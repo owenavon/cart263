@@ -14,6 +14,10 @@ class SausageDog extends Animal {
     }
   }
 
+  setTimeout() { // OR setInterval??
+
+  }
+
   mousePressed() { // function called from script.js
     if (this.overlap(mouseX, mouseY)) { // Correlates to overlap function in Animal.js
         this.found = true; // Assign true if user clicks on Sausage Dog image
