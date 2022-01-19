@@ -3,7 +3,6 @@ class Animal {
     this.x = x;
     this.y = y;
     this.image = image;
-
     this.angle = 0;
   }
 
@@ -31,4 +30,11 @@ class Animal {
       return false;
     }
   }
+
+  mousePressed() { // Function called from script.js
+    if (this.overlap(mouseX, mouseY)) { // Correlates to overlap function in Animal.js
+        gameSound.winnerSFX.play(); // Play wrong.mp3 (5 seconds).
+    }
+  }
+
 }

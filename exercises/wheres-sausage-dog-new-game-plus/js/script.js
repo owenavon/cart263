@@ -7,13 +7,20 @@
 "use strict";
 
 const NUM_ANIMAL_IMAGES = 10; // Constant value that will not be chnaged
-const NUM_ANIMALS = 100; // 100 Anmials objects that are created
+const NUM_ANIMALS = 25; // 100 Anmials objects that are created
 
 let animalImages = []; // Empty anmimal images array
 let animals = []; // Empty animal object array
 
 let sausageDogImage = undefined; // sausageDog image variable
 let sausageDog = undefined; // sausageDog variable
+// let animal = undefined; // animal variable
+
+let gameSound = {
+  wrongSFX: undefined, // Sets wrongSFX as a variable.
+  failSFX: undefined, // Sets failSFX as a variable.
+  winnerSFX: undefined // Sets winnerSFX as a variable.
+};
 
 let titleText = {
   string: `Where's Sausage Dog?`,
@@ -56,10 +63,10 @@ let textColour = {
     g: 255,
     b: 255
   },
-  yellow: {
-    r: 255,
-    g: 200,
-    b: 25,
+  teal: {
+    r: 20,
+    g: 143,
+    b: 168,
   },
   red: {
     r: 255,
@@ -69,7 +76,7 @@ let textColour = {
 };
 
 let state = `landing`; // Provides the starting state. Can be "landing", "simulation", "winner", "loser".
-let timer = 10; // Set's the timer value
+let timer = 5; // Set's the timer value
 
 
 function preload () { // P5 function that loads assets prior to starting the simulation
@@ -79,6 +86,10 @@ function preload () { // P5 function that loads assets prior to starting the sim
   }
 
   sausageDogImage = loadImage (`assets/images/sausage-dog.png`); // Preloads static sausage-dog.png
+
+  gameSound.wrongSFX = loadSound(`./assets/sounds/wrong.mp3`); // Preloads the "wrong.mp3" for efficient load times.
+  gameSound.failSFX = loadSound(`./assets/sounds/fail.mp3`); // Preloads the "fail.mp3" for efficient load times.
+  gameSound.winnerSFX = loadSound(`./assets/sounds/winner.mp3`); // Preloads the "winner.mp3" for efficient load times.
 }
 
 
@@ -87,7 +98,6 @@ function setup() { // P5 function for calculations
   createCanvas(900, 550);
   generateAnimals(); // Calls generateAnimals function
   generateSausageDog(); // Calls generateSausageDog function
-  generateSpinInterval();
 }
 
 function generateAnimals() { // Create the animals
@@ -104,14 +114,6 @@ function generateSausageDog() {
   let x = random(0, width); // Place SausageDog image at a random x postion
   let y = random(0, height); // Place SausageDog image at a random y postion
   sausageDog = new SausageDog(x, y, sausageDogImage); // Creates a class for SausageDog
-}
-
-function generateSpinInterval() {
-  setTimeout(delayStateChange, 4000);
-}
-
-function delayStateChange() {
-  sausageDog.stateWait();
 }
 
 
@@ -149,14 +151,14 @@ function headingText() {
 function subHeadingText() {
   text(subTitleText.string, subTitleText.x, subTitleText.y,); // Displays the text that dictates what the user must press to start the game.
   textSize(fontSize.medium); // Displays the font size as 28px.
-  fill(textColour.yellow.r, textColour.yellow.g, textColour.yellow.b); // Displays the instructions in grey colour.
+  fill(textColour.teal.r, textColour.teal.g, textColour.teal.b); // Displays the instructions in grey colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
 }
 
 
 
 function simulation() {
-  background(255, 255, 0); // Sets background to yellow in colour
+  background(20, 143, 168); // Sets background to Teal in colour
   createAnimal(); // Calls createRandomAnimal
   createSausageDog(); // Calls createSausageDog
   createGameTimerText();
@@ -170,32 +172,33 @@ function createAnimal() {
 }
 
 function createSausageDog() {
-  sausageDog.update(); // Calls update to display sausageDog on canvas
+  sausageDog.update(); // Calls update to display sausageDog in respected class
 }
 
 function createGameTimerText() {
   push(); // Isolates code from using global properties.
   textSize(fontSize.medium); // Displays the font size as 64px.
-  fill(255); // Makes the font white in colour.
+  fill(0); // Makes the font white in colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
-  text(`Time:`, 565, 50); // Displays text at the top right of the canvas.
-  text(timer, 690, 50); // Displays dynamic timer result at the top right of the canvas.
+  text(`Time:`, 75, 50); // Displays text at the top left of the canvas.
+  text(timer, 150, 50); // Displays dynamic timer result at the top left of the canvas.
   pop(); // Isolates code from using global properties.
 }
 
 function createGameTimer() {
-  if (frameCount % 60 == 0 && timer > 0) { // Indicates that if the frameCount is divisible by 60, then a second has passed.
+  if (frameCount % 60 == 0 && timer > 0 && !sausageDog.found) { // Indicates that if the frameCount is divisible by 60, then a second has passed.
     timer--;
   }
   if (timer == 0) { // If the timer hits zero (0), then...
     state = `loser`; // Run the loser state.
+    gameSound.failSFX.play(); // Play wrong.mp3 (5 seconds).
   }
 }
 
 
 
 function winner() {
-  background (0, 255, 0);
+  background (0, 255, 0); // Sets the background as Green in colour.
   winnerHeading();
 }
 
@@ -209,7 +212,7 @@ function winnerHeading() {
 
 
 function loser() {
-  background (255, 0, 0);
+  background (255, 0, 0); // Sets the background as Red in colour.
   loserHeading();
 }
 
@@ -226,5 +229,6 @@ function mousePressed() {
   if (state === `landing`) { // Indicates that if the mouse is clicked in the "landing" state, switch to the "simulation" state.
     state = `simulation`; // Runs the "simulation" state.
   }
-  sausageDog.mousePressed(); // Calls method upon mouse press
+  // animal.mousePressed(); // Calls method upon Animal class
+  sausageDog.mousePressed(); // Calls method in sausageDog class
 }
