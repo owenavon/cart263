@@ -3,8 +3,12 @@ class SausageDog extends Animal {
     super(x, y, image); // Calls the animal constructor
 
     this.found = false;
+
     this.rotationSpeed = 0.25;
+
   }
+
+
 
   update() { // SausageDog version of update
     super.update(); // Updates from animal class
@@ -14,9 +18,13 @@ class SausageDog extends Animal {
     }
   }
 
-  setTimeout() { // OR setInterval??
 
+  stateWait() {
+    if (this.found) {
+      state = `winner`;
+    }
   }
+
 
   mousePressed() { // function called from script.js
     if (this.overlap(mouseX, mouseY)) { // Correlates to overlap function in Animal.js

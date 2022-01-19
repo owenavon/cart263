@@ -15,31 +15,29 @@ let animals = []; // Empty animal object array
 let sausageDogImage = undefined; // sausageDog image variable
 let sausageDog = undefined; // sausageDog variable
 
-let state = `landing`; // Provides the starting state. Can be "landing", "simulation", "winner", "loser".
-
 let titleText = {
   string: `Where's Sausage Dog?`,
   x: 450,
   y: 250,
-}
+};
 
 let subTitleText = {
   string: `"Click" to Play`,
   x: 450,
   y: 300,
-}
+};
 
 let winnerText = {
   string: `You found the Sausage Dog!`,
   x: 450,
   y: 275,
-}
+};
 
 let loserText = {
   string: `Times up! Where could the Sausage dog be?`,
   x: 450,
   y: 275,
-}
+};
 
 let fontSize = {
   small: 28,
@@ -67,9 +65,11 @@ let textColour = {
     r: 255,
     g: 0,
     b: 0,
-  }
+  },
 };
 
+let state = `landing`; // Provides the starting state. Can be "landing", "simulation", "winner", "loser".
+let timer = 10; // Set's the timer value
 
 
 function preload () { // P5 function that loads assets prior to starting the simulation
@@ -87,6 +87,7 @@ function setup() { // P5 function for calculations
   createCanvas(900, 550);
   generateAnimals(); // Calls generateAnimals function
   generateSausageDog(); // Calls generateSausageDog function
+  generateSpinInterval();
 }
 
 function generateAnimals() { // Create the animals
@@ -103,6 +104,14 @@ function generateSausageDog() {
   let x = random(0, width); // Place SausageDog image at a random x postion
   let y = random(0, height); // Place SausageDog image at a random y postion
   sausageDog = new SausageDog(x, y, sausageDogImage); // Creates a class for SausageDog
+}
+
+function generateSpinInterval() {
+  setTimeout(delayStateChange, 4000);
+}
+
+function delayStateChange() {
+  sausageDog.stateWait();
 }
 
 
@@ -133,15 +142,15 @@ function landing() {
 function headingText() {
   text(titleText.string, titleText.x, titleText.y); // Displays the title of the game.
   textSize(fontSize.small); // Displays the font size as 28px.
-  fill(textColour.grey.r, textColour.grey.g, textColour.grey.b); // Displays the instructions in teel colour.
+  fill(textColour.grey.r, textColour.grey.g, textColour.grey.b); // Displays the instructions in yellow colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
 }
 
 function subHeadingText() {
   text(subTitleText.string, subTitleText.x, subTitleText.y,); // Displays the text that dictates what the user must press to start the game.
   textSize(fontSize.medium); // Displays the font size as 28px.
-  fill(textColour.yellow.r, textColour.yellow.g, textColour.yellow.b); // Displays the instructions in teel colour.
-  textAlign(CENTER); // Dictates the text alignment style.
+  fill(textColour.yellow.r, textColour.yellow.g, textColour.yellow.b); // Displays the instructions in grey colour.
+  textAlign(CENTER, CENTER); // Dictates the text alignment style.
 }
 
 
@@ -150,6 +159,8 @@ function simulation() {
   background(255, 255, 0); // Sets background to yellow in colour
   createAnimal(); // Calls createRandomAnimal
   createSausageDog(); // Calls createSausageDog
+  createGameTimerText();
+  createGameTimer();
 }
 
 function createAnimal() {
@@ -160,6 +171,25 @@ function createAnimal() {
 
 function createSausageDog() {
   sausageDog.update(); // Calls update to display sausageDog on canvas
+}
+
+function createGameTimerText() {
+  push(); // Isolates code from using global properties.
+  textSize(fontSize.medium); // Displays the font size as 64px.
+  fill(255); // Makes the font white in colour.
+  textAlign(CENTER, CENTER); // Dictates the text alignment style.
+  text(`Time:`, 565, 50); // Displays text at the top right of the canvas.
+  text(timer, 690, 50); // Displays dynamic timer result at the top right of the canvas.
+  pop(); // Isolates code from using global properties.
+}
+
+function createGameTimer() {
+  if (frameCount % 60 == 0 && timer > 0) { // Indicates that if the frameCount is divisible by 60, then a second has passed.
+    timer--;
+  }
+  if (timer == 0) { // If the timer hits zero (0), then...
+    state = `loser`; // Run the loser state.
+  }
 }
 
 
