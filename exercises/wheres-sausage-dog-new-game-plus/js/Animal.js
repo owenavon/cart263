@@ -1,9 +1,10 @@
 class Animal {
-  constructor(x, y , image) {
+  constructor(x, y , image, wrongSFX) { // Call variables from script.js
     this.x = x;
     this.y = y;
     this.image = image;
     this.angle = 0;
+    this.wrongSFX = wrongSFX;
   }
 
   update() {
@@ -31,10 +32,14 @@ class Animal {
     }
   }
 
+
   mousePressed() { // Function called from script.js
     if (this.overlap(mouseX, mouseY)) { // Correlates to overlap function in Animal.js
-        gameSound.winnerSFX.play(); // Play wrong.mp3 (5 seconds).
+        this.found = false; // Assign true if user clicks on Sausage Dog image.
+        this.image.resize(50, 50); // Resizes the snimal to 50% when cliked.
+        if (!this.wrongSFX.isPlaying()) { // Plays wrongSFX when animal is found.
+          this.wrongSFX.play();
+        }
+      }
     }
   }
-
-}

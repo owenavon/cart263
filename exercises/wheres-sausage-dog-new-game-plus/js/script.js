@@ -14,7 +14,6 @@ let animals = []; // Empty animal object array
 
 let sausageDogImage = undefined; // sausageDog image variable
 let sausageDog = undefined; // sausageDog variable
-// let animal = undefined; // animal variable
 
 let gameSound = {
   wrongSFX: undefined, // Sets wrongSFX as a variable.
@@ -25,31 +24,37 @@ let gameSound = {
 let titleText = {
   string: `Where's Sausage Dog?`,
   x: 450,
-  y: 250,
+  y: 250
+};
+
+let gameText = {
+  string: `"How to play: Locate and click on the Sausage. Be quick, as you only have 5 seconds.`,
+  x: 450,
+  y: 300
 };
 
 let subTitleText = {
-  string: `"Click" to Play`,
+  string: `Press the "Enter" key to Play`,
   x: 450,
-  y: 300,
+  y: 400
 };
 
 let winnerText = {
   string: `You found the Sausage Dog!`,
   x: 450,
-  y: 275,
+  y: 275
 };
 
 let loserText = {
   string: `Times up! Where could the Sausage dog be?`,
   x: 450,
-  y: 275,
+  y: 275
 };
 
 let fontSize = {
-  small: 28,
-  medium: 36,
-  large: 84
+  small: 20,
+  medium: 40,
+  large: 60
 };
 
 let textColour = {
@@ -66,19 +71,20 @@ let textColour = {
   teal: {
     r: 20,
     g: 143,
-    b: 168,
+    b: 168
   },
   red: {
     r: 255,
     g: 0,
-    b: 0,
-  },
+    b: 0
+  }
 };
 
 let state = `landing`; // Provides the starting state. Can be "landing", "simulation", "winner", "loser".
 let timer = 5; // Set's the timer value
 
 
+// PRELOAD FUNCTION
 function preload () { // P5 function that loads assets prior to starting the simulation
   for (let i = 0; i < NUM_ANIMAL_IMAGES; i++) { // Loop that counts up by 1 untill 10
     let animalImage = loadImage(`assets/images/animal${i}.png`); // Load images dynamically
@@ -93,7 +99,7 @@ function preload () { // P5 function that loads assets prior to starting the sim
 }
 
 
-
+// SETUP FUNCTION
 function setup() { // P5 function for calculations
   createCanvas(900, 550);
   generateAnimals(); // Calls generateAnimals function
@@ -105,7 +111,7 @@ function generateAnimals() { // Create the animals
     let x = random(0, width); // Random x postion for image placement
     let y = random(0, height); // Random y postion for image placement
     let animalImage = random(animalImages); // Random image from animalImages array
-    let animal = new Animal(x, y, animalImage); // Creates a class for random animal
+    let animal = new Animal(x, y, animalImage, gameSound.wrongSFX); // Creates a class for random animal
     animals.push(animal); // Add animal into animals array
   }
 }
@@ -113,11 +119,11 @@ function generateAnimals() { // Create the animals
 function generateSausageDog() {
   let x = random(0, width); // Place SausageDog image at a random x postion
   let y = random(0, height); // Place SausageDog image at a random y postion
-  sausageDog = new SausageDog(x, y, sausageDogImage); // Creates a class for SausageDog
+  sausageDog = new SausageDog(x, y, sausageDogImage, gameSound.winnerSFX); // Creates a class for SausageDog
 }
 
 
-
+// DRAW FUNCTION
 function draw() { // P5 Function that displays output on canvas
   if (state === `landing`) { // Indicates that when the state equates to "landing", start said state.
     landing();
@@ -134,40 +140,48 @@ function draw() { // P5 Function that displays output on canvas
 }
 
 
-
+// LANDING FUNCTION
 function landing() {
   background(0); // Sets background to black in colour
-  headingText();
-  subHeadingText();
+  headingText(); // Calls the headingText function
+  gameInstructionText(); // Calls the gameInstructionText function
+  subHeadingText(); // Calls the subHeadingText function
 }
 
 function headingText() {
   text(titleText.string, titleText.x, titleText.y); // Displays the title of the game.
-  textSize(fontSize.small); // Displays the font size as 28px.
-  fill(textColour.grey.r, textColour.grey.g, textColour.grey.b); // Displays the instructions in yellow colour.
+  textSize(fontSize.small); // Displays the font size XX
+  fill(textColour.grey.r, textColour.grey.g, textColour.grey.b); // Displays the instructions in XX colour.
+  textAlign(CENTER, CENTER); // Dictates the text alignment style.
+}
+
+function gameInstructionText() {
+  text(gameText.string, gameText.x, gameText.y); // Displays the game instructions
+  textSize(fontSize.medium); // Displays the font size as XX
+  fill(textColour.teal.r, textColour.teal.g, textColour.teal.b); // Displays the instructions in XX colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
 }
 
 function subHeadingText() {
-  text(subTitleText.string, subTitleText.x, subTitleText.y,); // Displays the text that dictates what the user must press to start the game.
-  textSize(fontSize.medium); // Displays the font size as 28px.
-  fill(textColour.teal.r, textColour.teal.g, textColour.teal.b); // Displays the instructions in grey colour.
+  text(subTitleText.string, subTitleText.x, subTitleText.y); // Displays the Sub Heading
+  textSize(fontSize.large); // Displays the font size as XX
+  fill(textColour.teal.r, textColour.teal.g, textColour.teal.b); // Displays the instructions in XX colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
 }
 
 
-
+// SIMULATION FUNCTION
 function simulation() {
-  background(20, 143, 168); // Sets background to Teal in colour
-  createAnimal(); // Calls createRandomAnimal
-  createSausageDog(); // Calls createSausageDog
+  background(20, 143, 168); // Sets background to Teal in colour.
+  createAnimal(); // Calls createRandomAnimal.
+  createSausageDog(); // Calls createSausageDog.
   createGameTimerText();
   createGameTimer();
 }
 
 function createAnimal() {
-  for (let i = 0; i < animals.length; i++) { // Loop that counts to the value indicated in animal
-    animals[i].update(); // Update "display" the animal at a random postion
+  for (let i = 0; i < animals.length; i++) { // Loop that counts to the value indicated in animal.
+    animals[i].update(); // Update "display" the animal at a random postion.
   }
 }
 
@@ -186,7 +200,7 @@ function createGameTimerText() {
 }
 
 function createGameTimer() {
-  if (frameCount % 60 == 0 && timer > 0 && !sausageDog.found) { // Indicates that if the frameCount is divisible by 60, then a second has passed.
+  if (frameCount % 60 == 0 && timer > 0 && !sausageDog.found) { // Stop the timer when the sauasgeDog is found.
     timer--;
   }
   if (timer == 0) { // If the timer hits zero (0), then...
@@ -196,39 +210,52 @@ function createGameTimer() {
 }
 
 
-
+// WINNER FUNCTION
 function winner() {
-  background (0, 255, 0); // Sets the background as Green in colour.
+  background (0, 140, 0); // Sets the background as Green in colour.
   winnerHeading();
 }
 
 function winnerHeading() {
+  push();
   text(winnerText.string, winnerText.x, winnerText.y,); // Displays the text that dictates what the user must press to start the game.
   textSize(fontSize.small); // Displays the font size as 28px.
   fill(textColour.white.r, textColour.white.g, textColour.white.b); // Displays the instructions in white colour.
   textAlign(CENTER); // Dictates the text alignment style.
+  pop();
 }
 
 
-
+// LOSER FUNCTION
 function loser() {
-  background (255, 0, 0); // Sets the background as Red in colour.
+  background (140, 0, 0); // Sets the background as Red in colour.
   loserHeading();
 }
 
 function loserHeading() {
+  push();
   text(loserText.string, loserText.x, loserText.y,); // Displays the text that dictates what the user must press to start the game.
   textSize(fontSize.small); // Displays the font size as 28px.
   fill(textColour.white.r, textColour.white.g, textColour.white.b); // Displays the instructions in white colour.
   textAlign(CENTER); // Dictates the text alignment style.
+  pop();
 }
 
 
-
-function mousePressed() {
-  if (state === `landing`) { // Indicates that if the mouse is clicked in the "landing" state, switch to the "simulation" state.
+// KEYPRESSED FUNCTION
+function keyPressed () { // p5 function to perform action with keyboard input.
+  if (keyCode === 13 && state === `landing`) { // Says when the "P" key is pushed, and the state is in "title", switch to the "simulation" state.
     state = `simulation`; // Runs the "simulation" state.
   }
-  // animal.mousePressed(); // Calls method upon Animal class
-  sausageDog.mousePressed(); // Calls method in sausageDog class
+}
+
+
+// MOUSEPRESSED FUNCTION
+function mousePressed() {
+  if (state === `simulation`) { // If state is equal to simulation then...
+    sausageDog.mousePressed(); // Calls method in object.
+    for (let i = 0; i < animals.length; i++) { // Loop that counts to the value indicated in animal
+      animals[i].mousePressed(); // Update "display" the animal at a random postion
+    }
+  }
 }
