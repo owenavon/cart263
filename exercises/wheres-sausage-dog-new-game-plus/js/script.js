@@ -24,19 +24,19 @@ let gameSound = {
 let titleText = {
   string: `Where's Sausage Dog?`,
   x: 450,
-  y: 250
+  y: 225
 };
 
 let gameText = {
-  string: `"How to play: Locate and click on the Sausage. Be quick, as you only have 5 seconds.`,
+  string: `Click on the Sausage Dog. Be quick, as you only have 5 seconds.`,
   x: 450,
-  y: 300
+  y: 280
 };
 
 let subTitleText = {
-  string: `Press the "Enter" key to Play`,
+  string: `Press "Enter" to Start`,
   x: 450,
-  y: 400
+  y: 375
 };
 
 let winnerText = {
@@ -53,8 +53,8 @@ let loserText = {
 
 let fontSize = {
   small: 20,
-  medium: 40,
-  large: 60
+  medium: 36,
+  large: 46
 };
 
 let textColour = {
@@ -72,16 +72,13 @@ let textColour = {
     r: 20,
     g: 143,
     b: 168
-  },
-  red: {
-    r: 255,
-    g: 0,
-    b: 0
   }
 };
 
+let gameTitleFont; // Defines custom gameTitleFont.
+let gameFont; // Defines custom gameFont.
 let state = `landing`; // Provides the starting state. Can be "landing", "simulation", "winner", "loser".
-let timer = 5; // Set's the timer value
+let timer = 5; // Set's the timer value.
 
 
 // PRELOAD FUNCTION
@@ -90,6 +87,8 @@ function preload () { // P5 function that loads assets prior to starting the sim
     let animalImage = loadImage(`assets/images/animal${i}.png`); // Load images dynamically
     animalImages.push(animalImage); // Pushs the animal images into the array
   }
+  gameTitleFont = loadFont ("assets/fonts/adelia.otf") // Preloads the custom downloaded font for efficient load times.
+  gameFont = loadFont ("assets/fonts/kiddos.ttf") // Preloads the custom downloaded font for efficient load times.
 
   sausageDogImage = loadImage (`assets/images/sausage-dog.png`); // Preloads static sausage-dog.png
 
@@ -149,24 +148,33 @@ function landing() {
 }
 
 function headingText() {
-  text(titleText.string, titleText.x, titleText.y); // Displays the title of the game.
-  textSize(fontSize.small); // Displays the font size XX
-  fill(textColour.grey.r, textColour.grey.g, textColour.grey.b); // Displays the instructions in XX colour.
+  push();
+  textFont(gameTitleFont);
+  textSize(fontSize.large); // Displays the font size XX
+  fill(textColour.teal.r, textColour.teal.g, textColour.teal.b); // Displays the instructions in XX colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
+  text(titleText.string, titleText.x, titleText.y); // Displays the title of the game.
+  pop();
 }
 
 function gameInstructionText() {
-  text(gameText.string, gameText.x, gameText.y); // Displays the game instructions
-  textSize(fontSize.medium); // Displays the font size as XX
-  fill(textColour.teal.r, textColour.teal.g, textColour.teal.b); // Displays the instructions in XX colour.
+  push();
+  textFont(gameFont);
+  textSize(fontSize.small); // Displays the font size as XX
+  fill(textColour.grey.r, textColour.grey.g, textColour.grey.b); // Displays the instructions in XX colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
+  text(gameText.string, gameText.x, gameText.y); // Displays the game instructions
+  pop();
 }
 
 function subHeadingText() {
-  text(subTitleText.string, subTitleText.x, subTitleText.y); // Displays the Sub Heading
-  textSize(fontSize.large); // Displays the font size as XX
-  fill(textColour.teal.r, textColour.teal.g, textColour.teal.b); // Displays the instructions in XX colour.
+  push();
+  textFont(gameFont);
+  textSize(fontSize.medium); // Displays the font size as XX
+  fill(textColour.grey.r, textColour.grey.g, textColour.grey.b); // Displays the instructions in XX colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
+  text(subTitleText.string, subTitleText.x, subTitleText.y); // Displays the Sub Heading
+  pop();
 }
 
 
@@ -192,10 +200,11 @@ function createSausageDog() {
 function createGameTimerText() {
   push(); // Isolates code from using global properties.
   textSize(fontSize.medium); // Displays the font size as 64px.
+  textFont(gameFont);
   fill(0); // Makes the font white in colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
-  text(`Time:`, 75, 50); // Displays text at the top left of the canvas.
-  text(timer, 150, 50); // Displays dynamic timer result at the top left of the canvas.
+  text(`Time:`, 75, 45); // Displays text at the top left of the canvas.
+  text(timer, 140, 45); // Displays dynamic timer result at the top left of the canvas.
   pop(); // Isolates code from using global properties.
 }
 
@@ -218,10 +227,11 @@ function winner() {
 
 function winnerHeading() {
   push();
-  text(winnerText.string, winnerText.x, winnerText.y,); // Displays the text that dictates what the user must press to start the game.
-  textSize(fontSize.small); // Displays the font size as 28px.
+  textFont(gameFont);
+  textSize(fontSize.medium); // Displays the font size as 28px.
   fill(textColour.white.r, textColour.white.g, textColour.white.b); // Displays the instructions in white colour.
-  textAlign(CENTER); // Dictates the text alignment style.
+  textAlign(CENTER, CENTER); // Dictates the text alignment style.
+  text(winnerText.string, winnerText.x, winnerText.y,); // Displays the text that dictates what the user must press to start the game.
   pop();
 }
 
@@ -234,10 +244,11 @@ function loser() {
 
 function loserHeading() {
   push();
-  text(loserText.string, loserText.x, loserText.y,); // Displays the text that dictates what the user must press to start the game.
-  textSize(fontSize.small); // Displays the font size as 28px.
+  textFont(gameFont);
+  textSize(fontSize.medium); // Displays the font size as 28px.
   fill(textColour.white.r, textColour.white.g, textColour.white.b); // Displays the instructions in white colour.
-  textAlign(CENTER); // Dictates the text alignment style.
+  textAlign(CENTER, CENTER); // Dictates the text alignment style.
+  text(loserText.string, loserText.x, loserText.y,); // Displays the text that dictates what the user must press to start the game.
   pop();
 }
 

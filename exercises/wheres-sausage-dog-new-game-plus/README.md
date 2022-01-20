@@ -1,3 +1,6 @@
-# Template p5 project
+# wheres-sausage-dog-new-game-plus
 
-This is the README file for the entire project. For more official projects you should write information here about the nature of the project, your name, any special explanations of how the project works, etc.
+// Activity 01: Where's Sausage Dog?
+// Owen Avon
+
+// The user objective is to find and click on the "Sausage Dog".
