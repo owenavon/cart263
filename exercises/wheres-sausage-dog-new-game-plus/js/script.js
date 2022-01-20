@@ -1,42 +1,41 @@
 
-// Activity 01: Where's Sausage Dog?
+// Activity 01: Where's Sausage Dog New Game Plus?
 // Owen Avon
 
 // The user objective is to find and click on the "Sausage Dog".
 
 "use strict";
 
-const NUM_ANIMAL_IMAGES = 10; // Constant value that will not be chnaged
-const NUM_ANIMALS = 25; // 100 Anmials objects that are created
+const NUM_ANIMAL_IMAGES = 10; // 100 different animal images. Constant value, so it will not be changed throughout the program.
+const NUM_ANIMALS = 30; // 30 Anmials objects are created, and will not be changed throughout the program.
 
-let animalImages = []; // Empty anmimal images array
-let animals = []; // Empty animal object array
+let animalImages = []; // Empty anmimal images array.
+let animals = []; // Empty animal object array.
 
-let sausageDogImage = undefined; // sausageDog image variable
-let sausageDog = undefined; // sausageDog variable
+let sausageDogImage = undefined; // sausageDog image variable.
+let sausageDog = undefined; // sausageDog variable.
 
-let gameSound = {
-  wrongSFX: undefined, // Sets wrongSFX as a variable.
-  failSFX: undefined, // Sets failSFX as a variable.
-  winnerSFX: undefined // Sets winnerSFX as a variable.
-};
+let gameTitleFont; // Defines custom gameTitleFont.
+let gameFont; // Defines custom gameFont.
+let state = `landing`; // Provides the starting state. Can be "landing", "simulation", "winner", "loser".
+let timer = 5; // Set's the timer value.
 
 let titleText = {
   string: `Where's Sausage Dog?`,
   x: 450,
-  y: 225
+  y: 200
 };
 
 let gameText = {
-  string: `Click on the Sausage Dog. Be quick, as you only have 5 seconds.`,
+  string: `Click on the Sausage Dog before the timer runs out!`,
   x: 450,
-  y: 280
+  y: 250
 };
 
 let subTitleText = {
   string: `Press "Enter" to Start`,
   x: 450,
-  y: 375
+  y: 330
 };
 
 let winnerText = {
@@ -52,40 +51,57 @@ let loserText = {
 };
 
 let fontSize = {
-  small: 20,
-  medium: 36,
-  large: 46
+  small: 22, // Sets a font size of 22px.
+  medium: 32, // Sets a font size of 32px.
+  large: 46 // Sets a font size of 46px.
 };
 
-let textColour = {
-  grey: {
-    r: 185,
-    g: 185,
-    b: 185
-  },
+let colour = {
   white: {
     r: 255,
     g: 255,
     b: 255
   },
-  teal: {
-    r: 20,
-    g: 143,
-    b: 168
+  purple: {
+    r: 50,
+    g: 25,
+    b: 55
+  },
+  orange: {
+    r: 200,
+    g: 100,
+    b: 0
+  },
+  red: {
+    r: 140,
+    g: 0,
+    b: 0
+  },
+  green: {
+    r: 0,
+    g: 140,
+    b: 0
+  },
+  blue: {
+    r: 0,
+    g: 0,
+    b: 140
   }
 };
 
-let gameTitleFont; // Defines custom gameTitleFont.
-let gameFont; // Defines custom gameFont.
-let state = `landing`; // Provides the starting state. Can be "landing", "simulation", "winner", "loser".
-let timer = 5; // Set's the timer value.
+let gameSound = {
+  wrongSFX: undefined, // Sets wrongSFX as a variable.
+  failSFX: undefined, // Sets failSFX as a variable.
+  winnerSFX: undefined // Sets winnerSFX as a variable.
+};
+
 
 
 // PRELOAD FUNCTION
-function preload () { // P5 function that loads assets prior to starting the simulation
-  for (let i = 0; i < NUM_ANIMAL_IMAGES; i++) { // Loop that counts up by 1 untill 10
-    let animalImage = loadImage(`assets/images/animal${i}.png`); // Load images dynamically
-    animalImages.push(animalImage); // Pushs the animal images into the array
+function preload () { // P5 function that loads assets prior to starting the simulation.
+  for (let i = 0; i < NUM_ANIMAL_IMAGES; i++) { // Loop that counts up by 1 untill 10.
+    let animalImage = loadImage(`assets/images/animal${i}.png`); // Load images dynamically.
+    animalImages.push(animalImage); // Push's the animal images into the array.
   }
   gameTitleFont = loadFont ("assets/fonts/adelia.otf") // Preloads the custom downloaded font for efficient load times.
   gameFont = loadFont ("assets/fonts/kiddos.ttf") // Preloads the custom downloaded font for efficient load times.
@@ -99,117 +115,117 @@ function preload () { // P5 function that loads assets prior to starting the sim
 
 
 // SETUP FUNCTION
-function setup() { // P5 function for calculations
-  createCanvas(900, 550);
-  generateAnimals(); // Calls generateAnimals function
-  generateSausageDog(); // Calls generateSausageDog function
+function setup() { // P5 function for calculations.
+  createCanvas(900, 550); // Creates a viewable space of 900px X 550px.
+  generateAnimals(); // Calls generateAnimals function.
+  generateSausageDog(); // Calls generateSausageDog function.
 }
 
-function generateAnimals() { // Create the animals
-  for (let i = 0; i < NUM_ANIMALS; i++) {
-    let x = random(0, width); // Random x postion for image placement
-    let y = random(0, height); // Random y postion for image placement
-    let animalImage = random(animalImages); // Random image from animalImages array
-    let animal = new Animal(x, y, animalImage, gameSound.wrongSFX); // Creates a class for random animal
-    animals.push(animal); // Add animal into animals array
+function generateAnimals() { // Generates the animals.
+  for (let i = 0; i < NUM_ANIMALS; i++) { // For loop to duplicate the animals.
+    let x = random(0, width); // Random x postion for image placement.
+    let y = random(0, height); // Random y postion for image placement.
+    let animalImage = random(animalImages); // Random image from animalImages array.
+    let animal = new Animal(x, y, animalImage, gameSound.wrongSFX); // Sends parameters to constructor in Animal class.
+    animals.push(animal); // Add animal into animals array.
   }
 }
 
-function generateSausageDog() {
-  let x = random(0, width); // Place SausageDog image at a random x postion
-  let y = random(0, height); // Place SausageDog image at a random y postion
-  sausageDog = new SausageDog(x, y, sausageDogImage, gameSound.winnerSFX); // Creates a class for SausageDog
+function generateSausageDog() { // Generates the SausageDog.
+  let x = random(0, width); // Place SausageDog image at a random x postion.
+  let y = random(0, height); // Place SausageDog image at a random y postion.
+  sausageDog = new SausageDog(x, y, sausageDogImage, gameSound.winnerSFX); // Sends parameters to constructor in sauasgeDog class.
 }
 
 
 // DRAW FUNCTION
-function draw() { // P5 Function that displays output on canvas
+function draw() { // P5 Function that displays output on canvas.
   if (state === `landing`) { // Indicates that when the state equates to "landing", start said state.
-    landing();
+    landing(); // Calls landing function.
   }
   else if (state === `simulation`) { // Indicates that when the state equates to "simulation", start said state.
-    simulation();
+    simulation(); // Calls simulation function.
   }
   else if (state === `winner`) { // Indicates that when the state equates to "winner", start said state.
-    winner();
+    winner(); // Calls winner function.
   }
   else if (state === `loser`) { // Indicates that when the state equates to "loser", start said state.
-    loser();
+    loser(); // Calls loser function.
   }
 }
 
 
 // LANDING FUNCTION
 function landing() {
-  background(0); // Sets background to black in colour
-  headingText(); // Calls the headingText function
-  gameInstructionText(); // Calls the gameInstructionText function
-  subHeadingText(); // Calls the subHeadingText function
+  background(colour.purple.r, colour.purple.g, colour.purple.b); // Sets background to purple in colour.
+  headingText(); // Calls the headingText function.
+  gameInstructionText(); // Calls the gameInstructionText function.
+  subHeadingText(); // Calls the subHeadingText function.
 }
 
 function headingText() {
-  push();
-  textFont(gameTitleFont);
-  textSize(fontSize.large); // Displays the font size XX
-  fill(textColour.teal.r, textColour.teal.g, textColour.teal.b); // Displays the instructions in XX colour.
+  push(); // Isolates code from using global properties.
+  textFont(gameTitleFont); // Displays custom adelia.otf font.
+  textSize(fontSize.large); // Displays the font size 46px.
+  fill(colour.orange.r, colour.orange.g, colour.orange.b); // Displays the instructions in orange colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
   text(titleText.string, titleText.x, titleText.y); // Displays the title of the game.
-  pop();
+  pop(); // Isolates code from using global properties.
 }
 
 function gameInstructionText() {
-  push();
-  textFont(gameFont);
-  textSize(fontSize.small); // Displays the font size as XX
-  fill(textColour.grey.r, textColour.grey.g, textColour.grey.b); // Displays the instructions in XX colour.
+  push(); // Isolates code from using global properties.
+  textFont(gameFont); // Displays custom kiddos.ttf font
+  textSize(fontSize.small); // Displays the font size as 22px.
+  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in white colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
   text(gameText.string, gameText.x, gameText.y); // Displays the game instructions
-  pop();
+  pop(); // Isolates code from using global properties.
 }
 
 function subHeadingText() {
-  push();
-  textFont(gameFont);
-  textSize(fontSize.medium); // Displays the font size as XX
-  fill(textColour.grey.r, textColour.grey.g, textColour.grey.b); // Displays the instructions in XX colour.
+  push(); // Isolates code from using global properties.
+  textFont(gameFont); // Displays custom kiddos.ttf font.
+  textSize(fontSize.medium); // Displays the font size as 32px.
+  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in white colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
-  text(subTitleText.string, subTitleText.x, subTitleText.y); // Displays the Sub Heading
-  pop();
+  text(subTitleText.string, subTitleText.x, subTitleText.y); // Displays the Sub Heading.
+  pop(); // Isolates code from using global properties.
 }
 
 
 // SIMULATION FUNCTION
 function simulation() {
-  background(20, 143, 168); // Sets background to Teal in colour.
+  background(colour.blue.r, colour.blue.g, colour.blue.b); // Sets background to blue in colour.
   createAnimal(); // Calls createRandomAnimal.
   createSausageDog(); // Calls createSausageDog.
-  createGameTimerText();
-  createGameTimer();
+  createGameTimerText(); // Calls the createGameTimerText function.
+  createGameTimer(); // Calls the createGamerTimer function.
 }
 
 function createAnimal() {
   for (let i = 0; i < animals.length; i++) { // Loop that counts to the value indicated in animal.
-    animals[i].update(); // Update "display" the animal at a random postion.
+    animals[i].update(); // Update (display) the animals at a random postion.
   }
 }
 
 function createSausageDog() {
-  sausageDog.update(); // Calls update to display sausageDog in respected class
+  sausageDog.update(); // Calls update to display sausageDog in respected class.
 }
 
 function createGameTimerText() {
   push(); // Isolates code from using global properties.
-  textSize(fontSize.medium); // Displays the font size as 64px.
-  textFont(gameFont);
-  fill(0); // Makes the font white in colour.
+  textSize(fontSize.medium); // Displays the font size as 32px.
+  textFont(gameFont); // Displays custom kiddos.ttf font.
+  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in white colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
-  text(`Time:`, 75, 45); // Displays text at the top left of the canvas.
-  text(timer, 140, 45); // Displays dynamic timer result at the top left of the canvas.
+  text(`Time:`, 75, 45); // Displays `Time` text at the top left of the canvas.
+  text(timer, 140, 45); // Displays dynamic timer result just right of `Time`.
   pop(); // Isolates code from using global properties.
 }
 
 function createGameTimer() {
-  if (frameCount % 60 == 0 && timer > 0 && !sausageDog.found) { // Stop the timer when the sauasgeDog is found.
+  if (frameCount % 60 == 0 && timer > 0 && !sausageDog.found) { // Count down by 1 second. Stop the timer if the sauasgeDog is found.
     timer--;
   }
   if (timer == 0) { // If the timer hits zero (0), then...
@@ -221,41 +237,41 @@ function createGameTimer() {
 
 // WINNER FUNCTION
 function winner() {
-  background (0, 140, 0); // Sets the background as Green in colour.
-  winnerHeading();
+  background (colour.green.r, colour.green.g, colour.green.b); // Sets the background as Green in colour.
+  winnerHeading(); // Calls the winnerHeading function.
 }
 
 function winnerHeading() {
-  push();
-  textFont(gameFont);
-  textSize(fontSize.medium); // Displays the font size as 28px.
-  fill(textColour.white.r, textColour.white.g, textColour.white.b); // Displays the instructions in white colour.
+  push(); // Isolates code from using global properties.
+  textFont(gameFont); // Displays custom kiddos.ttf font.
+  textSize(fontSize.medium); // Displays the font size as 32px.
+  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in white colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
   text(winnerText.string, winnerText.x, winnerText.y,); // Displays the text that dictates what the user must press to start the game.
-  pop();
+  pop(); // Isolates code from using global properties.
 }
 
 
 // LOSER FUNCTION
 function loser() {
-  background (140, 0, 0); // Sets the background as Red in colour.
-  loserHeading();
+  background (colour.red.r, colour.red.g, colour.red.b); // Sets the background as Red in colour.
+  loserHeading(); // Calls loserHeading function.
 }
 
 function loserHeading() {
-  push();
-  textFont(gameFont);
+  push(); // Isolates code from using global properties.
+  textFont(gameFont); // Displays custom kiddos.ttf font
   textSize(fontSize.medium); // Displays the font size as 28px.
-  fill(textColour.white.r, textColour.white.g, textColour.white.b); // Displays the instructions in white colour.
+  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in white colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
   text(loserText.string, loserText.x, loserText.y,); // Displays the text that dictates what the user must press to start the game.
-  pop();
+  pop(); // Isolates code from using global properties.
 }
 
 
 // KEYPRESSED FUNCTION
 function keyPressed () { // p5 function to perform action with keyboard input.
-  if (keyCode === 13 && state === `landing`) { // Says when the "P" key is pushed, and the state is in "title", switch to the "simulation" state.
+  if (keyCode === 13 && state === `landing`) { // When the "Enter" key is pushed, and the state is in "landing", switch to the "simulation" state.
     state = `simulation`; // Runs the "simulation" state.
   }
 }
@@ -263,10 +279,10 @@ function keyPressed () { // p5 function to perform action with keyboard input.
 
 // MOUSEPRESSED FUNCTION
 function mousePressed() {
-  if (state === `simulation`) { // If state is equal to simulation then...
-    sausageDog.mousePressed(); // Calls method in object.
-    for (let i = 0; i < animals.length; i++) { // Loop that counts to the value indicated in animal
-      animals[i].mousePressed(); // Update "display" the animal at a random postion
+  if (state === `simulation`) { // If state is equal to simulation then... This prevents mouse activation in landing page.
+    sausageDog.mousePressed(); // Calls method in object, in sausageDog class.
+    for (let i = 0; i < animals.length; i++) { // Loop that counts to the value indicated in animal.
+      animals[i].mousePressed(); // Update "display" the animal at a random postion.
     }
   }
 }

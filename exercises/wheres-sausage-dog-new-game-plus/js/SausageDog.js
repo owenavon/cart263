@@ -1,24 +1,24 @@
-class SausageDog extends Animal {
+class SausageDog extends Animal { // Creates a class that is called from script.js
   constructor(x, y, image, winnerSFX) { // Call variables from script.js
-    super(x, y, image); // Calls the animal constructor
+    super(x, y, image); // Connects SausageDog to Animal, so that x, y, and image do not need to be defined again.
 
-    this.found = false;
-    this.rotationSpeed = 0.25;
-    this.winnerSFX = winnerSFX;
+    this.found = false; // Assigns a boolean value.
+    this.rotationSpeed = 0.25; // Assigns a rotation speed.
+    this.winnerSFX = winnerSFX; // Defines a sound effect.
   }
 
 
-  update() { // SausageDog version of update
-    super.update(); // Updates from animal class
+  update() { // SausageDog version of update.
+    super.update(); // Updates from animal class.
 
-    if (this.found) { // Bollean value (True or False)
-      this.angle += this.rotationSpeed; // Allows the sauasgeDog to rotate
+    if (this.found) { // If the sausagedog is clicked on then...
+      this.angle += this.rotationSpeed; // Allows the sausageDog to rotate.
     }
   }
 
 
-  winState() { // Function that is called within setTimeout to create delay
-    state = `winner`; // Runs the simulation state
+  winState() { // Function that is called within setTimeout to create delay.
+    state = `winner`; // Runs the simulation state.
   }
 
 
@@ -26,8 +26,8 @@ class SausageDog extends Animal {
     if (this.overlap(mouseX, mouseY)) { // Correlates to overlap function in Animal.js
         this.found = true; // Assign true if user clicks on Sausage Dog image.
         setTimeout(this.winState.bind(this), 1750); // Allows the Sausage Dog to spin for 1.75 seconds prior to changing states.
-        if (!this.winnerSFX.isPlaying()) { // Plays winnerSFX when Sausage Dog is found.
-          this.winnerSFX.play();
+        if (!this.winnerSFX.isPlaying()) { // If winnerSFX is not playing when sausageDog is found, then...
+          this.winnerSFX.play(); // Play winnerSFX when Sausage Dog is found.
         }
       }
     }
