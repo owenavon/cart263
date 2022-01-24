@@ -2,7 +2,7 @@
 // Responsive Voice Learning Material
 // Owen Avon
 
-// Description of project
+// Description of project would go here
 
 "use strict";
 
