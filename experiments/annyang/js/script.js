@@ -1,17 +1,24 @@
-// Live Coding - Janaury 20
+
+// Title of Project
 // Owen Avon
 
+// Description of project
+
 "use strict";
+
+// Description of preload()
+function preload () {
+
+}
 
 
 // Description of setup()
 function setup() {
-  createCanvas(500, 500);
-}
 
+}
 
 
 // Description of draw()
 function draw() {
-  background(0);
+
 }
