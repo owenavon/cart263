@@ -143,17 +143,62 @@ const animals = [ // List of animal names inside an array. List from https://git
       "zebra"
     ];
 
+    let staticText = {
+      string: `I think it is a...`,
+      x: 320,
+      y: 160
+    };
+
+    let fontSize = {
+      small: 22, // Sets a font size of 22px.
+      medium: 32, // Sets a font size of 32px.
+      large: 46 // Sets a font size of 46px.
+    };
+
+    let colour = {
+      white: {
+        r: 255,
+        g: 255,
+        b: 255
+      },
+    }
+
     let currentAnimal = ``; // Chosen random animal will be placed inside the variable. Starts out as empty.
     let currentAnswer = ``; // Variable that stores the value of what the user guessed. Starts out as empty.
 
 
 // Description of setup()
 function setup() {
-  createCanvas(windowWidth, windowHeight); // Sets the canvas to the users screen resolution.
+  canvas = createCanvas(640, 480);
+  windowResized(); //  Calls windowResized function.
+  generateAnnyang(); // Calls the generateAnnyang function.
+}
 
+function windowResized() {
+  let canvasRatio = height / width; // Calculate ratio of height to width for the canvas.
+  let windowRatio = windowHeight / windowWidth; // Calculate ratio of height to width for the wndow.
+
+  let newWidth = undefined; // Create variables to store the new width.
+  let newHeight = undefined; // Create variables to store the new height.
+
+
+  if (windowRatio < canvasRatio) { // If the window ratio is smaller, we'll use the window height to set the basis of our new canvas dimensions.
+    newHeight = windowHeight;// Our canvas will fit by setting its height to the window height...
+    newWidth = windowHeight / canvasRatio; // ... and then scaling the width based on the ratio
+  }
+  else {
+    newWidth = windowWidth; // Our canvas will fit by setting its width to the window width...
+    newHeight = windowWidth * canvasRatio; // ... and then scaling the height based on the ratio.
+  }
+
+  canvas.elt.style.width = `${newWidth}px`; // Set the canvas's CSS width and height properties to the new width value.
+  canvas.elt.style.height = `${newHeight}px`; // Set the canvas's CSS width and height properties to the new height value.
+}
+
+function generateAnnyang () {
   if (annyang) { // Connects annyang API.
     let commands = { // defines command object.
-      'I think it is *animal': guessAnimal // Parameter with splat variable. This allows the user to guess the animal name.
+      'I think it is a *animal': guessAnimal // Parameter with splat variable. This allows the user to guess the animal name.
     };
     annyang.addCommands(commands); // Tells annyang to listen to commands variable.
     annyang.start(); // Initiates speech recognition.
@@ -168,7 +213,22 @@ function setup() {
 // Description of draw()
 function draw() {
   background(0); // Sets the background to black in colour.
+  displayStaticText(); // Calls the displayStaticText function.
+  diaplayAnswer(); // Calls the displayAnswer function.
+}
 
+function displayStaticText() {
+  push();
+  textSize(fontSize.medium); // Displays the font size 46px.
+  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in orange colour.
+  textAlign(CENTER, CENTER); // Dictates the text alignment style.
+  text(staticText.string, staticText.x, staticText.y); // Displays the title of the game.
+  pop();
+}
+
+
+
+function diaplayAnswer() {
   if (currentAnswer === currentAnimal) { // If the user answer is the correct animal name, then...
     fill(0, 255, 0); // Fill the background as green in colour.
   }
@@ -178,15 +238,13 @@ function draw() {
   text(currentAnswer, width / 2, height / 2); // Display user's answer in the centre of the canvas.
 }
 
-function mousePressed() {
-  currentAnimal = random(animals); // Fetch's random value from animals array.
-  let reverseAnimal = reverseString(currentAnimal); // Asigns reverseAnimal the result of currentAnimal.
+
+
+function sayAnimalBackwards(animal) { // Asigns reverseAnimal the result of animal.
+  let reverseAnimal = reverseString(animal); // Asigns reverseAnimal the result of reverseString.
   responsiveVoice.speak(reverseAnimal); // reverseAnimal value is spoken aloud, via the responsiveVoice API.
 }
 
-function guessAnimal(animal) { // Calls animal parameter, which is the word that the user guessed.
-  currentAnswer = animal.toLowerCase(); // Assign the guess inside the animal pararmter into the currentAnswer. Converts the guess toLowerCase.
-}
 
 
 function reverseString(string) { // Reverses the provided string.
@@ -194,4 +252,36 @@ function reverseString(string) { // Reverses the provided string.
   let reverseCharacters = characters.reverse(); // Reverse the array of characters.
   let result = reverseCharacters.join(''); // Join the array of characters back into a string.
   return result; // Return the result.
+}
+
+
+
+function guessAnimal(animal) { // Calls animal parameter, which is the word that the user guessed.
+  currentAnswer = animal.toLowerCase(); // Assign the guess inside the animal pararmter into the currentAnswer. Converts the guess toLowerCase.
+  oralFeedback(); // Calls oralFeedback function for voice dictation.
+}
+
+
+
+function oralFeedback() {
+  if (currentAnswer === currentAnimal) { // If the user answer is the correct animal name, then...
+    responsiveVoice.speak("Good job mate!", "UK English Male"); // Congratulate the user.
+  }
+  else { // Otherwise...
+    responsiveVoice.speak("nope, better luck next time!", "UK English Male"); // Wish them better luck next time.
+  }
+}
+
+
+
+function nextQuestion() { //
+  currentAnswer = ``; // Clears answer from screen. Initially displays nothing on screen.
+  currentAnimal = random(animals); // Fetch's random value from animals array.
+  sayAnimalBackwards(currentAnimal); // Calls function to speak the animal name.
+}
+
+
+
+function mousePressed() {
+  nextQuestion(); // Call the nextQuestion function
 }
