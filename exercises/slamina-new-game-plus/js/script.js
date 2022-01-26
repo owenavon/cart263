@@ -2,157 +2,138 @@
 // Exercise 02: Slamina New Game Plus
 // Owen Avon
 
-// A guessing game in which the page pronounces the name of an animal backwards and the user has to figure out what it was and say the name forwards.
+// A guessing game in which the page pronounces the name of an municipality backwards and the user has to figure out what it was and say the name forwards.
 
 "use strict";
 
-const animals = [ // List of animal names inside an array. List from https://github.com/dariusk/corpora/blob/master/data/animals/common.json
-      "aardvark",
-      "alligator",
-      "alpaca",
-      "antelope",
-      "ape",
-      "armadillo",
-      "baboon",
-      "badger",
-      "bat",
-      "bear",
-      "beaver",
-      "bison",
-      "boar",
-      "buffalo",
-      "bull",
-      "camel",
-      "canary",
-      "capybara",
-      "cat",
-      "chameleon",
-      "cheetah",
-      "chimpanzee",
-      "chinchilla",
-      "chipmunk",
-      "cougar",
-      "cow",
-      "coyote",
-      "crocodile",
-      "crow",
-      "deer",
-      "dingo",
-      "dog",
-      "donkey",
-      "dromedary",
-      "elephant",
-      "elk",
-      "ewe",
-      "ferret",
-      "finch",
-      "fish",
-      "fox",
-      "frog",
-      "gazelle",
-      "gila monster",
-      "giraffe",
-      "gnu",
-      "goat",
-      "gopher",
-      "gorilla",
-      "grizzly bear",
-      "ground hog",
-      "guinea pig",
-      "hamster",
-      "hedgehog",
-      "hippopotamus",
-      "hog",
-      "horse",
-      "hyena",
-      "ibex",
-      "iguana",
-      "impala",
-      "jackal",
-      "jaguar",
-      "kangaroo",
-      "koala",
-      "lamb",
-      "lemur",
-      "leopard",
-      "lion",
-      "lizard",
-      "llama",
-      "lynx",
-      "mandrill",
-      "marmoset",
-      "mink",
-      "mole",
-      "mongoose",
-      "monkey",
-      "moose",
-      "mountain goat",
-      "mouse",
-      "mule",
-      "muskrat",
-      "mustang",
-      "mynah bird",
-      "newt",
-      "ocelot",
-      "opossum",
-      "orangutan",
-      "oryx",
-      "otter",
-      "ox",
-      "panda",
-      "panther",
-      "parakeet",
-      "parrot",
-      "pig",
-      "platypus",
-      "polar bear",
-      "porcupine",
-      "porpoise",
-      "prairie dog",
-      "puma",
-      "rabbit",
-      "raccoon",
-      "ram",
-      "rat",
-      "reindeer",
-      "reptile",
-      "rhinoceros",
-      "salamander",
-      "seal",
-      "sheep",
-      "shrew",
-      "silver fox",
-      "skunk",
-      "sloth",
-      "snake",
-      "squirrel",
-      "tapir",
-      "tiger",
-      "toad",
-      "turtle",
-      "walrus",
-      "warthog",
-      "weasel",
-      "whale",
-      "wildcat",
-      "wolf",
-      "wolverine",
-      "wombat",
-      "woodchuck",
-      "yak",
-      "zebra"
+const municipalities = [ // List of Canadian city names inside an array. List from https://github.com/dariusk/corpora/blob/master/data/geography/canadian_municipalities.json
+      "toronto",
+      "montreal",,
+      "calgary",
+      "ottawa",
+      "edmonton",
+      "mississauga",
+      "winnipeg",
+      "vancouver",
+      "brampton",
+      "hamilton",
+      "quebec city",
+      "surrey",
+      "laval",
+      "halifax",
+      "london",
+      "markham",
+      "vaughan",
+      "gatineau",
+      "longueuil",
+      "burnaby",
+      "saskatoon",
+      "kitchener",
+      "windsor",
+      "regina",
+      "richmond",
+      "richmond hill",
+      "oakville",
+      "burlington",
+      "greater sudbury",
+      "sherbrooke",
+      "oshawa",
+      "saguenay",
+      "barrie",
+      "abbotsford",
+      "st. catharines",
+      "cambridge",
+      "coquitlam",
+      "kingston",
+      "whitby",
+      "guelph",
+      "kelowna",
+      "saanich",
+      "ajax",
+      "thunder bay",
+      "terrebonne",
+      "st. john's",
+      "langley",
+      "delta",
+      "waterloo",
+      "cape breton",
+      "brantford",
+      "strathcona county",
+      "red deer",
+      "pickering",
+      "kamloops",
+      "clarington",
+      "north vancouver",
+      "milton",
+      "nanaimo",
+      "lethbridge",
+      "niagara falls",
+      "repentigny",
+      "victoria",
+      "newmarket",
+      "brossard",
+      "peterborough",
+      "chilliwack",
+      "maple ridge",
+      "sault ste. marie",
+      "kawartha lakes",
+      "sarnia",
+      "prince george",
+      "drummondville",
+      "saint john",
+      "moncton",
+      "new westminster",
+      "wood buffalo",
+      "granby",
+      "norfolk county",
+      "st. albert",
+      "medicine hat",
+      "caledon",
+      "halton hills",
+      "port coquitlam",
+      "fredericton",
+      "north bay",
+      "blainville",
+      "aurora",
+      "welland",
+      "shawinigan",
+      "belleville"
     ];
 
-    let staticText = {
-      string: `I think it is a...`,
-      x: 320,
-      y: 160
+    let titleText = {
+      string: `Name that Canadian Municipality!`,
+      x: 960,
+      y: 270
+    };
+
+    let instructionText = {
+      string: `A voice says the name of a municipality backwards. You say "It must be" followed by your guess.`,
+      x: 960,
+      y: 350
+    };
+
+    let startText = {
+      string: `Press "Enter" to Begin`,
+      x: 960,
+      y: 550
+    };
+
+    let simulationText = {
+      string: `It must be...`,
+      x: 960,
+      y: 270
+    };
+
+    let simulationInstructionText = {
+      string: `Left "Click" to generate voice.`,
+      x: 960,
+      y: 810
     };
 
     let fontSize = {
-      small: 22, // Sets a font size of 22px.
-      medium: 32, // Sets a font size of 32px.
-      large: 46 // Sets a font size of 46px.
+      small: 16, // Sets a font size of 16px.
+      medium: 36, // Sets a font size of 36px.
+      large: 96 // Sets a font size of 96px.
     };
 
     let colour = {
@@ -163,13 +144,15 @@ const animals = [ // List of animal names inside an array. List from https://git
       },
     }
 
-    let currentAnimal = ``; // Chosen random animal will be placed inside the variable. Starts out as empty.
+    let currentMunicipality = ``; // Chosen random municipality will be placed inside the variable. Starts out as empty.
     let currentAnswer = ``; // Variable that stores the value of what the user guessed. Starts out as empty.
+    let state = `landing`; // Makes the program to start in the landing state.
+
 
 
 // Description of setup()
 function setup() {
-  canvas = createCanvas(640, 480);
+  canvas = createCanvas(1920, 1080);
   windowResized(); //  Calls windowResized function.
   generateAnnyang(); // Calls the generateAnnyang function.
 }
@@ -198,7 +181,7 @@ function windowResized() {
 function generateAnnyang () {
   if (annyang) { // Connects annyang API.
     let commands = { // defines command object.
-      'I think it is a *animal': guessAnimal // Parameter with splat variable. This allows the user to guess the animal name.
+      'It must be *municipality': guessMunicipality // Parameter with splat variable. This allows the user to guess the municipality name.
     };
     annyang.addCommands(commands); // Tells annyang to listen to commands variable.
     annyang.start(); // Initiates speech recognition.
@@ -212,24 +195,87 @@ function generateAnnyang () {
 
 // Description of draw()
 function draw() {
-  background(0); // Sets the background to black in colour.
-  displayStaticText(); // Calls the displayStaticText function.
-  diaplayAnswer(); // Calls the displayAnswer function.
+
+
+  if (state === `landing`) { // Indicates that when the state equates to "landing", start said state.
+    landing(); // Calls landing function.
+  }
+  else if (state === `simulation`) { // Indicates that when the state equates to "simulation", start said state.
+    simulation(); // Calls simulation function.
+  }
+
 }
 
-function displayStaticText() {
+function landing() {
+  background(155); // Sets the background to black in colour.
+
+  displayTitleText();
+  displayInstructionText();
+  displayStartText();
+}
+
+function displayTitleText() {
   push();
-  textSize(fontSize.medium); // Displays the font size 46px.
+  textSize(fontSize.large); // Displays the font size 96px.
   fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in orange colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
-  text(staticText.string, staticText.x, staticText.y); // Displays the title of the game.
+  text(titleText.string, titleText.x, titleText.y); // Displays the title of the game.
   pop();
 }
 
 
 
-function diaplayAnswer() {
-  if (currentAnswer === currentAnimal) { // If the user answer is the correct animal name, then...
+function displayInstructionText() {
+  push();
+  textSize(fontSize.medium); // Displays the font size 36px.
+  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in orange colour.
+  textAlign(CENTER, CENTER); // Dictates the text alignment style.
+  text(instructionText.string, instructionText.x, instructionText.y); // Displays the title of the game.
+  pop();
+}
+
+
+
+function displayStartText() {
+  push();
+  textSize(fontSize.medium); // Displays the font size 36px.
+  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in orange colour.
+  textAlign(CENTER, CENTER); // Dictates the text alignment style.
+  text(startText.string, startText.x, startText.y); // Displays the title of the game.
+  pop();
+}
+
+
+
+function simulation() {
+  background(0); // Sets the background to black in colour.
+  displaySimulationText(); // Calls the displayStaticText function.
+  displaySimulationInstructionText(); // Calls the displayAnswer function.
+  displayAnswer();
+}
+
+
+function displaySimulationText() {
+  push();
+  textSize(fontSize.large); // Displays the font size 96px.
+  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in orange colour.
+  textAlign(CENTER, CENTER); // Dictates the text alignment style.
+  text(simulationText.string, simulationText.x, simulationText.y); // Displays the title of the game.
+  pop();
+}
+
+function displaySimulationInstructionText() {
+  push();
+  textSize(fontSize.medium); // Displays the font size 36px.
+  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in orange colour.
+  textAlign(CENTER, CENTER); // Dictates the text alignment style.
+  text(simulationInstructionText.string, simulationInstructionText.x, simulationInstructionText.y); // Displays the title of the game.
+  pop();
+}
+
+
+function displayAnswer() {
+  if (currentAnswer === currentMunicipality) { // If the user answer is the correct municipality name, then...
     fill(0, 255, 0); // Fill the background as green in colour.
   }
   else { // Otherwise...
@@ -240,9 +286,9 @@ function diaplayAnswer() {
 
 
 
-function sayAnimalBackwards(animal) { // Asigns reverseAnimal the result of animal.
-  let reverseAnimal = reverseString(animal); // Asigns reverseAnimal the result of reverseString.
-  responsiveVoice.speak(reverseAnimal); // reverseAnimal value is spoken aloud, via the responsiveVoice API.
+function sayMunicipalityBackwards(municipality) { // Asigns reversemunicipality the result of municipality.
+  let reversemunicipality = reverseString(municipality); // Asigns reversemunicipality the result of reverseString.
+  responsiveVoice.speak(reversemunicipality); // reversemunicipality value is spoken aloud, via the responsiveVoice API.
 }
 
 
@@ -256,15 +302,15 @@ function reverseString(string) { // Reverses the provided string.
 
 
 
-function guessAnimal(animal) { // Calls animal parameter, which is the word that the user guessed.
-  currentAnswer = animal.toLowerCase(); // Assign the guess inside the animal pararmter into the currentAnswer. Converts the guess toLowerCase.
+function guessMunicipality(municipality) { // Calls municipality parameter, which is the word that the user guessed.
+  currentAnswer = municipality.toLowerCase(); // Assign the guess inside the municipality pararmter into the currentAnswer. Converts the guess toLowerCase.
   oralFeedback(); // Calls oralFeedback function for voice dictation.
 }
 
 
 
 function oralFeedback() {
-  if (currentAnswer === currentAnimal) { // If the user answer is the correct animal name, then...
+  if (currentAnswer === currentMunicipality) { // If the user answer is the correct municipality name, then...
     responsiveVoice.speak("Good job mate!", "UK English Male"); // Congratulate the user.
   }
   else { // Otherwise...
@@ -276,12 +322,21 @@ function oralFeedback() {
 
 function nextQuestion() { //
   currentAnswer = ``; // Clears answer from screen. Initially displays nothing on screen.
-  currentAnimal = random(animals); // Fetch's random value from animals array.
-  sayAnimalBackwards(currentAnimal); // Calls function to speak the animal name.
+  currentMunicipality = random(municipalities); // Fetch's random value from municipalities array.
+  sayMunicipalityBackwards(currentMunicipality); // Calls function to speak the municipality name.
 }
 
 
 
 function mousePressed() {
-  nextQuestion(); // Call the nextQuestion function
+  if (state === `simulation`) {
+    nextQuestion(); // Call the nextQuestion function
+  }
+}
+
+// KEYPRESSED FUNCTION
+function keyPressed () { // p5 function to perform action with keyboard input.
+  if (keyCode === 13 && state === `landing`) { // When the "Enter" key is pushed, and the state is in "landing", switch to the "simulation" state.
+    state = `simulation`; // Runs the "simulation" state.
+  }
 }
