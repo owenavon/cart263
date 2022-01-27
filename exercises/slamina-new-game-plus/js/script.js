@@ -113,7 +113,7 @@ const municipalities = [ // List of Canadian city names inside an array. List fr
     };
 
     let startText = {
-      string: `Press "Enter" to Begin`,
+      string: `Click Anywhere to Begin`,
       x: 960,
       y: 550
     };
@@ -125,7 +125,7 @@ const municipalities = [ // List of Canadian city names inside an array. List fr
     };
 
     let simulationInstructionText = {
-      string: `Left "Click" to generate voice.`,
+      string: `Clap to generate voice.`,
       x: 960,
       y: 810
     };
@@ -147,14 +147,20 @@ const municipalities = [ // List of Canadian city names inside an array. List fr
     let currentMunicipality = ``; // Chosen random municipality will be placed inside the variable. Starts out as empty.
     let currentAnswer = ``; // Variable that stores the value of what the user guessed. Starts out as empty.
     let state = `landing`; // Makes the program to start in the landing state.
+    let mic = undefined;
 
 
 
 // Description of setup()
 function setup() {
   canvas = createCanvas(1920, 1080);
+  audioInLink(); // Calls audioInLink function.
   windowResized(); //  Calls windowResized function.
   generateAnnyang(); // Calls the generateAnnyang function.
+}
+
+function audioInLink() {
+  mic = new p5.AudioIn(); // Links to p5 AudioIn Library.
 }
 
 function windowResized() {
@@ -178,6 +184,8 @@ function windowResized() {
   canvas.elt.style.height = `${newHeight}px`; // Set the canvas's CSS width and height properties to the new height value.
 }
 
+
+
 function generateAnnyang () {
   if (annyang) { // Connects annyang API.
     let commands = { // defines command object.
@@ -190,59 +198,60 @@ function generateAnnyang () {
     textStyle(BOLD); // Displays text in bold font family
     textAlign(CENTER, CENTER); // Displays text in the centre (vertically & horizontally) of the canvas.
   }
+  else {
+    alert(`Please visit this page in Google Chrome on a desktop.`)
+  }
 }
+
 
 
 // Description of draw()
 function draw() {
-
-
   if (state === `landing`) { // Indicates that when the state equates to "landing", start said state.
     landing(); // Calls landing function.
   }
   else if (state === `simulation`) { // Indicates that when the state equates to "simulation", start said state.
     simulation(); // Calls simulation function.
   }
-
 }
 
 function landing() {
   background(155); // Sets the background to black in colour.
 
-  displayTitleText();
-  displayInstructionText();
-  displayStartText();
+  displayTitleText(); // Calls displayTitleText function
+  displayInstructionText(); // Calls displayInstructionText function.
+  displayStartText(); // Calls displayStartText function.
 }
 
 function displayTitleText() {
-  push();
+  push(); // Isolates code from using global properties.
   textSize(fontSize.large); // Displays the font size 96px.
   fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in orange colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
   text(titleText.string, titleText.x, titleText.y); // Displays the title of the game.
-  pop();
+  pop(); // Isolates code from using global properties.
 }
 
 
 
 function displayInstructionText() {
-  push();
+  push(); // Isolates code from using global properties.
   textSize(fontSize.medium); // Displays the font size 36px.
   fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in orange colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
   text(instructionText.string, instructionText.x, instructionText.y); // Displays the title of the game.
-  pop();
+  pop(); // Isolates code from using global properties.
 }
 
 
 
 function displayStartText() {
-  push();
+  push(); // Isolates code from using global properties.
   textSize(fontSize.medium); // Displays the font size 36px.
   fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in orange colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
   text(startText.string, startText.x, startText.y); // Displays the title of the game.
-  pop();
+  pop(); // Isolates code from using global properties.
 }
 
 
@@ -251,26 +260,27 @@ function simulation() {
   background(0); // Sets the background to black in colour.
   displaySimulationText(); // Calls the displayStaticText function.
   displaySimulationInstructionText(); // Calls the displayAnswer function.
-  displayAnswer();
+  displayAnswer(); // Calls the displayAnswer function.
+  clapToNextQuestion(); // Calls the clapToNextQuestion function.
 }
 
 
 function displaySimulationText() {
-  push();
+  push(); // Isolates code from using global properties.
   textSize(fontSize.large); // Displays the font size 96px.
   fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in orange colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
   text(simulationText.string, simulationText.x, simulationText.y); // Displays the title of the game.
-  pop();
+  pop(); // Isolates code from using global properties.
 }
 
 function displaySimulationInstructionText() {
-  push();
+  push(); // Isolates code from using global properties.
   textSize(fontSize.medium); // Displays the font size 36px.
   fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in orange colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
   text(simulationInstructionText.string, simulationInstructionText.x, simulationInstructionText.y); // Displays the title of the game.
-  pop();
+  pop(); // Isolates code from using global properties.
 }
 
 
@@ -327,16 +337,17 @@ function nextQuestion() { //
 }
 
 
+function clapToNextQuestion() {
+  let level = mic.getLevel(); // Allows
 
-function mousePressed() {
-  if (state === `simulation`) {
+  if (level > 0.6) { // Indicates that then the level reaches 0.6 or louder, then...
     nextQuestion(); // Call the nextQuestion function
   }
 }
 
 // KEYPRESSED FUNCTION
-function keyPressed () { // p5 function to perform action with keyboard input.
-  if (keyCode === 13 && state === `landing`) { // When the "Enter" key is pushed, and the state is in "landing", switch to the "simulation" state.
-    state = `simulation`; // Runs the "simulation" state.
-  }
+function mousePressed () { // p5 function to perform action with keyboard input.
+  state = `simulation`; // Runs the "simulation" state.
+  mic.start(); // Starts microphone input.
+  userStartAudio(); // starts the AudioContext on a user gesture, to enable audio input in browser.
 }
