@@ -2,7 +2,7 @@
 // Exercise 02: Slamina New Game Plus
 // Owen Avon
 
-// A guessing game in which the page pronounces the name of an municipality backwards and the user has to figure out what it was and say the name forwards.
+// A guessing game in which an automated voice says the name of a Canadian municipality "backwards". The user's objective is to say the name of the Canadian municipality "forwards".
 
 "use strict";
 
@@ -107,7 +107,7 @@ let titleText = {
 };
 
 let instructionText = {
-  string: `A voice says the name of a municipality backwards. You say "It must be" followed by your guess.`,
+  string: `The name of a municipality will be voiced backwards. You say "It must be" followed by your guess.`,
   x: 960,
   y: 350
 };
@@ -115,7 +115,7 @@ let instructionText = {
 let startText = {
   string: `Click Anywhere to Begin`,
   x: 960,
-  y: 550
+  y: 575
 };
 
 let simulationText = {
@@ -131,8 +131,8 @@ let simulationInstructionText = {
 };
 
 let fontSize = {
-  small: 16, // Sets a font size of 16px.
-  medium: 32, // Sets a font size of 36px.
+  small: 26, // Sets a font size of 26px.
+  medium: 36, // Sets a font size of 36px.
   large: 96 // Sets a font size of 96px.
 };
 
@@ -152,6 +152,8 @@ let colour = {
 let currentMunicipality = ``; // Chosen random municipality will be placed inside the variable. Starts out as empty.
 let currentAnswer = ``; // Variable that stores the value of what the user guessed. Starts out as empty.
 let state = `landing`; // Makes the program to start in the landing state.
+let customFont; // Defines customFont.
+let canadaFlag; // Assigns variable to background image.
 let microphone = undefined; // undefined variable that will later be associated to a variable / parameter.
 let halfLoudness = 0.5; // Assigns a value to  microphone input loudness.
 let red = 0; // Sets intial red variable to black in colour.
@@ -160,7 +162,16 @@ let blue = 0; // Sets intial red variable to blue in colour.
 
 
 
-// Description of setup()
+// PRELOAD FUNCTION
+function preload() {
+  canadaFlag = loadImage("assets/images/canada-flag.png"); // Preloads the "Canadian Flag" image for efficient load times.
+
+  customFont = loadFont ("assets/fonts/molly-sans.ttf") // Preloads the custom downloaded font for efficient load times.
+}
+
+
+
+// SETUP FUNCTION
 function setup() {
   canvas = createCanvas(1920, 1080);
   audioInLink(); // Calls audioInLink function.
@@ -168,9 +179,11 @@ function setup() {
   generateAnnyang(); // Calls the generateAnnyang function.
 }
 
+
 function audioInLink() {
   microphone = new p5.AudioIn(); // Links to p5 AudioIn Library.
 }
+
 
 function windowResized() {
   let canvasRatio = height / width; // Calculate ratio of height to width for the canvas.
@@ -178,7 +191,6 @@ function windowResized() {
 
   let newWidth = undefined; // Create variables to store the new width.
   let newHeight = undefined; // Create variables to store the new height.
-
 
   if (windowRatio < canvasRatio) { // If the window ratio is smaller, we'll use the window height to set the basis of our new canvas dimensions.
     newHeight = windowHeight;// Our canvas will fit by setting its height to the window height...
@@ -192,7 +204,6 @@ function windowResized() {
   canvas.elt.style.width = `${newWidth}px`; // Set the canvas's CSS width and height properties to the new width value.
   canvas.elt.style.height = `${newHeight}px`; // Set the canvas's CSS width and height properties to the new height value.
 }
-
 
 
 function generateAnnyang () {
@@ -214,7 +225,7 @@ function generateAnnyang () {
 
 
 
-// Description of draw()
+// DRAW FUNCTION
 function draw() {
   if (state === `landing`) { // Indicates that when the state equates to "landing", start said state.
     landing(); // Calls landing function.
@@ -224,16 +235,21 @@ function draw() {
   }
 }
 
+
+
+// LANDING FUNCTION
 function landing() {
-  background(colour.red.r, colour.red.g, colour.red.b); // Sets the background to black in colour.
+  background(canadaFlag); // Sets the background to black in colour.
 
   displayTitleText(); // Calls displayTitleText function
   displayInstructionText(); // Calls displayInstructionText function.
   displayStartText(); // Calls displayStartText function.
 }
 
+
 function displayTitleText() {
   push(); // Isolates code from using global properties.
+  textFont(customFont); // Displays customFont.ttf.
   textSize(fontSize.large); // Displays the font size 96px.
   fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in orange colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
@@ -242,10 +258,10 @@ function displayTitleText() {
 }
 
 
-
 function displayInstructionText() {
   push(); // Isolates code from using global properties.
-  textSize(fontSize.medium); // Displays the font size 36px.
+  textFont(customFont); // Displays customFont.ttf.
+  textSize(fontSize.small); // Displays the font size 26px.
   fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in orange colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
   text(instructionText.string, instructionText.x, instructionText.y); // Displays the title of the game.
@@ -253,9 +269,9 @@ function displayInstructionText() {
 }
 
 
-
 function displayStartText() {
   push(); // Isolates code from using global properties.
+  textFont(customFont); // Displays customFont.ttf.
   textSize(fontSize.medium); // Displays the font size 36px.
   fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in orange colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
@@ -265,6 +281,7 @@ function displayStartText() {
 
 
 
+// SIMULATION FUNCTION
 function simulation() {
   background(red, green, blue); // Sets the background to black in colour.
   displaySimulationText(); // Calls the displayStaticText function.
@@ -276,6 +293,7 @@ function simulation() {
 
 function displaySimulationText() {
   push(); // Isolates code from using global properties.
+  textFont(customFont); // Displays customFont.ttf.
   textSize(fontSize.large); // Displays the font size 96px.
   fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in orange colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
@@ -283,8 +301,10 @@ function displaySimulationText() {
   pop(); // Isolates code from using global properties.
 }
 
+
 function displaySimulationInstructionText() {
   push(); // Isolates code from using global properties.
+  textFont(customFont); // Displays customFont.ttf.
   textSize(fontSize.medium); // Displays the font size 36px.
   fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in orange colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
@@ -304,12 +324,10 @@ function displayAnswer() {
 }
 
 
-
 function sayMunicipalityBackwards(municipality) { // Asigns reversemunicipality the result of municipality.
   let reversemunicipality = reverseString(municipality); // Asigns reversemunicipality the result of reverseString.
   responsiveVoice.speak(reversemunicipality); // reversemunicipality value is spoken aloud, via the responsiveVoice API.
 }
-
 
 
 function reverseString(string) { // Reverses the provided string.
@@ -320,23 +338,28 @@ function reverseString(string) { // Reverses the provided string.
 }
 
 
-
 function guessMunicipality(municipality) { // Calls municipality parameter, which is the word that the user guessed.
   currentAnswer = municipality.toLowerCase(); // Assign the guess inside the municipality pararmter into the currentAnswer. Converts the guess toLowerCase.
   oralFeedback(); // Calls oralFeedback function for voice dictation.
 }
 
 
-
 function oralFeedback() {
   if (currentAnswer === currentMunicipality) { // If the user answer is the correct municipality name, then...
-    responsiveVoice.speak("Good job mate!", "UK English Male"); // Congratulate the user.
+    responsiveVoice.speak("Good job mate!", "UK English Male", {
+      pitch: 0.9,
+      rate: 1.1,
+      volume: 1
+    }); // Congratulate the user.
   }
   else { // Otherwise...
-    responsiveVoice.speak("nope, better luck next time!", "UK English Male"); // Wish them better luck next time.
+    responsiveVoice.speak("nope, better luck next time!", "UK English Male", {
+      pitch: 0.9,
+      rate: 1.1,
+      volume: 1
+    }); // Wish them better luck next time.
   }
 }
-
 
 
 function nextQuestion() { //
@@ -347,17 +370,17 @@ function nextQuestion() { //
 
 
 function clapToNextQuestion() {
-  let microphoneLevel = microphone.getLevel(); // Allows
+  let microphoneLevel = microphone.getLevel(); // Allows microphone to pickup audio input
 
   if (microphoneLevel > halfLoudness) { // Indicates that then the level reaches 0.6 or louder, then...
-    nextQuestion(); // Call the nextQuestion function
-    red = random (0, 200);
-    green = random (0, 200);
-    blue = random (0, 200);
+    nextQuestion(); // Call the nextQuestion function.
+    red = random (0, 200); // Generates a random dark red value.
+    green = random (0, 200); // Generates a random dark green value.
+    blue = random (0, 200); // Generates a random dark blue value.
   }
 }
 
-// KEYPRESSED FUNCTION
+// MOUSEPRESSED FUNCTION
 function mousePressed () { // p5 function to perform action with keyboard input.
   state = `simulation`; // Runs the "simulation" state.
   microphone.start(); // Starts microphone input.
