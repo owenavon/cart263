@@ -37,6 +37,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   validateSpyCredentials(); // Calls validateSpyCredentials function.
   resetAll(); // Calls resetAll function.
+  generateAnnyang(); // Calls generateAnnyang function.
 }
 
 
@@ -72,27 +73,50 @@ function generateSpyProfile() {
   localStorage.setItem(USER_PROFILE, JSON.stringify(spyProfile)); // Saves spyProfile in the broswer, with a specfifc key
 }
 
+
 function resetAll() {
-  let resetButton = createButton(`Regenerate Profile`);
-  resetButton.mousePressed(regenerateProfile);
+  let resetButton = createButton(`Generate New Profile`); // Assigns a variable to a button.
+  resetButton.mousePressed(generateProfile); // Calls regenerateProfile function upon button press.
 }
 
-function regenerateProfile() {
+
+function generateProfile() {
   localStorage.removeItem(USER_PROFILE); // Clears spy-profile-data rleated broswer storage.
   location.reload(); // Core Javascript that refreshes page.
 }
 
 
+function generateAnnyang () {
+  if (annyang) { // Connects annyang API.
+    let commands = { // defines command object.
+      'sign out': function() {
+        location.reload(); // Core Javascript that refreshes page.
+      }// Parameter with splat variable. This allows the user to guess the municipality name.
+    };
+    annyang.addCommands(commands); // Tells annyang to listen to commands variable.
+    annyang.start(); // Initiates speech recognition.
+  }
+  else {
+    alert(`Please visit this page in Google Chrome on a desktop.`)
+  }
+}
+
+
+
 // Description of draw()
 function draw() {
   background(255);
+  displaySpyProfile();
 
+}
+
+function displaySpyProfile() {
   let profile = `** SPY PROFILE! DO NOT DISTRIBUTE! **
 
-Name: ${spyProfile.name}
-Alias: ${spyProfile.alias}
-Secret weapon: ${spyProfile.secretWeapon}
-Password: ${spyProfile.password}`;
+  Name: ${spyProfile.name}
+  Alias: ${spyProfile.alias}
+  Secret weapon: ${spyProfile.secretWeapon}
+  Password: ${spyProfile.password}`;
 
   push();
   textFont(`Courier, monosapce`);

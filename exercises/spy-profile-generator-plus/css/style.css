@@ -18,3 +18,13 @@ body {
   height: 100vh; /* Body is the height of the viewport */
   overflow: hidden; /* Hide anything that goes off the window size */
 }
+
+button {
+  width: 25%;
+  font-family: "Courier";
+  font-size: 20px;
+  margin-bottom: 10em;
+  margin-left: 10em;
+  padding-bottom: 10px;
+
+}
