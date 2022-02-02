@@ -1,3 +1,19 @@
-# Template p5 project
+# Spy Profile Generator Plus
 
-This is the README file for the entire project. For more official projects you should write information here about the nature of the project, your name, any special explanations of how the project works, etc.
+Exercise 02: Spy Profile Generator Plus
+Owen Avon
+
+Generates a randomized spy profile for the user, and password protects it.
+
+Added functionality:
+
+** Added the ability to clear the browser's cache and generate a new account by a button press, with the use of p5.dom.min.js and CSS.
+** Implemented voice recognition to allow the user to sign out of their account, by saying "sign out". Instruction displays when "signed in".
+** Improve the visual display of the program.
+
+
+Photo Credit:
+"canada-g8e99cfce6_1920.jpg" by "TheDigitalArtist" | Pixabay License (https://pixabay.com/service/license/)
+
+Font Credits:
+"Molly Sans" by Måns Grebäck | Note from author: "This font is for PERSONAL USE ONLY!"

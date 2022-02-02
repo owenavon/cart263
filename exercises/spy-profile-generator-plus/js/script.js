@@ -20,7 +20,8 @@ let spyProfile = {
   name: `**REDACTED**`,
   alias: `**REDACTED**`,
   secretWeapon: `**REDACTED**`,
-  password: `**REDACTED**`
+  password: `**REDACTED**`,
+  instruction: `**REDACTED**`
 };
 
 
@@ -52,6 +53,7 @@ function validateSpyCredentials() {
       spyProfile.alias = data.alias; // Puts spyProfile alias information into data alias information.
       spyProfile.secretWeapon = data.secretWeapon; // Puts spyProfile secretWeapon information into data secretWeapon information.
       spyProfile.password = data.password; // Puts spyProfile password information into data password information.
+      spyProfile.instruction = data.instruction; // Puts spyProfile password information into data password information.
     }
   }
   else { // If there is not save data, then...
@@ -69,6 +71,8 @@ function generateSpyProfile() {
 
   let card = random(tarotData.tarot_interpretations); // Chooses a random element from the tarot_interpretations object.
   spyProfile.password = random(card.keywords); // A random keyword from the "keywords" object is assigned to spyProfile.password.
+
+  spyProfile.instruction = `Say "sign out" to sign out.`; // Generates static text that informs the user how to "sign out".
 
   localStorage.setItem(USER_PROFILE, JSON.stringify(spyProfile)); // Saves spyProfile in the broswer, with a specfifc key
 }
@@ -91,21 +95,20 @@ function generateAnnyang () {
     let commands = { // defines command object.
       'sign out': function() {
         location.reload(); // Core Javascript that refreshes page.
-      }// Parameter with splat variable. This allows the user to guess the municipality name.
+      }
     };
     annyang.addCommands(commands); // Tells annyang to listen to commands variable.
     annyang.start(); // Initiates speech recognition.
   }
-  else {
-    alert(`Please visit this page in Google Chrome on a desktop.`)
+  else { // If the user is not using the Google Chrome broswer, then...
+    alert(`Please visit this page in Google Chrome on a desktop.`) // Tells the end user visiting instructions.
   }
 }
 
 
-
 // Description of draw()
 function draw() {
-  background(255);
+  background(235);
   displaySpyProfile();
 
 }
@@ -116,7 +119,8 @@ function displaySpyProfile() {
   Name: ${spyProfile.name}
   Alias: ${spyProfile.alias}
   Secret weapon: ${spyProfile.secretWeapon}
-  Password: ${spyProfile.password}`;
+  Password: ${spyProfile.password}
+  Instruction: ${spyProfile.instruction}`;
 
   push();
   textFont(`Courier, monosapce`);
