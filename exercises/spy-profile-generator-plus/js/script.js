@@ -12,6 +12,9 @@ const OBJECT_DATA = `https://raw.githubusercontent.com/dariusk/corpora/master/da
 const TAROT_DATA = `https://raw.githubusercontent.com/dariusk/corpora/master/data/divination/tarot_interpretations.json`;
 const USER_PROFILE = `spy-profile-data`;
 
+let instrumentData = undefined;
+let objectData = undefined;
+let tarotData = undefined;
 
 let spyProfile = {
   name: `**REDACTED**`,
@@ -19,10 +22,6 @@ let spyProfile = {
   secretWeapon: `**REDACTED**`,
   password: `**REDACTED**`
 };
-
-let instrumentData = undefined;
-let objectData = undefined;
-let tarotData = undefined;
 
 
 // Description of preload()
@@ -36,7 +35,12 @@ function preload() {
 // Description of setup()
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  validateSpyCredentials(); // Calls validateSpyCredentials function.
+  resetAll(); // Calls resetAll function.
+}
 
+
+function validateSpyCredentials() {
   let data = JSON.parse(localStorage.getItem(USER_PROFILE)); // Converts the specific key from a string to an object.
 
   if (data !== null) { // If there is saved data, then place it into the spyProfile.
@@ -66,6 +70,16 @@ function generateSpyProfile() {
   spyProfile.password = random(card.keywords); // A random keyword from the "keywords" object is assigned to spyProfile.password.
 
   localStorage.setItem(USER_PROFILE, JSON.stringify(spyProfile)); // Saves spyProfile in the broswer, with a specfifc key
+}
+
+function resetAll() {
+  let resetButton = createButton(`Regenerate Profile`);
+  resetButton.mousePressed(regenerateProfile);
+}
+
+function regenerateProfile() {
+  localStorage.removeItem(USER_PROFILE); // Clears spy-profile-data rleated broswer storage.
+  location.reload(); // Core Javascript that refreshes page.
 }
 
 
