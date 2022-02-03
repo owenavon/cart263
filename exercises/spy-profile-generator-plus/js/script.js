@@ -6,7 +6,6 @@
 
 "use strict";
 
-
 const INSTRUMENT_DATA = `https://raw.githubusercontent.com/dariusk/corpora/master/data/music/instruments.json`;
 const OBJECT_DATA = `https://raw.githubusercontent.com/dariusk/corpora/master/data/objects/objects.json`;
 const TAROT_DATA = `https://raw.githubusercontent.com/dariusk/corpora/master/data/divination/tarot_interpretations.json`;
@@ -18,6 +17,7 @@ let tarotData = undefined;
 
 let state = `landing`; // Makes the program to start in the landing state.
 let numbers = ""; // Defines variable
+let successMusic = undefined;
 
 let spyProfile = {
   name: `**REDACTED**`,
@@ -27,26 +27,35 @@ let spyProfile = {
   instruction: `**REDACTED**`
 };
 
-
-
-
-
 let titleText = {
   string: `PROTECTED INFORMATION PORTAL (PIP)`,
   x: 375,
   y: 350
 };
 
-let instructionText = {
-  string: `Enter the keypad numbers for PIP`,
+let instructionHeading = {
+  string: `Click on "Generate New Profile".`,
   x: 375,
-  y: 400
+  y: 385
 };
 
+let instructionSubheading = {
+  string: `Type the keypad numbers for PIP, followed by "Enter".`,
+  x: 375,
+  y: 410
+};
+
+let answerField = {
+  x: 375,
+  y: 495,
+  w: 280,
+  h: 35
+}
+
 let fontSize = {
-  small: 20, // Sets a font size of 26px.
-  medium: 28, // Sets a font size of 36px.
-  large: 32 // Sets a font size of 96px.
+  small: 20, // Sets a font size of 20px.
+  medium: 24, // Sets a font size of 24px.
+  large: 32 // Sets a font size of 32px.
 };
 
 let colour = {
@@ -63,25 +72,23 @@ let colour = {
 }
 
 
-
-
-
-
 // PRELOAD
 function preload() {
   instrumentData = loadJSON(INSTRUMENT_DATA); // Preloads JSON instrumentData file from URL.
   objectData = loadJSON(OBJECT_DATA); // Preloads JSON objectData file from URL.
   tarotData = loadJSON(TAROT_DATA); // Preloads JSON tarotData file from URL.
+
+  successMusic = loadSound (`./assets/sounds/bark.wav`);
 }
 
 
 // Description of setup()
 function setup() {
   createCanvas(750, 750);
-  validateSpyCredentials(); // Calls validateSpyCredentials function.
-  resetAll(); // Calls resetAll function.
+  newInformation(); // Calls newInformation function.
   generateAnnyang(); // Calls generateAnnyang function.
 }
+
 
 
 function validateSpyCredentials() {
@@ -96,12 +103,16 @@ function validateSpyCredentials() {
       spyProfile.secretWeapon = data.secretWeapon; // Puts spyProfile secretWeapon information into data secretWeapon information.
       spyProfile.password = data.password; // Puts spyProfile password information into data password information.
       spyProfile.instruction = data.instruction; // Puts spyProfile password information into data password information.
+      playMusicUponPassword();
     }
   }
+
+
   else { // If there is not save data, then...
     generateSpyProfile(); // Calls the generateSpyProfile function.
   }
 }
+
 
 
 function generateSpyProfile() {
@@ -114,36 +125,35 @@ function generateSpyProfile() {
   let card = random(tarotData.tarot_interpretations); // Chooses a random element from the tarot_interpretations object.
   spyProfile.password = random(card.keywords); // A random keyword from the "keywords" object is assigned to spyProfile.password.
 
-  spyProfile.instruction = `Say "sign out" to sign out.`; // Generates static text that informs the user how to "sign out".
+  spyProfile.instruction = `Say "destory data" to sign out.`; // Generates static text that informs the user how to "sign out".
 
   localStorage.setItem(USER_PROFILE, JSON.stringify(spyProfile)); // Saves spyProfile in the broswer, with a specfifc key
 }
 
 
-function resetAll() {
-  let resetButton = createButton(`Generate New Profile`); // Assigns a variable to a button.
-  resetButton.mousePressed(generateProfile); // Calls regenerateProfile function upon button press.
+
+function newInformation() {
+  let regenInformation = createButton(`Regenerate Information`); // Assigns a variable to a button.
+  regenInformation.mousePressed(generateProfile); // Calls regenerateProfile function upon button press.
 }
 
 
 function generateProfile() {
-  localStorage.removeItem(USER_PROFILE); // Clears spy-profile-data rleated broswer storage.
-  location.reload(); // Core Javascript that refreshes page.
-}
-
-function keyPressed() {
-  if (key === `c`) {
-    localStorage.removeItem(USER_PROFILE);
-    spyProfile = undefined;
+  if (state === `simulation`) { // If the state is equal to "simulation", then...
+    spyProfile.alias = random(instrumentData.instruments); // A random keyword from the "keywords" object is re-shuffled.
+    spyProfile.secretWeapon = random(objectData.objects); // A random element from the "objects" property is re-shuffled.
+    // spyProfile.password = data.password; // Puts spyProfile password information into data password information.
   }
 }
+
 
 
 function generateAnnyang () {
   if (annyang) { // Connects annyang API.
     let commands = { // defines command object.
-      'sign out': function() {
-        location.reload(); // Core Javascript that refreshes page.
+      'destory data': function() {
+        localStorage.removeItem(USER_PROFILE); // Clears spy-profile-data rleated broswer storage.
+        spyProfile = undefined; // Removes visible data from screen.
       }
     };
     annyang.addCommands(commands); // Tells annyang to listen to commands variable.
@@ -153,7 +163,6 @@ function generateAnnyang () {
     alert(`Please visit this page in Google Chrome on a desktop.`) // Tells the end user visiting instructions.
   }
 }
-
 
 
 
@@ -169,45 +178,67 @@ function draw() {
 
 
 
-
 // LANDING FUNCTION
 function landing() {
-  background(0);
+  background(0); // Sets the background colour to black.
   displayTitleText(); // Calls displayTitleText function
-  displayInstructionText(); // Calls displayInstructionText function.
-  displayAnswerField(); // Displays the text that generates from keyTyped.
+  displayInstructionHeading(); // Calls displayInstructionHeading function.
+  displayInstructionSubHeading(); // Calls displayInstructionSubHeading function.
+  displayAnswerField(); // Calls the white answer input field box.
+  displayUserInput(); // Calls the text that generates from keyTyped.
 }
+
 
 
 function displayTitleText() {
   push(); // Isolates code from using global properties.
-  // textFont(customFont); // Displays customFont.ttf.
-  textSize(fontSize.large); // Displays the font size 96px.
-  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in orange colour.
+  textFont(`Courier, monosapce`); // Displays text font as "courier"
+  textSize(fontSize.large); // Displays the font size 32px.
+  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in white colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
   text(titleText.string, titleText.x, titleText.y); // Displays the title of the game.
   pop(); // Isolates code from using global properties.
 }
 
 
-function displayInstructionText() {
+
+function displayInstructionHeading() {
   push(); // Isolates code from using global properties.
-  // textFont(customFont); // Displays customFont.ttf.
-  textSize(fontSize.small); // Displays the font size 26px.
-  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in orange colour.
+  textFont(`Courier, monosapce`); // Displays text font as "courier"
+  textSize(fontSize.small); // Displays the font size 20px.
+  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in white colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
-  text(instructionText.string, instructionText.x, instructionText.y); // Displays the title of the game.
+  text(instructionHeading.string, instructionHeading.x, instructionHeading.y); // Displays the title of the game.
   pop(); // Isolates code from using global properties.
 }
 
 
 
+function displayInstructionSubHeading() {
+  push(); // Isolates code from using global properties.
+  textFont(`Courier, monosapce`); // Displays text font as "courier"
+  textSize(fontSize.small); // Displays the font size 20px.
+  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in white colour.
+  textAlign(CENTER, CENTER); // Dictates the text alignment style.
+  text(instructionSubheading.string, instructionSubheading.x, instructionSubheading.y); // Displays the title of the game.
+  pop(); // Isolates code from using global properties.
+}
+
+
 
 function displayAnswerField() {
-  // textFont(simFont); // Changes the font from the default to a custom font.
-  textSize(fontSize.small); // Displays the font size 26px.
+  rect(answerField.x, answerField.y, answerField.w, answerField.h); // Draws the answerField input field.
+  rectMode(CENTER); // Draws the rectangle from the center outwards.
+  fill(0); // Sets the answer field input box as white in colour.
+}
+
+
+
+function displayUserInput() {
+  textFont(`Courier, monosapce`); // Displays text font as "courier"
+  textSize(fontSize.small); // Displays the font size 20px.
   text(numbers, width / 2, height / 1.5); // Coordinates that state where the keytyped content will appear.
-  fill(255); // Displays the instructions in orange colour.
+  fill(255); // Displays the instructions in white colour.
 }
 
 
@@ -215,8 +246,10 @@ function displayAnswerField() {
 // SIMULATION FUNCTION
 function simulation() {
   background(235);
-  displaySpyProfile();
+  displaySpyProfile(); // Calls displaySpyProfile.
 }
+
+
 
 function displaySpyProfile() {
   let profile = `** SPY PROFILE! DO NOT DISTRIBUTE! **
@@ -229,17 +262,23 @@ function displaySpyProfile() {
 
 
   if (spyProfile !== undefined) {
-    push();
+    push(); // Isolates code from using global properties.
     textFont(`Courier, monosapce`);
-    textSize(24);
-    textAlign(LEFT, TOP);
-    fill(0);
-    text(profile, 100, 100);
-    pop();
+    textSize(fontSize.medium);
+    textAlign(LEFT, TOP); // Aligns the text content.
+    fill(0); // Displays the font as black in colour.
+    text(profile, 40, 100); // Displays the profile information at the top left of the canvas.
+    pop(); // Isolates code from using global properties.
   }
 }
 
 
+
+function playMusicUponPassword() {
+  if (!successMusic.isPlaying()) { // States that if the click sound effect is not playing, it will be played everytime the basket and goldAcorn touch.
+    successMusic.play();
+  }
+}
 
 
 
@@ -251,6 +290,7 @@ function keyTyped() {
 }
 
 
+
 // KEYPRESSED FUNCTION
 function keyPressed() {
   if (state === `landing`) {
@@ -259,6 +299,7 @@ function keyPressed() {
     }
     else if (numbers === `747`) { // Change state to cameraFlash if user types in "webcam" followed by "Enter".
       state = `simulation`; // Swaps to cameraFlash STATE.
+      validateSpyCredentials(); // Calls validateSpyCredentials function.
     }
   }
 }
