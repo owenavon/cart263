@@ -11,9 +11,6 @@ Added functionality:
 ** Implemented voice recognition to allow the user to sign out of their account, by saying "sign out". Instruction displays when "signed in".
 ** Improve the visual display of the program.
 
-
 Photo Credit:
-"canada-g8e99cfce6_1920.jpg" by "TheDigitalArtist" | Pixabay License (https://pixabay.com/service/license/)
 
 Font Credits:
-"Molly Sans" by Måns Grebäck | Note from author: "This font is for PERSONAL USE ONLY!"

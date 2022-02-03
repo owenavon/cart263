@@ -16,6 +16,9 @@ let instrumentData = undefined;
 let objectData = undefined;
 let tarotData = undefined;
 
+let state = `landing`; // Makes the program to start in the landing state.
+let numbers = ""; // Defines variable
+
 let spyProfile = {
   name: `**REDACTED**`,
   alias: `**REDACTED**`,
@@ -25,7 +28,46 @@ let spyProfile = {
 };
 
 
-// Description of preload()
+
+
+
+let titleText = {
+  string: `PROTECTED INFORMATION PORTAL (PIP)`,
+  x: 375,
+  y: 350
+};
+
+let instructionText = {
+  string: `Enter the keypad numbers for PIP`,
+  x: 375,
+  y: 400
+};
+
+let fontSize = {
+  small: 20, // Sets a font size of 26px.
+  medium: 28, // Sets a font size of 36px.
+  large: 32 // Sets a font size of 96px.
+};
+
+let colour = {
+  white: {
+    r: 255,
+    g: 255,
+    b: 255
+  },
+  red: {
+    r: 130,
+    g: 0,
+    b: 0
+  }
+}
+
+
+
+
+
+
+// PRELOAD
 function preload() {
   instrumentData = loadJSON(INSTRUMENT_DATA); // Preloads JSON instrumentData file from URL.
   objectData = loadJSON(OBJECT_DATA); // Preloads JSON objectData file from URL.
@@ -35,7 +77,7 @@ function preload() {
 
 // Description of setup()
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(750, 750);
   validateSpyCredentials(); // Calls validateSpyCredentials function.
   resetAll(); // Calls resetAll function.
   generateAnnyang(); // Calls generateAnnyang function.
@@ -89,6 +131,13 @@ function generateProfile() {
   location.reload(); // Core Javascript that refreshes page.
 }
 
+function keyPressed() {
+  if (key === `c`) {
+    localStorage.removeItem(USER_PROFILE);
+    spyProfile = undefined;
+  }
+}
+
 
 function generateAnnyang () {
   if (annyang) { // Connects annyang API.
@@ -106,11 +155,67 @@ function generateAnnyang () {
 }
 
 
-// Description of draw()
+
+
+// DRAW FUNCTION
 function draw() {
+  if (state === `landing`) { // Indicates that when the state equates to "landing", start said state.
+    landing(); // Calls landing function.
+  }
+  else if (state === `simulation`) { // Indicates that when the state equates to "simulation", start said state.
+    simulation(); // Calls simulation function.
+  }
+}
+
+
+
+
+// LANDING FUNCTION
+function landing() {
+  background(0);
+  displayTitleText(); // Calls displayTitleText function
+  displayInstructionText(); // Calls displayInstructionText function.
+  displayAnswerField(); // Displays the text that generates from keyTyped.
+}
+
+
+function displayTitleText() {
+  push(); // Isolates code from using global properties.
+  // textFont(customFont); // Displays customFont.ttf.
+  textSize(fontSize.large); // Displays the font size 96px.
+  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in orange colour.
+  textAlign(CENTER, CENTER); // Dictates the text alignment style.
+  text(titleText.string, titleText.x, titleText.y); // Displays the title of the game.
+  pop(); // Isolates code from using global properties.
+}
+
+
+function displayInstructionText() {
+  push(); // Isolates code from using global properties.
+  // textFont(customFont); // Displays customFont.ttf.
+  textSize(fontSize.small); // Displays the font size 26px.
+  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in orange colour.
+  textAlign(CENTER, CENTER); // Dictates the text alignment style.
+  text(instructionText.string, instructionText.x, instructionText.y); // Displays the title of the game.
+  pop(); // Isolates code from using global properties.
+}
+
+
+
+
+function displayAnswerField() {
+  // textFont(simFont); // Changes the font from the default to a custom font.
+  textSize(fontSize.small); // Displays the font size 26px.
+  text(numbers, width / 2, height / 1.5); // Coordinates that state where the keytyped content will appear.
+  fill(255); // Displays the instructions in orange colour.
+}
+
+
+
+// SIMULATION FUNCTION
+function simulation() {
   background(235);
   displaySpyProfile();
-
 }
 
 function displaySpyProfile() {
@@ -122,11 +227,38 @@ function displaySpyProfile() {
   Password: ${spyProfile.password}
   Instruction: ${spyProfile.instruction}`;
 
-  push();
-  textFont(`Courier, monosapce`);
-  textSize(24);
-  textAlign(LEFT, TOP);
-  fill(0);
-  text(profile, 100, 100);
-  pop();
+
+  if (spyProfile !== undefined) {
+    push();
+    textFont(`Courier, monosapce`);
+    textSize(24);
+    textAlign(LEFT, TOP);
+    fill(0);
+    text(profile, 100, 100);
+    pop();
+  }
+}
+
+
+
+
+
+// KEYTYPED FUNCTION
+function keyTyped() {
+  if (state === `landing`) { // If the state is in cameraRiddle then...
+    numbers = numbers + key; // Add key function to each pressed letter.
+  }
+}
+
+
+// KEYPRESSED FUNCTION
+function keyPressed() {
+  if (state === `landing`) {
+    if (keyCode === BACKSPACE) { // Allows the "Backspace" key remove previous letters.
+      numbers = numbers.slice(0, numbers.length - 1); // This is a way to remove the last character in a string!
+    }
+    else if (numbers === `747`) { // Change state to cameraFlash if user types in "webcam" followed by "Enter".
+      state = `simulation`; // Swaps to cameraFlash STATE.
+    }
+  }
 }
