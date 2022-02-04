@@ -17,32 +17,29 @@ let tarotData = undefined;
 
 let state = `landing`; // Makes the program to start in the landing state.
 let numbers = ""; // Defines variable
-let successMusic = undefined;
+
+let accessGrantedSFX = undefined;
+let accessDeniedSFX = undefined;
 
 let spyProfile = {
   name: `**REDACTED**`,
   alias: `**REDACTED**`,
   secretWeapon: `**REDACTED**`,
   password: `**REDACTED**`,
-  instruction: `**REDACTED**`
+  signOut: `**REDACTED**`,
+  abort: `**REDACTED**`
 };
 
 let titleText = {
   string: `PROTECTED INFORMATION PORTAL (PIP)`,
   x: 375,
-  y: 350
+  y: 325
 };
 
 let instructionHeading = {
-  string: `Click on "Generate New Profile".`,
-  x: 375,
-  y: 385
-};
-
-let instructionSubheading = {
   string: `Type the keypad numbers for PIP, followed by "Enter".`,
   x: 375,
-  y: 410
+  y: 355
 };
 
 let answerField = {
@@ -78,7 +75,8 @@ function preload() {
   objectData = loadJSON(OBJECT_DATA); // Preloads JSON objectData file from URL.
   tarotData = loadJSON(TAROT_DATA); // Preloads JSON tarotData file from URL.
 
-  successMusic = loadSound (`./assets/sounds/bark.wav`);
+  accessGrantedSFX = loadSound (`./assets/sounds/granted.mp3`); // Preloads granted.mp3
+  accessDeniedSFX = loadSound (`./assets/sounds/denied.mp3`); // Preloads denied.mp3
 }
 
 
@@ -87,6 +85,28 @@ function setup() {
   createCanvas(750, 750);
   newInformation(); // Calls newInformation function.
   generateAnnyang(); // Calls generateAnnyang function.
+}
+
+
+
+function generateAnnyang () {
+  if (annyang) { // Connects annyang API.
+    let commands = { // defines command object.
+      'sign out': function() {
+        location.reload(); // Core Javascript that clears page data.
+        state = `landing`; // Switch state to landing.
+      },
+      'destroy account': function() {
+        localStorage.removeItem(USER_PROFILE); // Clears spy-profile-data rleated broswer storage.
+        location.reload(); // Core Javascript that clears page data.
+      }
+    };
+    annyang.addCommands(commands); // Tells annyang to listen to commands variable.
+    annyang.start(); // Initiates speech recognition.
+  }
+  else { // If the user is not using the Google Chrome broswer, then...
+    alert(`Please visit this page in Google Chrome on a desktop.`) // Tells the end user visiting instructions.
+  }
 }
 
 
@@ -102,11 +122,16 @@ function validateSpyCredentials() {
       spyProfile.alias = data.alias; // Puts spyProfile alias information into data alias information.
       spyProfile.secretWeapon = data.secretWeapon; // Puts spyProfile secretWeapon information into data secretWeapon information.
       spyProfile.password = data.password; // Puts spyProfile password information into data password information.
-      spyProfile.instruction = data.instruction; // Puts spyProfile password information into data password information.
-      playMusicUponPassword();
+      spyProfile.signOut = data.signOut; // Displays instruction on how to sign out of account.
+      spyProfile.abort = data.abort; // Displays instruction on how to delete account.
+      generateProfile(); // Calls generateProfile function, only of the password is correct.
+      accessGrantedAudio(); // Calls accessGrantedAudio function, only of the password is correct.
+    }
+
+    else if (password !== data.password) { // If inputted password was not equal data.password, then...
+      accessDeniedAudio(); // Calls accessDeniedAudio function, only of the password is correct.
     }
   }
-
 
   else { // If there is not save data, then...
     generateSpyProfile(); // Calls the generateSpyProfile function.
@@ -125,43 +150,10 @@ function generateSpyProfile() {
   let card = random(tarotData.tarot_interpretations); // Chooses a random element from the tarot_interpretations object.
   spyProfile.password = random(card.keywords); // A random keyword from the "keywords" object is assigned to spyProfile.password.
 
-  spyProfile.instruction = `Say "destory data" to sign out.`; // Generates static text that informs the user how to "sign out".
+  spyProfile.signOut = `Done for the day? say "sign out"`; // Generates static text that informs the user how to "sign out".
+  spyProfile.abort = `In trouble? say "destroy account"`; // Generates static text that informs the user how to "sign out".
 
   localStorage.setItem(USER_PROFILE, JSON.stringify(spyProfile)); // Saves spyProfile in the broswer, with a specfifc key
-}
-
-
-
-function newInformation() {
-  let regenInformation = createButton(`Regenerate Information`); // Assigns a variable to a button.
-  regenInformation.mousePressed(generateProfile); // Calls regenerateProfile function upon button press.
-}
-
-
-function generateProfile() {
-  if (state === `simulation`) { // If the state is equal to "simulation", then...
-    spyProfile.alias = random(instrumentData.instruments); // A random keyword from the "keywords" object is re-shuffled.
-    spyProfile.secretWeapon = random(objectData.objects); // A random element from the "objects" property is re-shuffled.
-    // spyProfile.password = data.password; // Puts spyProfile password information into data password information.
-  }
-}
-
-
-
-function generateAnnyang () {
-  if (annyang) { // Connects annyang API.
-    let commands = { // defines command object.
-      'destory data': function() {
-        localStorage.removeItem(USER_PROFILE); // Clears spy-profile-data rleated broswer storage.
-        spyProfile = undefined; // Removes visible data from screen.
-      }
-    };
-    annyang.addCommands(commands); // Tells annyang to listen to commands variable.
-    annyang.start(); // Initiates speech recognition.
-  }
-  else { // If the user is not using the Google Chrome broswer, then...
-    alert(`Please visit this page in Google Chrome on a desktop.`) // Tells the end user visiting instructions.
-  }
 }
 
 
@@ -183,7 +175,6 @@ function landing() {
   background(0); // Sets the background colour to black.
   displayTitleText(); // Calls displayTitleText function
   displayInstructionHeading(); // Calls displayInstructionHeading function.
-  displayInstructionSubHeading(); // Calls displayInstructionSubHeading function.
   displayAnswerField(); // Calls the white answer input field box.
   displayUserInput(); // Calls the text that generates from keyTyped.
 }
@@ -214,18 +205,6 @@ function displayInstructionHeading() {
 
 
 
-function displayInstructionSubHeading() {
-  push(); // Isolates code from using global properties.
-  textFont(`Courier, monosapce`); // Displays text font as "courier"
-  textSize(fontSize.small); // Displays the font size 20px.
-  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in white colour.
-  textAlign(CENTER, CENTER); // Dictates the text alignment style.
-  text(instructionSubheading.string, instructionSubheading.x, instructionSubheading.y); // Displays the title of the game.
-  pop(); // Isolates code from using global properties.
-}
-
-
-
 function displayAnswerField() {
   rect(answerField.x, answerField.y, answerField.w, answerField.h); // Draws the answerField input field.
   rectMode(CENTER); // Draws the rectangle from the center outwards.
@@ -245,7 +224,7 @@ function displayUserInput() {
 
 // SIMULATION FUNCTION
 function simulation() {
-  background(235);
+  background(235); // Sets background colour to light grey.
   displaySpyProfile(); // Calls displaySpyProfile.
 }
 
@@ -258,25 +237,49 @@ function displaySpyProfile() {
   Alias: ${spyProfile.alias}
   Secret weapon: ${spyProfile.secretWeapon}
   Password: ${spyProfile.password}
-  Instruction: ${spyProfile.instruction}`;
+  Secret#1: ${spyProfile.signOut}
+  Secret#2: ${spyProfile.abort}`;
 
-
-  if (spyProfile !== undefined) {
     push(); // Isolates code from using global properties.
     textFont(`Courier, monosapce`);
-    textSize(fontSize.medium);
+    textSize(fontSize.medium); // Sets font to 24px.
     textAlign(LEFT, TOP); // Aligns the text content.
     fill(0); // Displays the font as black in colour.
     text(profile, 40, 100); // Displays the profile information at the top left of the canvas.
     pop(); // Isolates code from using global properties.
+}
+
+
+
+// ACCESSGRANTEDAUDIO FUNCTION
+function accessGrantedAudio() {
+  if (!accessGrantedSFX.isPlaying()) { // If the click sound effect is not playing, then play it upon successful sign in.
+    accessGrantedSFX.play(); // Play's accessGrantedSFX.
   }
 }
 
 
 
-function playMusicUponPassword() {
-  if (!successMusic.isPlaying()) { // States that if the click sound effect is not playing, it will be played everytime the basket and goldAcorn touch.
-    successMusic.play();
+// ACCESSDENIEDAUDIO FUNCTION
+function accessDeniedAudio() {
+  if (!accessDeniedSFX.isPlaying()) { // If the click sound effect is not playing, then play it upon failed sign in.
+    accessDeniedSFX.play(); // Play's accessDeniedSFX.
+  }
+}
+
+
+
+function newInformation() {
+  let regenInformation = createButton(`Regenerate Information`); // Assigns a variable to a button.
+  regenInformation.mousePressed(generateProfile); // Calls regenerateProfile function upon button press.
+}
+
+
+
+function generateProfile() {
+  if (state == `simulation`) {
+    spyProfile.alias = random(instrumentData.instruments); // A random keyword from the "keywords" object is re-shuffled.
+    spyProfile.secretWeapon = random(objectData.objects); // A random element from the "objects" property is re-shuffled.
   }
 }
 
@@ -295,10 +298,10 @@ function keyTyped() {
 function keyPressed() {
   if (state === `landing`) {
     if (keyCode === BACKSPACE) { // Allows the "Backspace" key remove previous letters.
-      numbers = numbers.slice(0, numbers.length - 1); // This is a way to remove the last character in a string!
+      numbers = numbers.slice(0, numbers.length - 1); // This is a way to remove the last character in a string.
     }
-    else if (numbers === `747`) { // Change state to cameraFlash if user types in "webcam" followed by "Enter".
-      state = `simulation`; // Swaps to cameraFlash STATE.
+    else if (numbers === `747`) { // Change state to simulation if user types in "747" followed by "Enter".
+      state = `simulation`; // Swaps to simulation STATE.
       validateSpyCredentials(); // Calls validateSpyCredentials function.
     }
   }
