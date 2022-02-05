@@ -1,5 +1,5 @@
 
-// 5.1. Introducing ml5.js
+// 5.2. ml5.js. Object Detector
 // Owen Avon
 
 "use strict";
