@@ -3,20 +3,28 @@
 // Owen Avon
 
 // Pop bubbles with your index finger as a pin.
-// ml5.js Handpose:
-// https://learn.ml5js.org/#/reference/handpose
+// ml5.js Handpose: https://learn.ml5js.org/#/reference/handpose
 
 "use strict";
 
 let video = undefined; // Stores the user's webcam.
 let handpose = undefined; // The handpose model.
 let predictions = []; // The current set of predictions.
-let bubble = undefined; // The bubble.
+let bubble = undefined; // The single bubble.
 
 
 // SETUP FUNCTION
 function setup() {
-  createCanvas(640, 480);
+  createCanvas(640, 480); // Sets the canvas size to 4:3 aspect ratio.
+
+  generateHandposeModel(); // Calls the generateHandposeModel function.
+  generateHandposePredictions(); // Calls the generateHandposePredictions function.
+  generateBubble(); // Calls the generateBubble function.
+}
+
+
+// Generates the implemenatation of the ml5js.handpose.
+function generateHandposeModel() {
   video = createCapture(VIDEO); // Acess the user's webcam.
   video.hide(); // Hides the html element on the webpage.
 
@@ -25,14 +33,20 @@ function setup() {
   }, function() { // Anonymous function that prints "Model Loaded" in the console, should the model load correctly.
     console.log(`Model Loaded.`);
   });
+}
 
 
+// Generates Handpose's predictions and assigns it to the predictions array.
+function generateHandposePredictions() {
   handpose.on(`predict`, function (results) { // Listen for predictions, and creates a parameter. Keeps predeictions array "up to date".
     console.log(results); // Print the "results" in the console.
     predictions = results; // Assign the "results" into the "predictions" global array.
   });
+}
 
 
+// Defines the bubble's variables.
+function generateBubble() {
   bubble = {
     x: random(width), // Allows the bubble to appear anywhere on the canvas's x axis.
     y: height, // Displays the buble at the bottom of the canvas.
@@ -40,9 +54,7 @@ function setup() {
     vx: 0, // No intial movement of bubble on the x axis.
     vy: -2, // Allows the bubble to move upwards on the y axis.
   }
-
 }
-
 
 
 
@@ -51,14 +63,13 @@ function draw() {
   background(0); // Sets the background to black in colour.
 
   displayIndexPosition(); // Calls the displayIndexPosition function.
-
   displaySetBubbleVelocity() // Calls the displaySetBubbleVelocity function.
   displayRelocateBubble() // Calls the displayRelocateBubble function.
   displayBubble() // Calls the displayBubble function.
 }
 
 
-
+// Associates handpose to index finger.
 function displayIndexPosition() {
   if (predictions.length > 0) { // If the camera detects handpose, then...
     let hand = predictions [0]; // Assigns "hand" to postion 0 of predictions.
@@ -70,15 +81,15 @@ function displayIndexPosition() {
     let baseX = base[0]; // Assigns X position of base.
     let baseY = base[1]; // Assigns y position of base.
 
-    displayPinBody(); // Calls the displayPinBody function.
-    displayPinHead(); // Calls the displayPinHead function.
-    displayBubblePop(); // Calls the displayBubblePop function.
+    displayPinBody(hand, index, tip, base, tipX, tipY, baseX, baseY); // Calls the displayPinBody function.
+    displayPinHead(hand, index, tip, base, tipX, tipY, baseX, baseY); // Calls the displayPinHead function.
+    displayBubblePop(hand, index, tip, base, tipX, tipY, baseX, baseY); // Calls the displayBubblePop function.
   }
 }
 
 
 // Pin Body.
-function displayPinBody() {
+function displayPinBody(hand, index, tip, base, tipX, tipY, baseX, baseY) {
   push(); // Isolates code from using global properties.
   noFill(); // Indicates that the line has no fill.
   stroke(255, 255, 255); // Sets the stroke to white in colour
@@ -89,7 +100,7 @@ function displayPinBody() {
 
 
 // Pin Head.
-function displayPinHead() {
+function displayPinHead(hand, index, tip, base, tipX, tipY, baseX, baseY) {
   push(); // Isolates code from using global properties.
   noStroke(); // Indicates that the there is no stroke.
   fill(255, 0, 0); // Displays the base ellipse as red in colour.
@@ -99,12 +110,13 @@ function displayPinHead() {
 
 
 // Check if the bubble pops.
-function displayBubblePop() {
+function displayBubblePop(hand, index, tip, base, tipX, tipY, baseX, baseY) {
 let d = dist(tipX, tipY, bubble.x, bubble.y); // Assign the distance between index tip, base and bubble.
   if (d < bubble.size / 2) { // If the distance is less then half the bubbles size, then...
     bubblePosition(); // Calls the bubblePosition function.
   }
 }
+
 
 
 // Bubble velocity.
@@ -122,7 +134,7 @@ function displayRelocateBubble() {
 }
 
 
-// Display Bubble/
+// Display Bubble.
 function displayBubble() {
   push(); // Isolates code from using global properties.
   fill (0, 100, 200); // Displays the base ellipse as light blue in colour.
@@ -130,6 +142,7 @@ function displayBubble() {
   ellipse(bubble.x, bubble.y, bubble.size) // Draws a bubble (ellipse) at the bottom of the canvas.
   pop(); // Isolates code from using global properties.
 }
+
 
 
 // Sets bubble Position.
