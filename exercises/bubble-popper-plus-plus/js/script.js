@@ -1,5 +1,5 @@
 
-// Bubble Popper Activity
+// Bubble Popper Plus Plus Exercise
 // Owen Avon
 
 // Pop bubbles with your index finger as a pin.
@@ -53,6 +53,13 @@ function generateBubble() {
     size: 100, // Size of bubble in pixels.
     vx: 0, // No intial movement of bubble on the x axis.
     vy: -2, // Allows the bubble to move upwards on the y axis.
+    minSize: 25, // Sets a minimum bubble size.
+    maxSize: 125, // Sets a maximum bubble size.
+    minVelocity: -1, // Sets a minimum vlocity of ball movement on the y-axis.
+    maxVelocity: -3, // Sets a maximum vlocity of ball movement on the y-axis.
+    redBubble: 0, // Sets intial red variable to red in colour.
+    greenBubble: 0, // Sets intial red variable to green in colour.
+    blueBubble: 0 // Sets intial red variable to blue in colour.
   }
 }
 
@@ -114,6 +121,7 @@ function displayBubblePop(hand, index, tip, base, tipX, tipY, baseX, baseY) {
 let d = dist(tipX, tipY, bubble.x, bubble.y); // Assign the distance between index tip, base and bubble.
   if (d < bubble.size / 2) { // If the distance is less then half the bubbles size, then...
     bubblePosition(); // Calls the bubblePosition function.
+    bubbleCharacteristics(); // Calls the bubbleCharacteristics function.
   }
 }
 
@@ -130,6 +138,7 @@ function displaySetBubbleVelocity() {
 function displayRelocateBubble() {
   if (bubble.y < 0) { // If the bubble has floated above the top of the canvas, then...
     bubblePosition(); // Calls the bubblePosition function.
+    bubbleCharacteristics(); // Calls the bubbleCharacteristics function.
   }
 }
 
@@ -137,16 +146,26 @@ function displayRelocateBubble() {
 // Display Bubble.
 function displayBubble() {
   push(); // Isolates code from using global properties.
-  fill (0, 100, 200); // Displays the base ellipse as light blue in colour.
+  fill (bubble.redBubble, bubble.greenBubble, bubble.blueBubble,); // Displays the base ellipse as light blue in colour.
   noStroke(); // Indicates that the there is no stroke.
   ellipse(bubble.x, bubble.y, bubble.size) // Draws a bubble (ellipse) at the bottom of the canvas.
   pop(); // Isolates code from using global properties.
 }
 
 
-
 // Sets bubble Position.
 function bubblePosition() {
   bubble.x = random(width); // Randomly places the bubble's x position on the canvas.
   bubble.y = height; // Places the bubble's y position at the bottom of the canvas.
+}
+
+
+// Sets the bubbleCharacteristics
+function bubbleCharacteristics() {
+  bubble.vy = random(bubble.minVelocity, bubble.maxVelocity); // Allows the bubble to vertically travel at various velocities within a range.
+  bubble.size = random(bubble.minSize, bubble.maxSize); // Allows the bubble to vertically appear at random sizes within a range.
+
+  bubble.redBubble = random(55, 255); // Generates a random red value.
+  bubble.greenBubble = random(55, 255); // Generates a random green value.
+  bubble.blueBubble = random(55, 255); // Generates a random blue value.
 }
