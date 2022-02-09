@@ -7,31 +7,93 @@
 
 "use strict";
 
+let state = `landing`; // Starts the program in the loading state.
 let video = undefined; // Stores the user's webcam.
+let modelName = `Handpose`; // Defines handpose object.
 let handpose = undefined; // The handpose model.
 let predictions = []; // The current set of predictions.
 let bubble = undefined; // The single bubble.
+let score = 0; // Starts the score board at "0".
+
+let titleText = {
+  string: `Popper McPoppy`,
+  x: 320,
+  y: 120
+};
+
+let instructionText = {
+  string: `Use your finger to pop the on screen ballons. Don't miss more then 3.`,
+  x: 320,
+  y: 180
+};
+
+let startText = {
+  string: `Click Anywhere to Begin`,
+  x: 320,
+  y: 240
+};
+
+let winnerText = {
+  string: `Yahoo, you popped all the ballons! Be proud of your accomplishment.`,
+  x: 320,
+  y: 240
+};
+
+let loserText = {
+  string: `You let too many ballons escape. You make the children cry.`,
+  x: 320,
+  y: 240
+};
+
+let fontSize = {
+  small: 24, // Sets a font size of 26px.
+  medium: 32, // Sets a font size of 36px.
+  large: 64 // Sets a font size of 96px.
+};
+
+let colour = {
+  white: {
+    r: 255,
+    g: 255,
+    b: 255
+  },
+  red: {
+    r: 130,
+    g: 0,
+    b: 0
+  }
+}
 
 
 // SETUP FUNCTION
 function setup() {
   createCanvas(640, 480); // Sets the canvas size to 4:3 aspect ratio.
 
+
   generateHandposeModel(); // Calls the generateHandposeModel function.
   generateHandposePredictions(); // Calls the generateHandposePredictions function.
   generateBubble(); // Calls the generateBubble function.
+
+}
+
+function generateCamera() {
+  video = createCapture(VIDEO); // Acess the user's webcam.
+  video.hide(); // Hides the html element on the webpage.
 }
 
 
 // Generates the implemenatation of the ml5js.handpose.
 function generateHandposeModel() {
-  video = createCapture(VIDEO); // Acess the user's webcam.
-  video.hide(); // Hides the html element on the webpage.
-
+  generateCamera(); // Calls the generateCamera function.
   handpose = ml5.handpose(video, { // Load the handpose model.
     flipHorizontal: true // Mirrors the handpose input on screen.
-  }, function() { // Anonymous function that prints "Model Loaded" in the console, should the model load correctly.
-    console.log(`Model Loaded.`);
+  }, function() { // Anonymous function that calls a state change once handpose has loaded.
+    if (state === `loading`) {
+      state = `simulation`; // Changes state to `simulation`.
+    }
+    else {
+      state = `simulation`; // Automatically jumps to simulation state once the camera has been loaded.
+    }
   });
 }
 
@@ -64,11 +126,91 @@ function generateBubble() {
 }
 
 
-
 // DRAW FUNCTION
 function draw() {
+  if (state === `landing`) {
+    landing(); // Calls the landing function.
+  }
+  else if (state === `loading`) {
+    loading(); // Calls the loading function.
+  }
+  else if (state === `simulation`) {
+    simulation(); // Calls the simulation function.
+  }
+  else if (state === `winner`) {
+    winner(); // Calls the winner function.
+  }
+  else if (state === `loser`) {
+    loser(); // Calls the loser function.
+  }
+}
+
+
+function landing() {
   background(0); // Sets the background to black in colour.
 
+  displayTitleText(); // Calls displayTitleText function
+  displayInstructionText(); // Calls displayInstructionText function.
+  displayStartText(); // Calls displayStartText function.
+}
+
+
+function displayTitleText() {
+  push(); // Isolates code from using global properties.
+  // textFont(customFont); // Displays customFont.ttf.
+  textSize(fontSize.large); // Displays the font size 96px.
+  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in orange colour.
+  textAlign(CENTER, CENTER); // Dictates the text alignment style.
+  text(titleText.string, titleText.x, titleText.y); // Displays the title of the game.
+  pop(); // Isolates code from using global properties.
+}
+
+
+function displayInstructionText() {
+  push(); // Isolates code from using global properties.
+  // textFont(customFont); // Displays customFont.ttf.
+  textSize(fontSize.small); // Displays the font size 26px.
+  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in orange colour.
+  textAlign(CENTER, CENTER); // Dictates the text alignment style.
+  text(instructionText.string, instructionText.x, instructionText.y); // Displays the title of the game.
+  pop(); // Isolates code from using global properties.
+}
+
+
+function displayStartText() {
+  push(); // Isolates code from using global properties.
+  // textFont(customFont); // Displays customFont.ttf.
+  textSize(fontSize.medium); // Displays the font size 36px.
+  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in orange colour.
+  textAlign(CENTER, CENTER); // Dictates the text alignment style.
+  text(startText.string, startText.x, startText.y); // Displays the title of the game.
+  pop(); // Isolates code from using global properties.
+}
+
+
+
+// Handpose loading screen.
+function loading() {
+  background(255); // Sets the background to white in colour.
+  displayLoadingText(); // Calls the displayLoadingText.
+}
+
+
+// Displays loading text on screen.
+function displayLoadingText() {
+  push();
+  textSize(32);
+  textStyle(BOLD);
+  textAlign(CENTER, CENTER);
+  text(`Loading ${modelName}...`, width / 2, height / 2);
+  fill(0);
+  pop();
+}
+
+
+// Calls function to run in the simulation state.
+function simulation() {
+  background(0); // Sets the background to black in colour.
   displayIndexPosition(); // Calls the displayIndexPosition function.
   displaySetBubbleVelocity() // Calls the displaySetBubbleVelocity function.
   displayRelocateBubble() // Calls the displayRelocateBubble function.
@@ -168,4 +310,12 @@ function bubbleCharacteristics() {
   bubble.redBubble = random(55, 255); // Generates a random red value.
   bubble.greenBubble = random(55, 255); // Generates a random green value.
   bubble.blueBubble = random(55, 255); // Generates a random blue value.
+}
+
+
+// MOUSEPRESSED FUNCTION
+function mousePressed () { // p5 function to perform action with keyboard input.
+  if (state === `landing`) {
+    state = `loading`; // Runs the "loading" state.
+  }
 }
