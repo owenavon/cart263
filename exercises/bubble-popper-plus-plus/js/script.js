@@ -7,13 +7,19 @@
 
 "use strict";
 
-let state = `landing`; // Starts the program in the loading state.
+let state = `simulation`; // Starts the program in the loading state.
 let video = undefined; // Stores the user's webcam.
 let modelName = `Handpose`; // Defines handpose object.
 let handpose = undefined; // The handpose model.
 let predictions = []; // The current set of predictions.
 let bubble = undefined; // The single bubble.
 let score = 0; // Starts the score board at "0".
+let bubbleReset = 0; // Starts with no bubbleResets.
+
+let red = 0; // Sets intial red variable to black in colour.
+let green = 0; // Sets intialgrren variable to black in colour.
+let blue = 0; // Sets intial blue variable to black in colour.
+
 
 let titleText = {
   string: `Popper McPoppy`,
@@ -57,8 +63,13 @@ let colour = {
     g: 255,
     b: 255
   },
+  green: {
+    r: 0,
+    g: 175,
+    b: 0
+  },
   red: {
-    r: 130,
+    r: 255,
     g: 0,
     b: 0
   }
@@ -210,11 +221,12 @@ function displayLoadingText() {
 
 // Calls function to run in the simulation state.
 function simulation() {
-  background(0); // Sets the background to black in colour.
+  background(red, green, blue); // Sets the default background to black in colour.
   displayIndexPosition(); // Calls the displayIndexPosition function.
-  displaySetBubbleVelocity() // Calls the displaySetBubbleVelocity function.
-  displayRelocateBubble() // Calls the displayRelocateBubble function.
-  displayBubble() // Calls the displayBubble function.
+  displaySetBubbleVelocity(); // Calls the displaySetBubbleVelocity function.
+  displayRelocateBubble(); // Calls the displayRelocateBubble function.
+  displayBubble(); // Calls the displayBubble function.
+  displayScoreboard(); // Calls the displayScoreboard function.
 }
 
 
@@ -262,11 +274,12 @@ function displayPinHead(hand, index, tip, base, tipX, tipY, baseX, baseY) {
 function displayBubblePop(hand, index, tip, base, tipX, tipY, baseX, baseY) {
 let d = dist(tipX, tipY, bubble.x, bubble.y); // Assign the distance between index tip, base and bubble.
   if (d < bubble.size / 2) { // If the distance is less then half the bubbles size, then...
+
     bubblePosition(); // Calls the bubblePosition function.
     bubbleCharacteristics(); // Calls the bubbleCharacteristics function.
+    bubblePoints(); // Calls the bubblePoints function.
   }
 }
-
 
 
 // Bubble velocity.
@@ -278,10 +291,13 @@ function displaySetBubbleVelocity() {
 
 // Relocates bubble.
 function displayRelocateBubble() {
+
   if (bubble.y < 0) { // If the bubble has floated above the top of the canvas, then...
     bubblePosition(); // Calls the bubblePosition function.
     bubbleCharacteristics(); // Calls the bubbleCharacteristics function.
   }
+
+  failedPoppingObjective(); // Calls failedPoppingObjective function.
 }
 
 
@@ -310,6 +326,94 @@ function bubbleCharacteristics() {
   bubble.redBubble = random(55, 255); // Generates a random red value.
   bubble.greenBubble = random(55, 255); // Generates a random green value.
   bubble.blueBubble = random(55, 255); // Generates a random blue value.
+}
+
+
+// Sets the point system for each popped bubble.
+function bubblePoints() {
+  if (bubble.size >= 100 && bubble.size <= 125) {
+    score = score + 1; // 1 point for each large sized popped bubble.
+  }
+  if (bubble.size >= 50 && bubble.size <= 99) {
+    score = score + 2; // 2 points for each medium sized popped bubble.
+  }
+  if (bubble.size >= 25 && bubble.size <= 49) {
+    score = score + 3; // 3 points for each small sized popped bubble.
+  }
+}
+
+
+// Creates the displayScoreboard function
+function displayScoreboard() { // Main code for dynamic score board.
+  displayScoreText(); // Calls the displayScoreText.
+  scoreWin(); // Calls the scoreWin function.
+}
+
+
+// Creates the scoreboard text
+function displayScoreText() {
+  push(); // Isolates code from using global properties.
+  fill(255); // Makes the font white in colour.
+  textSize(fontSize.small); // Displays the font size as 56px.
+  text(`Score:`, 50, 65); // Displays text at the top left of the canvas.
+  text(score, 125, 65); // Displays dynamic score result at the top left of the canvas.
+  pop(); // Isolates code from using global properties.
+}
+
+
+// Changes states upon reaching target score.
+function scoreWin() {
+  if (score >= 5) { // If the score is equal to or greater then 20...
+    state = `winner`; // Runs the winner state.
+  }
+}
+
+
+// WINNER FUNCTION
+function winner() {
+  background (colour.green.r, colour.green.g, colour.green.b); // Sets the background as Green in colour.
+  winnerHeading(); // Calls the winnerHeading function.
+}
+
+function winnerHeading() {
+  push(); // Isolates code from using global properties.
+  // textFont(gameFont); // Displays custom kiddos.ttf font.
+  textSize(fontSize.small); // Displays the font size as 32px.
+  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in white colour.
+  textAlign(CENTER, CENTER); // Dictates the text alignment style.
+  text(winnerText.string, winnerText.x, winnerText.y,); // Displays the text that dictates what the user must press to start the game.
+  pop(); // Isolates code from using global properties.
+}
+
+
+// LOSER FUNCTION
+function loser() {
+  background (colour.red.r, colour.red.g, colour.red.b); // Sets the background as Red in colour.
+  loserHeading(); // Calls loserHeading function.
+}
+
+function loserHeading() {
+  push(); // Isolates code from using global properties.
+  // textFont(gameFont); // Displays custom kiddos.ttf font
+  textSize(fontSize.small); // Displays the font size as 28px.
+  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in white colour.
+  textAlign(CENTER, CENTER); // Dictates the text alignment style.
+  text(loserText.string, loserText.x, loserText.y,); // Displays the text that dictates what the user must press to start the game.
+  pop(); // Isolates code from using global properties.
+}
+
+
+// Sets rule for how to lose game by not popping ballons.
+function failedPoppingObjective() {
+
+  if (bubble.y >= height) { // If the bubble reaches the top of the canvas, then...
+    red = random (0, 255); // Generates a random dark red value.
+    bubbleReset = bubbleReset + 1; // Keeps count of the missed bubbles
+  }
+
+  else if (bubbleReset > 3) { // If more then 3 bubbles get missed, then...
+    state = `loser`; // Changes to the loser state.
+  }
 }
 
 
