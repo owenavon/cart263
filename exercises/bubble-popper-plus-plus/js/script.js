@@ -17,12 +17,22 @@ let score = 0; // Starts the score board at "0".
 let bubble = undefined; // The single bubble.
 let bubbleReset = 0; // Starts with no bubbleResets.
 
+
 let red = 0; // Sets intial red variable to black in colour.
 let green = 0; // Sets intialgrren variable to black in colour.
 let blue = 0; // Sets intial blue variable to black in colour.
 
+
+let lives = { // Defines the lives.
+  x: 540,
+  y: 60,
+  size: 10,
+  remaining: 4
+};
+
+
 let titleText = {
-  string: `Popper McPoppy`,
+  string: `Poppy McPopper`,
   x: 320,
   y: 160
 };
@@ -84,7 +94,6 @@ let colour = {
 // SETUP FUNCTION
 function setup() {
   createCanvas(640, 480); // Sets the canvas size to 4:3 aspect ratio.
-
 }
 
 
@@ -153,12 +162,10 @@ function displayStartText() {
 }
 
 
-
 // Handpose loadWebcam screen.
 function loadWebcam() {
   background(255); // Sets the background to white in colour.
   displayWebcamLoadingText(); // Calls the displayLoadingText.
-
 }
 
 
@@ -192,7 +199,6 @@ function displayModelLoadingText() {
 }
 
 
-
 // Calls function to run in the simulation state.
 function simulation() {
   background(red, green, blue); // Sets the default background to black in colour.
@@ -201,6 +207,7 @@ function simulation() {
   displayRelocateBubble(); // Calls the displayRelocateBubble function.
   displayBubble(); // Calls the displayBubble function.
   displayScoreboard(); // Calls the displayScoreboard function.
+  displayLives(); // Calls the displayLives function.
 }
 
 
@@ -306,7 +313,7 @@ function bubbleCharacteristics() {
 
 // Sets the point system for each popped bubble.
 function bubblePoints() {
-  if (bubble.size >= 100 && bubble.size <= 125) {
+  if (bubble.size >= 150 && bubble.size <= 125) {
     score = score + 1; // 1 point for each large sized popped bubble.
   }
   if (bubble.size >= 50 && bubble.size <= 99) {
@@ -345,6 +352,22 @@ function scoreWin() {
 }
 
 
+// Creates the 3 draw lives
+function displayLives() {
+  let x = lives.x; // Defines the elipses X position.
+  let y = lives.y; // Defines the elipses Y position.
+  noStroke(); // Display no stroke.
+
+  for (let i = 0; i < lives.remaining; i++) { // For loop that calls lives remaining upon running loop.
+
+    x += lives.size * 2; // Spaces the ellipses side by side on the X axis.
+
+    ellipse(x, y, lives.size); // Draws ellipses.
+    fill (colour.grey.r, colour.grey.g, colour.grey.b)
+  }
+}
+
+
 // Generates pop sound.
 function bubblePopVoice() {
   responsiveVoice.speak("Pop!", "French Female", { // Generated voice says "pop!" upon popping a ballon.
@@ -378,6 +401,7 @@ function loser() {
   loserHeading(); // Calls loserHeading function.
 }
 
+
 function loserHeading() {
   push(); // Isolates code from using global properties.
   textFont(`century gothic`); // Displays customFont.ttf.
@@ -394,6 +418,7 @@ function failedPoppingObjective() {
 
   if (bubble.y >= height) { // If the bubble reaches the top of the canvas, then...
     bubbleReset = bubbleReset + 1; // Keeps count of the missed bubbles
+    lives.remaining--; // Removes 1 life ellipse.
   }
   else if (bubbleReset === 1) { // When the bubble intially spawns...
     green = 0; // Keeps the background as black.
@@ -404,22 +429,11 @@ function failedPoppingObjective() {
   else if (bubbleReset === 3) { // When the bubble is missed twice, then...
     red = 170; // Make he background bright red.
   }
-
   else if (bubbleReset > 3) { // If more then 3 bubbles get missed, then...
     state = `loser`; // Changes to the loser state.
   }
 
-  // bubbleMissedVoice(); // Calls the bubbleMissed Voice.
 }
-
-// Generates pop sound.
-// function bubbleMissedVoice() {
-//   responsiveVoice.speak("Pop!", "French Female", { // Generated voice says "pop!" upon popping a ballon.
-//     pitch: 1.5, // Increased the pitch.
-//     rate: 0.9, // Decreased the rate.
-//     volume: 1 // Kept the volume as default.
-//   });
-// }
 
 
 
@@ -438,30 +452,45 @@ function mousePressed () { // p5 function to perform action with keyboard input.
 function webcamLoaded () {
   state = `loadHandpose`; // Chnages to loadWebcam sate.
 
+  generateMachineEngine(); // Calls the generateMachineEngine function.
+  generatePredictions(); // Calls the generatePredictions function.
+  generateBubble(); // Calls the generateBubble function.
+}
+
+
+// Generates the ml5 machchine engine
+function generateMachineEngine() {
   handpose = ml5.handpose(video, { // Load the handpose model.
     flipHorizontal: true // Mirrors the handpose input on screen.
   }, function() { // Anonymous function that calls a state change once handpose has loaded.
     state = `simulation`;
   });
+}
 
+
+// Generates ml5's predictions
+function generatePredictions() {
   handpose.on(`predict`, function (results) { // Listen for predictions, and creates a parameter. Keeps predeictions array "up to date".
     console.log(results); // Print the "results" in the console.
     predictions = results; // Assign the "results" into the "predictions" global array.
   });
+}
 
+
+// Generates the onscreen bubble.
+function generateBubble() {
   bubble = {
     x: random(width), // Allows the bubble to appear anywhere on the canvas's x axis.
-    y: height, // Displays the buble at the bottom of the canvas.
+    y: 0, // Displays the bubble at the bottom of the canvas.
     size: 100, // Size of bubble in pixels.
     vx: 0, // No intial movement of bubble on the x axis.
-    vy: -2, // Allows the bubble to move upwards on the y axis.
+    vy: -3, // Allows the bubble to move upwards on the y axis.
     minSize: 25, // Sets a minimum bubble size.
-    maxSize: 125, // Sets a maximum bubble size.
-    minVelocity: -1, // Sets a minimum vlocity of ball movement on the y-axis.
-    maxVelocity: -3, // Sets a maximum vlocity of ball movement on the y-axis.
+    maxSize: 150, // Sets a maximum bubble size.
+    minVelocity: -2, // Sets a minimum vlocity of ball movement on the y-axis.
+    maxVelocity: -4, // Sets a maximum vlocity of ball movement on the y-axis.
     redBubble: 0, // Sets intial red variable to red in colour.
     greenBubble: 0, // Sets intial red variable to green in colour.
     blueBubble: 0 // Sets intial red variable to blue in colour.
   }
-
 }
