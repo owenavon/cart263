@@ -9,17 +9,17 @@
 
 let state = `landing`; // Starts the program in the loading state.
 let video = undefined; // Stores the user's webcam.
-let modelName = `Handpose`; // Defines handpose object.
+
 let handpose = undefined; // The handpose model.
 let predictions = []; // The current set of predictions.
-let bubble = undefined; // The single bubble.
+
 let score = 0; // Starts the score board at "0".
+let bubble = undefined; // The single bubble.
 let bubbleReset = 0; // Starts with no bubbleResets.
 
 let red = 0; // Sets intial red variable to black in colour.
 let green = 0; // Sets intialgrren variable to black in colour.
 let blue = 0; // Sets intial blue variable to black in colour.
-
 
 let titleText = {
   string: `Popper McPoppy`,
@@ -85,60 +85,6 @@ let colour = {
 function setup() {
   createCanvas(640, 480); // Sets the canvas size to 4:3 aspect ratio.
 
-
-  generateHandposeModel(); // Calls the generateHandposeModel function.
-  generateHandposePredictions(); // Calls the generateHandposePredictions function.
-  generateBubble(); // Calls the generateBubble function.
-
-}
-
-function generateCamera() {
-  video = createCapture(VIDEO); // Acess the user's webcam.
-  video.hide(); // Hides the html element on the webpage.
-}
-
-
-// Generates the implemenatation of the ml5js.handpose.
-function generateHandposeModel() {
-  generateCamera(); // Calls the generateCamera function.
-  handpose = ml5.handpose(video, { // Load the handpose model.
-    flipHorizontal: true // Mirrors the handpose input on screen.
-  }, function() { // Anonymous function that calls a state change once handpose has loaded.
-    if (state === `loading`) {
-      state = `simulation`; // Changes state to `simulation`.
-    }
-    else {
-      state = `simulation`; // Automatically jumps to simulation state once the camera has been loaded.
-    }
-  });
-}
-
-
-// Generates Handpose's predictions and assigns it to the predictions array.
-function generateHandposePredictions() {
-  handpose.on(`predict`, function (results) { // Listen for predictions, and creates a parameter. Keeps predeictions array "up to date".
-    console.log(results); // Print the "results" in the console.
-    predictions = results; // Assign the "results" into the "predictions" global array.
-  });
-}
-
-
-// Defines the bubble's variables.
-function generateBubble() {
-  bubble = {
-    x: random(width), // Allows the bubble to appear anywhere on the canvas's x axis.
-    y: height, // Displays the buble at the bottom of the canvas.
-    size: 100, // Size of bubble in pixels.
-    vx: 0, // No intial movement of bubble on the x axis.
-    vy: -2, // Allows the bubble to move upwards on the y axis.
-    minSize: 25, // Sets a minimum bubble size.
-    maxSize: 125, // Sets a maximum bubble size.
-    minVelocity: -1, // Sets a minimum vlocity of ball movement on the y-axis.
-    maxVelocity: -3, // Sets a maximum vlocity of ball movement on the y-axis.
-    redBubble: 0, // Sets intial red variable to red in colour.
-    greenBubble: 0, // Sets intial red variable to green in colour.
-    blueBubble: 0 // Sets intial red variable to blue in colour.
-  }
 }
 
 
@@ -147,8 +93,11 @@ function draw() {
   if (state === `landing`) {
     landing(); // Calls the landing function.
   }
-  else if (state === `loading`) {
-    loading(); // Calls the loading function.
+  else if (state === `loadWebcam`) {
+    loadWebcam(); // Calls the loadWebcam function.
+  }
+  else if (state === `loadHandpose`) {
+    loadHandpose(); // Calls the loadModel function.
   }
   else if (state === `simulation`) {
     simulation(); // Calls the simulation function.
@@ -205,23 +154,43 @@ function displayStartText() {
 
 
 
-// Handpose loading screen.
-function loading() {
+// Handpose loadWebcam screen.
+function loadWebcam() {
   background(255); // Sets the background to white in colour.
-  displayLoadingText(); // Calls the displayLoadingText.
+  displayWebcamLoadingText(); // Calls the displayLoadingText.
+
 }
 
 
-// Displays loading text on screen.
-function displayLoadingText() {
+// Displays displayWebcamLoadingText on screen.
+function displayWebcamLoadingText() {
+  push(); // Isolates code from using global properties.
+  textSize(fontSize.large); // Displays the font size 36px.
+  textStyle(BOLD); // Bolds the text.
+  textAlign(CENTER, CENTER); // Aligns the text in the center.
+  text(`Loading Webcam...`, width / 2, height / 2); // Displays the text on screen with dynamic variable.
+  fill(0); // Displays the text as white in colour.
+  pop(); // Isolates code from using global properties.
+}
+
+
+function loadHandpose() {
+  background(255); // Sets the background to white in colour.
+  displayModelLoadingText(); // Calls the displayModelLoadingText.
+}
+
+
+// Displays displayModelLoadingTex on screen.
+function displayModelLoadingText() {
   push(); // Isolates code from using global properties.
   textSize(fontSize.large); // Displays the font size 36px.
   textStyle(BOLD); // Bolds the text.
   textAlign(CENTER, CENTER); // Aligns the text in the center
-  text(`Loading ${modelName}...`, width / 2, height / 2); // Displays the text on screen with dynamic variable
+  text(`Loading Handpose...`, width / 2, height / 2); // Displays the text on screen with dynamic variable
   fill(0); // Displays the text as white in colour.
   pop(); // Isolates code from using global properties.
 }
+
 
 
 // Calls function to run in the simulation state.
@@ -453,9 +422,46 @@ function failedPoppingObjective() {
 // }
 
 
+
 // MOUSEPRESSED FUNCTION
 function mousePressed () { // p5 function to perform action with keyboard input.
-  if (state === `landing`) {
-    state = `loading`; // Runs the "loading" state.
+  if (state === `landing`) { // if the state is in landing, then...
+
+    video = createCapture(VIDEO, webcamLoaded); // Acess the user's webcam.
+    video.hide(); // Hides the html element on the webpage.
+    state = `loadWebcam`; // Chnages to loadWebcam sate.
   }
+}
+
+
+// video loaded function called once the webcam loads.
+function webcamLoaded () {
+  state = `loadHandpose`; // Chnages to loadWebcam sate.
+
+  handpose = ml5.handpose(video, { // Load the handpose model.
+    flipHorizontal: true // Mirrors the handpose input on screen.
+  }, function() { // Anonymous function that calls a state change once handpose has loaded.
+    state = `simulation`;
+  });
+
+  handpose.on(`predict`, function (results) { // Listen for predictions, and creates a parameter. Keeps predeictions array "up to date".
+    console.log(results); // Print the "results" in the console.
+    predictions = results; // Assign the "results" into the "predictions" global array.
+  });
+
+  bubble = {
+    x: random(width), // Allows the bubble to appear anywhere on the canvas's x axis.
+    y: height, // Displays the buble at the bottom of the canvas.
+    size: 100, // Size of bubble in pixels.
+    vx: 0, // No intial movement of bubble on the x axis.
+    vy: -2, // Allows the bubble to move upwards on the y axis.
+    minSize: 25, // Sets a minimum bubble size.
+    maxSize: 125, // Sets a maximum bubble size.
+    minVelocity: -1, // Sets a minimum vlocity of ball movement on the y-axis.
+    maxVelocity: -3, // Sets a maximum vlocity of ball movement on the y-axis.
+    redBubble: 0, // Sets intial red variable to red in colour.
+    greenBubble: 0, // Sets intial red variable to green in colour.
+    blueBubble: 0 // Sets intial red variable to blue in colour.
+  }
+
 }
