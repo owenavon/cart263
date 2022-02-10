@@ -7,7 +7,7 @@
 
 "use strict";
 
-let state = `simulation`; // Starts the program in the loading state.
+let state = `landing`; // Starts the program in the loading state.
 let video = undefined; // Stores the user's webcam.
 let modelName = `Handpose`; // Defines handpose object.
 let handpose = undefined; // The handpose model.
@@ -24,19 +24,19 @@ let blue = 0; // Sets intial blue variable to black in colour.
 let titleText = {
   string: `Popper McPoppy`,
   x: 320,
-  y: 120
+  y: 160
 };
 
 let instructionText = {
-  string: `Use your finger to pop the on screen ballons. Don't miss more then 3.`,
+  string: `Use your finger to pop the on screen ballons. Don't miss more then 2.`,
   x: 320,
-  y: 180
+  y: 200
 };
 
 let startText = {
-  string: `Click Anywhere to Begin`,
+  string: `"Click" anywhere to begin`,
   x: 320,
-  y: 240
+  y: 260
 };
 
 let winnerText = {
@@ -52,9 +52,9 @@ let loserText = {
 };
 
 let fontSize = {
-  small: 24, // Sets a font size of 26px.
-  medium: 32, // Sets a font size of 36px.
-  large: 64 // Sets a font size of 96px.
+  small: 18, // Sets a font size of 18px.
+  medium: 24, // Sets a font size of 24px.
+  large: 36 // Sets a font size of 36px.
 };
 
 let colour = {
@@ -62,6 +62,11 @@ let colour = {
     r: 255,
     g: 255,
     b: 255
+  },
+  grey: {
+    r: 214,
+    g: 206,
+    b: 195
   },
   green: {
     r: 0,
@@ -158,7 +163,7 @@ function draw() {
 
 
 function landing() {
-  background(0); // Sets the background to black in colour.
+  background(50); // Sets the background to black in colour.
 
   displayTitleText(); // Calls displayTitleText function
   displayInstructionText(); // Calls displayInstructionText function.
@@ -168,9 +173,9 @@ function landing() {
 
 function displayTitleText() {
   push(); // Isolates code from using global properties.
-  // textFont(customFont); // Displays customFont.ttf.
-  textSize(fontSize.large); // Displays the font size 96px.
-  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in orange colour.
+  textFont(`century gothic`); // Displays customFont.ttf.
+  textSize(fontSize.large); // Displays the font size 36px.
+  fill(colour.grey.r, colour.grey.g, colour.grey.b); // Displays the instructions in orange colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
   text(titleText.string, titleText.x, titleText.y); // Displays the title of the game.
   pop(); // Isolates code from using global properties.
@@ -179,9 +184,9 @@ function displayTitleText() {
 
 function displayInstructionText() {
   push(); // Isolates code from using global properties.
-  // textFont(customFont); // Displays customFont.ttf.
-  textSize(fontSize.small); // Displays the font size 26px.
-  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in orange colour.
+  textFont(`century gothic`); // Displays customFont.ttf.
+  textSize(fontSize.small); // Displays the font size 18px.
+  fill(colour.grey.r, colour.grey.g, colour.grey.b); // Displays the instructions in orange colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
   text(instructionText.string, instructionText.x, instructionText.y); // Displays the title of the game.
   pop(); // Isolates code from using global properties.
@@ -190,9 +195,9 @@ function displayInstructionText() {
 
 function displayStartText() {
   push(); // Isolates code from using global properties.
-  // textFont(customFont); // Displays customFont.ttf.
-  textSize(fontSize.medium); // Displays the font size 36px.
-  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in orange colour.
+  textFont(`century gothic`); // Displays customFont.ttf.
+  textSize(fontSize.small); // Displays the font size 18px.
+  fill(colour.grey.r, colour.grey.g, colour.grey.b); // Displays the instructions in orange colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
   text(startText.string, startText.x, startText.y); // Displays the title of the game.
   pop(); // Isolates code from using global properties.
@@ -209,13 +214,13 @@ function loading() {
 
 // Displays loading text on screen.
 function displayLoadingText() {
-  push();
-  textSize(32);
-  textStyle(BOLD);
-  textAlign(CENTER, CENTER);
-  text(`Loading ${modelName}...`, width / 2, height / 2);
-  fill(0);
-  pop();
+  push(); // Isolates code from using global properties.
+  textSize(fontSize.large); // Displays the font size 36px.
+  textStyle(BOLD); // Bolds the text.
+  textAlign(CENTER, CENTER); // Aligns the text in the center
+  text(`Loading ${modelName}...`, width / 2, height / 2); // Displays the text on screen with dynamic variable
+  fill(0); // Displays the text as white in colour.
+  pop(); // Isolates code from using global properties.
 }
 
 
@@ -278,6 +283,7 @@ let d = dist(tipX, tipY, bubble.x, bubble.y); // Assign the distance between ind
     bubblePosition(); // Calls the bubblePosition function.
     bubbleCharacteristics(); // Calls the bubbleCharacteristics function.
     bubblePoints(); // Calls the bubblePoints function.
+    bubblePopVoice(); // Calls the bubblePopVoice.
   }
 }
 
@@ -353,19 +359,30 @@ function displayScoreboard() { // Main code for dynamic score board.
 // Creates the scoreboard text
 function displayScoreText() {
   push(); // Isolates code from using global properties.
-  fill(255); // Makes the font white in colour.
-  textSize(fontSize.small); // Displays the font size as 56px.
+  fill(colour.grey.r, colour.grey.g, colour.grey.b); // Makes the font white in colour.
+  textFont(`century gothic`); // Displays customFont.ttf.
+  textSize(fontSize.medium); // Displays the font size as 24px.
   text(`Score:`, 50, 65); // Displays text at the top left of the canvas.
-  text(score, 125, 65); // Displays dynamic score result at the top left of the canvas.
+  text(score, 130, 65); // Displays dynamic score result at the top left of the canvas.
   pop(); // Isolates code from using global properties.
 }
 
 
 // Changes states upon reaching target score.
 function scoreWin() {
-  if (score >= 5) { // If the score is equal to or greater then 20...
+  if (score >= 20) { // If the score is equal to or greater then 20...
     state = `winner`; // Runs the winner state.
   }
+}
+
+
+// Generates pop sound.
+function bubblePopVoice() {
+  responsiveVoice.speak("Pop!", "French Female", { // Generated voice says "pop!" upon popping a ballon.
+    pitch: 1.5, // Increased the pitch.
+    rate: 0.9, // Decreased the rate.
+    volume: 1 // Kept the volume as default.
+  });
 }
 
 
@@ -377,8 +394,8 @@ function winner() {
 
 function winnerHeading() {
   push(); // Isolates code from using global properties.
-  // textFont(gameFont); // Displays custom kiddos.ttf font.
-  textSize(fontSize.small); // Displays the font size as 32px.
+  textFont(`century gothic`); // Displays customFont.ttf.
+  textSize(fontSize.small); // Displays the font size as 18px.
   fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in white colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
   text(winnerText.string, winnerText.x, winnerText.y,); // Displays the text that dictates what the user must press to start the game.
@@ -394,8 +411,8 @@ function loser() {
 
 function loserHeading() {
   push(); // Isolates code from using global properties.
-  // textFont(gameFont); // Displays custom kiddos.ttf font
-  textSize(fontSize.small); // Displays the font size as 28px.
+  textFont(`century gothic`); // Displays customFont.ttf.
+  textSize(fontSize.small); // Displays the font size as 18px.
   fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in white colour.
   textAlign(CENTER, CENTER); // Dictates the text alignment style.
   text(loserText.string, loserText.x, loserText.y,); // Displays the text that dictates what the user must press to start the game.
@@ -407,14 +424,33 @@ function loserHeading() {
 function failedPoppingObjective() {
 
   if (bubble.y >= height) { // If the bubble reaches the top of the canvas, then...
-    red = random (0, 255); // Generates a random dark red value.
     bubbleReset = bubbleReset + 1; // Keeps count of the missed bubbles
+  }
+  else if (bubbleReset === 1) { // When the bubble intially spawns...
+    green = 0; // Keeps the background as black.
+  }
+  else if (bubbleReset === 2) { // When the bubble is missed once, then...
+    red = 85; // Make the background dark red.
+  }
+  else if (bubbleReset === 3) { // When the bubble is missed twice, then...
+    red = 170; // Make he background bright red.
   }
 
   else if (bubbleReset > 3) { // If more then 3 bubbles get missed, then...
     state = `loser`; // Changes to the loser state.
   }
+
+  // bubbleMissedVoice(); // Calls the bubbleMissed Voice.
 }
+
+// Generates pop sound.
+// function bubbleMissedVoice() {
+//   responsiveVoice.speak("Pop!", "French Female", { // Generated voice says "pop!" upon popping a ballon.
+//     pitch: 1.5, // Increased the pitch.
+//     rate: 0.9, // Decreased the rate.
+//     volume: 1 // Kept the volume as default.
+//   });
+// }
 
 
 // MOUSEPRESSED FUNCTION
