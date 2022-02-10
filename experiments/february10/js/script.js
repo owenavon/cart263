@@ -11,6 +11,13 @@ let handpose;
 // The current set of predictions made by Handpose once it's running
 let predictions = [];
 
+let thing = {
+  x: 500,
+  y: 150,
+  size: 50,
+  dragging: false
+};
+
 /**
 Starts the webcam and the Handpose
 */
@@ -71,6 +78,12 @@ function running() {
   let flippedVideo = ml5.flipImage(video);
   image(flippedVideo, 0, 0, width, height);
 
+  push();
+  fill(0, 255, 255);
+  ellipse(thing.x, thing.y, thing.size);
+  pop();
+
+
   // Check if there currently predictions to display
   if (predictions.length > 0) {
     // Technically there will only be ONE because it only detects ONE hand
@@ -89,9 +102,37 @@ function highlightHand(hand) {
   let index = hand.annotations.indexFinger[3];
   let indexX = index[0];
   let indexY = index[1];
+
+  let thumb = hand.annotations.thumb[3];
+  let thumbX = thumb[0];
+  let thumbY = thumb[1];
+
+
+
+  let d = dist(indexX, indexY, thumbX, thumbY);
+  if (d < 40) {
+    fill(0, 255, 0);
+    let thingDistance = dist(thing.x, thing.y, indexX, indexY);
+    if (thingDistance < thing.size / 2) {
+      thing.dragging = true;
+      thing.x = indexX;
+      thing.y = indexY;
+    }
+  }
+  else {
+    fill(255, 0, 0);
+    thing.dragging = false;
+  }
+
+
   push();
-  fill(255, 255, 0);
   noStroke();
   ellipse(indexX, indexY, 10);
+  pop();
+
+
+  push();
+  noStroke();
+  ellipse(thumbX, thumbY, 10);
   pop();
 }
