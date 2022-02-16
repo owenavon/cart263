@@ -12,6 +12,7 @@ Inspired from the movie “Cars”, the user plays as "Mator" and has the task o
 
 However, If Frank is disturbed, he will chase "Mator" along the screen for up to 30 seconds. The user who controls "Mator" must avoid all obstacles like fences and hay bales in order to louse Frank and win the objective.
 
+Get close to the tractors to activate sound, but don't get to close!
 
 Technical functionality:
 ** State System

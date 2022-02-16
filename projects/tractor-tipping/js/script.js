@@ -17,6 +17,9 @@ let voiceTimer = 11; // Sets the voiceTimer to 11 seconds.
 let currentCharacter = 0; // Starts without showing any characters on screen.
 let pageMargin = 50; // Page margins for a sheet of paper effect.
 
+let materImage = undefined;
+let mater = undefined;
+
 let voiceString = `
 Okay now here's what you do.
 You just sneak up in front of 'em and then honk.
@@ -117,14 +120,22 @@ let colour = {
 
 // Description of preload()
 function preload () {
-  titleFont = loadFont ("assets/fonts/magnetob.ttf") // Preloads the custom downloaded font for efficient load times.
-  disneyFont = loadFont ("assets/fonts/disney.ttf") // Preloads the custom downloaded font for efficient load times.
+  loadFonts(); // Calls the loadFonts function.
+  loadImages(); // Calls the loadImages.
 }
 
 
 // Description of setup()
 function setup() {
 createCanvas(1280, 720); // Sets the canvas size to 16:9 aspect ratio.
+generateMater(); // Calls the generatemater function.
+}
+
+
+function generateMater() {
+  let x = 0;
+  let y = 0;
+  mater = new Mater (x, y, materImage); // Sends arguments to constructor in Mater.js.
 }
 
 
@@ -256,7 +267,7 @@ function trickTimer() {
 
 
 // RESPONSIVEVOICE FUNCTION
-function talkingMator() {
+function talkingmater() {
   responsiveVoice.speak(voiceString, "Australian Male", { // Uses responsiveVoice api to speak the variable "voiceString" aloud.
     pitch: 1.1, // Increases the voice's pitch.
     rate: 0.70, // Decreases the voice's rate.
@@ -268,6 +279,12 @@ function talkingMator() {
 // REDTRACTOR FUNCTION
 function redTractor() { // RedTractor function
   background(colour.red.r, colour.red.g, colour.red.b); // Sets background to red in colour.
+  createMater(); // Calls the createMater function.
+}
+
+
+function createMater() {
+  mater.update(); // Calls update to display, move and constrain Mater
 }
 
 
@@ -275,7 +292,20 @@ function redTractor() { // RedTractor function
 function keyPressed () { // p5 function to perform action with keyboard input.
   if (keyCode === 13 && state === `landing`) { // When the "Enter" key is pushed, and the state is in "landing", switch to the "instruction" state.
     state = `instruction`; // Runs the "simulation" state.
-    talkingMator(); // Calls the talkingMator function which uses responsive voice api.
+    talkingmater(); // Calls the talkingmater function which uses responsive voice api.
     generateTrickTimer(); // Calls the generateTrickTimer fnction.
   }
+}
+
+
+// LOADFONTS FUNCTION
+function loadFonts() {
+  titleFont = loadFont ("assets/fonts/magnetob.ttf") // Preloads the custom downloaded font for efficient load times.
+  disneyFont = loadFont ("assets/fonts/disney.ttf") // Preloads the custom downloaded font for efficient load times.
+}
+
+
+// LOADIMAGES FUNCTION
+function loadImages() {
+  materImage = loadImage (`assets/images/materTest.jpg`) // Preloads the image of mater for efficient load times.
 }
