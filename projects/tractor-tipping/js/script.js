@@ -7,7 +7,7 @@
 "use strict";
 
 
-let state = `landing`; // Provides the starting state. Can be "landing", "redTractor", "greenTractor", "blueTractor", "chase", "winner", "loser".
+let state = `redTractor`; // Provides the starting state. Can be "landing", "redTractor", "greenTractor", "blueTractor", "chase", "winner", "loser".
 let disneyFont; // Defines custom disneyFont.
 let titleFont; // Defines custom titleFont.
 // let gameFont; // Defines custom gameFont.
@@ -17,8 +17,15 @@ let voiceTimer = 11; // Sets the voiceTimer to 11 seconds.
 let currentCharacter = 0; // Starts without showing any characters on screen.
 let pageMargin = 50; // Page margins for a sheet of paper effect.
 
+
+
 let materImage = undefined;
 let mater = undefined;
+
+let tractorImage = undefined;
+let tractor = undefined;
+
+
 
 let voiceString = `
 Okay now here's what you do.
@@ -128,7 +135,8 @@ function preload () {
 // Description of setup()
 function setup() {
 createCanvas(1280, 720); // Sets the canvas size to 16:9 aspect ratio.
-generateMater(); // Calls the generatemater function.
+generateMater(); // Calls the generateMater function.
+generateTractor(); // Calls the generateTractor function.
 }
 
 
@@ -136,6 +144,13 @@ function generateMater() {
   let x = 0;
   let y = 0;
   mater = new Mater (x, y, materImage); // Sends arguments to constructor in Mater.js.
+}
+
+
+function generateTractor() {
+  let x = random(100, 1000);
+  let y = 600;
+  tractor = new Tractor (x, y, tractorImage); // Sends arguments to constructor in Tractor.js.
 }
 
 
@@ -279,12 +294,37 @@ function talkingmater() {
 // REDTRACTOR FUNCTION
 function redTractor() { // RedTractor function
   background(colour.red.r, colour.red.g, colour.red.b); // Sets background to red in colour.
+
   createMater(); // Calls the createMater function.
+  createTractor(); // Calls the createTractor function.
+  createCheckOverlap(); // Calls the createCheckOverlap function.
 }
 
 
 function createMater() {
-  mater.update(); // Calls update to display, move and constrain Mater
+  mater.display();
+  mater.overlap(tractor);
+  mater.handleInput();
+  mater.move();
+}
+
+
+function createTractor() {
+  tractor.update();
+  tractor.tip();
+}
+
+
+function createCheckOverlap() {
+  if (!mater.alive) {
+    state = `loser`;
+  }
+}
+
+
+// LOSER FUNCTION
+function loser() { // loser function
+  background(colour.blue.r, colour.blue.g, colour.blue.b); // Sets background to red in colour.
 }
 
 
@@ -298,6 +338,12 @@ function keyPressed () { // p5 function to perform action with keyboard input.
 }
 
 
+// // MOUSEPRESSED FUNCTION
+// function mousePressed() {
+//   tractor.mousePressed(); // Calls method in object, in sausageDog class.
+// }
+
+
 // LOADFONTS FUNCTION
 function loadFonts() {
   titleFont = loadFont ("assets/fonts/magnetob.ttf") // Preloads the custom downloaded font for efficient load times.
@@ -308,4 +354,5 @@ function loadFonts() {
 // LOADIMAGES FUNCTION
 function loadImages() {
   materImage = loadImage (`assets/images/materTest.jpg`) // Preloads the image of mater for efficient load times.
+  tractorImage = loadImage (`assets/images/tractorTest.jpg`) // Preloads the image of tractor for efficient load times.
 }

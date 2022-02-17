@@ -6,12 +6,35 @@ class Mater {
     this.vx = 0;
     this.vy = 0;
     this.speed = 3;
+    this.angle = 0;
+    this.alive = true;
   }
 
+
   update() {
-    this.handleInput();
-    this.move();
     this.display();
+  }
+
+
+  display() {
+    push(); // Isolates code from using global properties.
+    imageMode(CENTER); // Fromats image from the center outwards.
+    translate(this.x, this.y); // Transalte the image postion.
+    rotate(this.angle); // Allows the animal to rotate.
+    image(this.image, 0, 0); // Orgin point has been moved to where we want to draw due to translate.
+    pop(); // Isolates code from using global properties.
+  }
+
+
+  overlap(tractor) {
+    if (this.x > tractor.x - tractor.width / 2 &&
+        this.x < tractor.x + tractor.width / 2 &&
+        this.y > tractor.y - tractor.height / 2 &&
+        this.y < tractor.y + tractor.height / 2) {
+      this.alive = false;
+      
+      console.log(`hit`);
+    }
   }
 
 
@@ -46,14 +69,4 @@ class Mater {
     this.y = constrain(this.y, 0, width); // Constrains Mater to the canvas width.
   }
 
-
-  display() { // Display mater on the canvas.
-
-    push(); // Isolates code from using global properties.
-    imageMode(CENTER, CENTER); // Formats image from the center outwards.
-    translate(this.x, this.y); // Translates the image position.
-    image(this.image, 250, 250); // Orgin point has been moved to where we want to draw due to translate.
-    pop(); // Isolates code from using global properties.
-
-  }
 }
