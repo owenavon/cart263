@@ -17,14 +17,15 @@ let voiceTimer = 11; // Sets the voiceTimer to 11 seconds.
 let currentCharacter = 0; // Starts without showing any characters on screen.
 let pageMargin = 50; // Page margins for a sheet of paper effect.
 
-
+let microphone; // Defines microphone for AudioInput
+let minLoudness = 0.3; // Assigns a minimum loudness value
+let maxLoudness = 0.5; // Assigns a maximum loudness value
 
 let materImage = undefined;
 let mater = undefined;
 
 let tractorImage = undefined;
 let tractor = undefined;
-
 
 
 let voiceString = `
@@ -111,6 +112,11 @@ let colour = {
     g: 0,
     b: 100
   },
+  black: {
+    r: 0,
+    g: 0,
+    b: 0
+  },
   yellow: {
     r: 185,
     g: 185,
@@ -137,6 +143,7 @@ function setup() {
 createCanvas(1280, 720); // Sets the canvas size to 16:9 aspect ratio.
 generateMater(); // Calls the generateMater function.
 generateTractor(); // Calls the generateTractor function.
+generateAudioInput(); // Calls the generateAudioInput function upon starting the redTractor state.
 }
 
 
@@ -151,6 +158,13 @@ function generateTractor() {
   let x = random(100, 1000);
   let y = 600;
   tractor = new Tractor (x, y, tractorImage); // Sends arguments to constructor in Tractor.js.
+}
+
+
+function generateAudioInput() {
+  microphone = new p5.AudioIn(); // Connects to p5.Audio Library
+  microphone.start(); // Starts the microphone.
+  userStartAudio(); // starts the AudioContext on a user gesture, to enable audio input in browser.
 }
 
 
@@ -171,15 +185,15 @@ function draw() { // P5 Function that displays output on canvas.
   else if (state === `blueTractor`) { // Indicates that when the state equates to "blueTractor", start said state.
     blueTractor(); // Calls blueTractor function.
   }
-  else if (state === `chase`) { // Indicates that when the state equates to "chase", start said state.
-    chase(); // Calls chase function.
-  }
-  else if (state === `winner`) { // Indicates that when the state equates to "winner", start said state.
-    winner(); // Calls winner function.
-  }
-  else if (state === `loser`) { // Indicates that when the state equates to "loser", start said state.
-    loser(); // Calls loser function.
-  }
+  // else if (state === `chase`) { // Indicates that when the state equates to "chase", start said state.
+  //   chase(); // Calls chase function.
+  // }
+  // else if (state === `winner`) { // Indicates that when the state equates to "winner", start said state.
+  //   winner(); // Calls winner function.
+  // }
+  // else if (state === `loser`) { // Indicates that when the state equates to "loser", start said state.
+  //   loser(); // Calls loser function.
+  // }
 }
 
 
@@ -295,9 +309,27 @@ function talkingmater() {
 function redTractor() { // RedTractor function
   background(colour.red.r, colour.red.g, colour.red.b); // Sets background to red in colour.
 
+  createAudioInputLevel(); // Calls the createAudioInputLevels function.
   createMater(); // Calls the createMater function.
   createTractor(); // Calls the createTractor function.
   createCheckOverlap(); // Calls the createCheckOverlap function.
+}
+
+
+function createAudioInputLevel() {
+  let level = microphone.getLevel(); // Assigns level to getLevel function.
+
+  if (microphone >= minLoudness) {
+    // tractor.tip(); // Calls the tractor tip function
+    console.log(`Test`);
+    state = `blueTractor`; // Changes the state to blueTractor.
+  }
+
+  else if (microphone >= maxLoudness) {
+    state = `loser`; // Chnages the state to loser.
+  }
+
+  console.log(level); // Console logs audio input for testing purposes.
 }
 
 
@@ -310,21 +342,27 @@ function createMater() {
 
 
 function createTractor() {
-  tractor.update();
-  tractor.tip();
+  tractor.display();
 }
 
 
 function createCheckOverlap() {
   if (!mater.alive) {
     state = `loser`;
+    console.log(`fail`)
   }
+}
+
+
+// GREENTRACTOR FUNCTION
+function greenTractor() {
+  background(colour.blue.r, colour.blue.g, colour.blue.b)
 }
 
 
 // LOSER FUNCTION
 function loser() { // loser function
-  background(colour.blue.r, colour.blue.g, colour.blue.b); // Sets background to red in colour.
+  background(colour.black.r, colour.black.g, colour.black.b); // Sets background to red in colour.
 }
 
 
@@ -336,12 +374,6 @@ function keyPressed () { // p5 function to perform action with keyboard input.
     generateTrickTimer(); // Calls the generateTrickTimer fnction.
   }
 }
-
-
-// // MOUSEPRESSED FUNCTION
-// function mousePressed() {
-//   tractor.mousePressed(); // Calls method in object, in sausageDog class.
-// }
 
 
 // LOADFONTS FUNCTION

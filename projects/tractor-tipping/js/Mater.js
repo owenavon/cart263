@@ -8,11 +8,8 @@ class Mater {
     this.speed = 3;
     this.angle = 0;
     this.alive = true;
-  }
-
-
-  update() {
-    this.display();
+    this.width = 0;
+    this.height = 0;
   }
 
 
@@ -20,21 +17,20 @@ class Mater {
     push(); // Isolates code from using global properties.
     imageMode(CENTER); // Fromats image from the center outwards.
     translate(this.x, this.y); // Transalte the image postion.
-    rotate(this.angle); // Allows the animal to rotate.
     image(this.image, 0, 0); // Orgin point has been moved to where we want to draw due to translate.
     pop(); // Isolates code from using global properties.
   }
 
 
   overlap(tractor) {
-    if (this.x > tractor.x - tractor.width / 2 &&
-        this.x < tractor.x + tractor.width / 2 &&
-        this.y > tractor.y - tractor.height / 2 &&
-        this.y < tractor.y + tractor.height / 2) {
+    if (this.x > tractor.x - tractor.image.width / 2 &&
+        this.x < tractor.x + tractor.image.width / 2 &&
+        this.y > tractor.y - tractor.image.height / 2 &&
+        this.y < tractor.y + tractor.image.height / 2) {
       this.alive = false;
-      
-      console.log(`hit`);
+
     }
+    console.log(this.x, this.y, this.width, this.height, tractor.x, tractor.y);
   }
 
 
