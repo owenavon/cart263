@@ -37,5 +37,4 @@ class Frank {
     this.vy = this.speed; // Provides a moving speed for Frank.
   }
 
-
 }

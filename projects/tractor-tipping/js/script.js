@@ -7,7 +7,7 @@
 "use strict";
 
 
-let state = `landing`; // Provides the starting state. Can be "landing", "redTractor", "greenTractor", "blueTractor", "chase", "winner", "loser".
+let state = `landing`; // Provides the starting state. Can be "landing", "tractorHonkOne", "tractorHonkTwo", "tractorHonkThree", "touchTractor" "chase", "winner", "loser".
 let disneyFont; // Defines custom disneyFont.
 let titleFont; // Defines custom titleFont.
 // let gameFont; // Defines custom gameFont.
@@ -26,7 +26,11 @@ let maxLoudness = 0.5; // Assigns a maximum loudness value
 let materImage = undefined;
 let mater = undefined;
 
-let tractorImage = undefined;
+const NUM_TRACTOR_IMAGES = 3; // 3 different tractor images. Constant value, so it will not be changed throughout the program.
+const NUM_TRACTORS = 1; // 1 Tractor object is created, and will not be changed throughout the program.
+
+let tractorImages = []; // Empty anmimal images array.
+let tractors = []; // Empty animal object array.
 let tractor = undefined;
 
 let frankImage = undefined;
@@ -193,7 +197,7 @@ function preload () {
 // Description of setup()
 function setup() {
 createCanvas(1280, 720); // Sets the canvas size to 16:9 aspect ratio.
-generateAudioInput(); // Calls the generateAudioInput function upon starting the redTractor state.
+generateAudioInput(); // Calls the generateAudioInput function upon starting the tractorHonkOne state.
 }
 
 
@@ -210,17 +214,17 @@ function draw() { // P5 Function that displays output on canvas.
   if (state === `landing`) { // Indicates that when the state equates to "landing", start said state.
     landing(); // Calls landing function.
   }
-  else if (state === `instruction`) { // Indicates that when the state equates to "redTractor", start said state.
+  else if (state === `instruction`) { // Indicates that when the state equates to "tractorHonkOne", start said state.
     instruction(); // Calls instruction function.
   }
-  else if (state === `redTractor`) { // Indicates that when the state equates to "redTractor", start said state.
-    redTractor(); // Calls simulation function.
+  else if (state === `tractorHonkOne`) { // Indicates that when the state equates to "tractorHonkOne", start said state.
+    tractorHonkOne(); // Calls simulation function.
   }
-  else if (state === `greenTractor`) { // Indicates that when the state equates to "greenTractor", start said state.
-    greenTractor(); // Calls greenTractor function.
+  else if (state === `tractorHonkTwo`) { // Indicates that when the state equates to "tractorHonkTwo", start said state.
+    tractorHonkTwo(); // Calls tractorHonkTwo function.
   }
-  else if (state === `blueTractor`) { // Indicates that when the state equates to "blueTractor", start said state.
-    blueTractor(); // Calls blueTractor function.
+  else if (state === `tractorHonkThree`) { // Indicates that when the state equates to "tractorHonkThree", start said state.
+    tractorHonkThree(); // Calls tractorHonkThree function.
   }
   else if (state === `touchTractor`) { // Indicates that when the state equates to "touchTractor", start said state.
     touchTractor(); // Calls touchTractor function.
@@ -318,9 +322,9 @@ function displayTypewritterEffect() {
 
 function responsiveVoiceTimer() {
   if (voiceTimer == 0) { // Says, when the voiceTimer reaches zero (0), then...
-    state = `redTractor`; // Change the state to redTractor.
+    state = `tractorHonkOne`; // Change the state to tractorHonkOne.
     generateMater(); // Calls the generateMater function.
-    generateTractor(); // Calls the generateTractor function.
+    generateTractors(); // Calls the generateTractors function.
   }
 }
 
@@ -350,11 +354,11 @@ function talkingmater() {
 
 
 
-// REDTRACTOR FUNCTION
-function redTractor() { // RedTractor function
+// tractorHonkOne FUNCTION
+function tractorHonkOne() { // tractorHonkOne function
   background(colour.red.r, colour.red.g, colour.red.b); // Sets background to red in colour.
 
-  createRedTractorHeadingText(); // Calls the createRedTractorHeadingText.
+  createtractorHonkOneHeadingText(); // Calls the createtractorHonkOneHeadingText.
   createAudioInputLevel(); // Calls the createAudioInputLevels function.
   createMater(); // Calls the createMater function.
   createTractor(); // Calls the createTractor function.
@@ -364,7 +368,7 @@ function redTractor() { // RedTractor function
 }
 
 
-function createRedTractorHeadingText() {
+function createtractorHonkOneHeadingText() {
   push(); // Isolates code from using global properties.
   textFont(`courier`); // Displays the text font as courier.
   textSize(fontSize.extraSmall); // Displays the font size as 32px.
@@ -379,7 +383,7 @@ function createAudioInputLevel() {
   let level = microphone.getLevel(); // Assigns level to getLevel function.
 
   if (level > minLoudness) {
-    tractor.tip(); // Calls the tractor tip function, which makes the tractor rotate 90 degrees.
+    // tractor.tip(); // Calls the tractor tip function, which makes the tractor rotate 90 degrees.
     generateStateDelayTimer(); // Calls the generateStateDelayTimer which adds a 3 second delay to the state change.
   }
 
@@ -394,20 +398,21 @@ function createAudioInputLevel() {
 
 function createMater() {
   mater.display(); // Calls the display class in Mater.js.
-  mater.overlapTractor(tractor); // Calls the overlap class in Mater.js.
   mater.handleInput(); // Calls the handleInput class in Mater.js.
   mater.move(); // Calls the move class in Mater.js.
 }
 
 
 function createTractor() {
-  tractor.display(); // Calls the tractor display class in Tractor.js.
+  for (let i = 0; i < tractors.length; i++) { // Loop that counts to the value indicated in tractor.
+    tractors[i].update(); // Display one tractor at a random postion.
+  }
 }
 
 
 function createStateChangeDelayTimer() {
   if (stateDelayTimer == 0) { // Says, when the voiceTimer reaches zero (0), then...
-    state = `greenTractor`; // Change the state to greenTractor.
+    state = `tractorHonkTwo`; // Change the state to tractorHonkTwo.
   }
 }
 
@@ -433,21 +438,25 @@ function generateMater() {
 }
 
 
-function generateTractor() {
-  let x = random(100, 1000); // Spawns the tractor at a range of positions along the X axis
-  let y = 600; // Spawns the tractor at the y position of 600. (Left side of canvas).
-  tractor = new Tractor (x, y, tractorImage); // Sends arguments to constructor in Tractor.js.
+function generateTractors() { // Generates the animals.
+  for (let i = 0; i < NUM_TRACTORS; i++) { // For loop to duplicate the animals.
+    let x = random(0, width); // Random x postion for image placement.
+    let y = random(0, height); // Random y postion for image placement.
+    let tractorImage = random(tractorImages); // Random image from animalImages array.
+    let tractor = new Tractor(x, y, tractorImage); // Sends parameters to constructor in Tractor class.
+    tractors.push(tractor); // Add tractor into tractors array.
+  }
 }
 
 
-// GREENTRACTOR FUNCTION
-function greenTractor() {
+// tractorHonkTwo FUNCTION
+function tractorHonkTwo() {
   background(colour.green.r, colour.green.g, colour.green.b); // Sets background to green in colour.
-  createGreenTractorHeadingText(); // Calls the createGreenTractorHeadingText.
+  createtractorHonkTwoHeadingText(); // Calls the createtractorHonkTwoHeadingText.
 }
 
 
-function createGreenTractorHeadingText() {
+function createtractorHonkTwoHeadingText() {
   push(); // Isolates code from using global properties.
   textFont(`courier`); // Displays the text font as courier.
   textSize(fontSize.small); // Displays the font size as 32px.
@@ -459,14 +468,14 @@ function createGreenTractorHeadingText() {
 
 
 
-// BLUETRACTOR FUNCTION
-function blueTractor() {
+// tractorHonkThree FUNCTION
+function tractorHonkThree() {
   background(colour.blue.r, colour.blue.g, colour.blue.b); // Sets background to blue in colour.
-  createBlueTractorHeadingText(); // Calls the createGreenTractorHeadingText.
+  createtractorHonkThreeHeadingText(); // Calls the createtractorHonkTwoHeadingText.
 }
 
 
-function createBlueTractorHeadingText() {
+function createtractorHonkThreeHeadingText() {
   push(); // Isolates code from using global properties.
   textFont(`courier`); // Displays the text font as courier.
   textSize(fontSize.Small); // Displays the font size as 32px.
@@ -592,6 +601,11 @@ function loadFonts() {
 // LOADIMAGES FUNCTION
 function loadImages() {
   materImage = loadImage (`assets/images/materTest.jpg`) // Preloads the image of mater for efficient load times.
-  tractorImage = loadImage (`assets/images/tractorTest.jpg`) // Preloads the image of tractor for efficient load times.
   frankImage = loadImage (`assets/images/frankTest.png`) // Preloads the image of frank for efficient load times.
+
+
+  for (let i = 0; i < NUM_TRACTOR_IMAGES; i++) { // Loop that counts up by 1 untill 3.
+    let tractorImage = loadImage(`assets/images/tractor${i}.png`); // Load tractor images dynamically.
+    tractorImages.push(tractorImage); // Push's the animal images into the array.
+  }
 }
