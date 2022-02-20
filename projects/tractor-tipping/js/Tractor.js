@@ -10,13 +10,11 @@ class Tractor { // Creates a class that is called from script.js.
     this.rotationSpeed = 0.1; // Assigns a rotation speed.
   }
 
-
   update() {
     this.display();
-    // this.tip();
+    // this.top();
     this.overlapMater(mater);
   }
-
 
   display() {
     push(); // Isolates code from using global properties.

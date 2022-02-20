@@ -14,7 +14,8 @@ let titleFont; // Defines custom titleFont.
 // let timer = 5; // Set's the timer value.
 
 let voiceTimer = 11; // Sets the voiceTimer to 11 seconds.
-let stateDelayTimer = 3; // Sets the voiceTimer to 11 seconds.
+
+let stateDelayTimer = 3; // Sets the stateDelayTimer to 3 seconds.
 
 let currentCharacter = 0; // Starts without showing any characters on screen.
 let pageMargin = 50; // Page margins for a sheet of paper effect.
@@ -363,8 +364,6 @@ function tractorHonkOne() { // tractorHonkOne function
   createMater(); // Calls the createMater function.
   createTractor(); // Calls the createTractor function.
   createStateChangeDelayTimer(); // Calls the createStateChangeDelay function.
-
-
 }
 
 
@@ -379,80 +378,13 @@ function createtractorHonkOneHeadingText() {
 }
 
 
-function createAudioInputLevel() {
-  let level = microphone.getLevel(); // Assigns level to getLevel function.
-
-  if (level > minLoudness) {
-    // tractor.tip(); // Calls the tractor tip function, which makes the tractor rotate 90 degrees.
-    generateStateDelayTimer(); // Calls the generateStateDelayTimer which adds a 3 second delay to the state change.
-  }
-
-  if (level > maxLoudness) {
-    state = `chase`; // Chnages the state to chase.
-    generateFrank(); // Calls the generateFrank function.
-  }
-
-  console.log(level); // Console logs audio input for testing purposes.
-}
-
-
-function createMater() {
-  mater.display(); // Calls the display class in Mater.js.
-  mater.handleInput(); // Calls the handleInput class in Mater.js.
-  mater.move(); // Calls the move class in Mater.js.
-}
-
-
-function createTractor() {
-  for (let i = 0; i < tractors.length; i++) { // Loop that counts to the value indicated in tractor.
-    tractors[i].update(); // Display one tractor at a random postion.
-  }
-}
-
-
-function createStateChangeDelayTimer() {
-  if (stateDelayTimer == 0) { // Says, when the voiceTimer reaches zero (0), then...
-    state = `tractorHonkTwo`; // Change the state to tractorHonkTwo.
-  }
-}
-
-
-    // STATEDELAY SETUP
-function generateStateDelayTimer() {
-  setInterval(stateDelay, 1000); // Creates a timer that calls the function trickTimer.
-}
-
-
-    // STATEDELAY FUNCTION
-function stateDelay() {
-  if (stateDelayTimer > 0) { // Says, if the timer is an interger greater then zero (0), then...
-    stateDelayTimer--; // Decrease the number by 1.
-  }
-}
-
-
-function generateMater() {
-  let x = 0; // Spawns mater at the x orgin point.
-  let y = 0; // Spawns mater at the y orgin point.
-  mater = new Mater (x, y, materImage); // Sends arguments to constructor in Mater.js.
-}
-
-
-function generateTractors() { // Generates the animals.
-  for (let i = 0; i < NUM_TRACTORS; i++) { // For loop to duplicate the animals.
-    let x = random(0, width); // Random x postion for image placement.
-    let y = random(0, height); // Random y postion for image placement.
-    let tractorImage = random(tractorImages); // Random image from animalImages array.
-    let tractor = new Tractor(x, y, tractorImage); // Sends parameters to constructor in Tractor class.
-    tractors.push(tractor); // Add tractor into tractors array.
-  }
-}
-
-
 // tractorHonkTwo FUNCTION
 function tractorHonkTwo() {
   background(colour.green.r, colour.green.g, colour.green.b); // Sets background to green in colour.
   createtractorHonkTwoHeadingText(); // Calls the createtractorHonkTwoHeadingText.
+  createAudioInputLevel(); // Calls the createAudioInputLevels function.
+  createMater(); // Calls the createMater function.
+  createTractor(); // Calls the createTractor function.
 }
 
 
@@ -607,5 +539,82 @@ function loadImages() {
   for (let i = 0; i < NUM_TRACTOR_IMAGES; i++) { // Loop that counts up by 1 untill 3.
     let tractorImage = loadImage(`assets/images/tractor${i}.png`); // Load tractor images dynamically.
     tractorImages.push(tractorImage); // Push's the animal images into the array.
+  }
+}
+
+
+// GENERATE MATER FUNCTION
+function generateMater() {
+  let x = 0; // Spawns mater at the x orgin point.
+  let y = 0; // Spawns mater at the y orgin point.
+  mater = new Mater (x, y, materImage); // Sends arguments to constructor in Mater.js.
+}
+
+
+// GENERARE TRACTOR FUNCTION
+function generateTractors() { // Generates the animals.
+  for (let i = 0; i < NUM_TRACTORS; i++) { // For loop to duplicate the animals.
+    let x = random(0, width); // Random x postion for image placement.
+    let y = random(0, height); // Random y postion for image placement.
+    let tractorImage = random(tractorImages); // Random image from animalImages array.
+    let tractor = new Tractor(x, y, tractorImage); // Sends parameters to constructor in Tractor class.
+    tractors.push(tractor); // Add tractor into tractors array.
+  }
+}
+
+
+// CREATE MATER FUNCTION
+function createMater() {
+  mater.display(); // Calls the display class in Mater.js.
+  mater.handleInput(); // Calls the handleInput class in Mater.js.
+  mater.move(); // Calls the move class in Mater.js.
+}
+
+
+// CREATE TRACTOR FUNCTION
+function createTractor() {
+  for (let i = 0; i < tractors.length; i++) { // Loop that counts to the value indicated in tractor.
+    tractors[i].update(); // Display one tractor at a random postion.
+  }
+}
+
+
+
+// CREATE AUDIO INPUT FUNCTION
+function createAudioInputLevel() {
+  let level = microphone.getLevel(); // Assigns level to getLevel function.
+
+  if (level > minLoudness) {
+    // tractor.tip(); // Calls the tractor tip function, which makes the tractor rotate 90 degrees.
+    generateStateDelayTimer(); // Calls the generateStateDelayTimer which adds a 3 second delay to the state change.
+  }
+
+  if (level > maxLoudness) {
+    state = `chase`; // Changes the state to chase.
+    generateFrank(); // Calls the generateFrank function.
+  }
+
+  console.log(level); // Console logs audio input for testing purposes.
+}
+
+
+function createStateChangeDelayTimer() {
+  if (stateDelayTimer == 0) { // Says, when the voiceTimer reaches zero (0), then...
+    state = `tractorHonkTwo`; // Change the state to tractorHonkTwo.
+    generateTractors();
+  }
+}
+
+
+    // STATEDELAY SETUP
+function generateStateDelayTimer() {
+  setInterval(stateDelay, 1000); // Creates a timer that calls the function trickTimer.
+}
+
+
+    // STATEDELAY FUNCTION
+function stateDelay() {
+  if (stateDelayTimer > 0) { // Says, if the timer is an interger greater then zero (0), then...
+    stateDelayTimer--; // Decrease the number by 1.
   }
 }
