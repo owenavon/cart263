@@ -7,7 +7,7 @@
 "use strict";
 
 
-let state = `redTractor`; // Provides the starting state. Can be "landing", "redTractor", "greenTractor", "blueTractor", "chase", "winner", "loser".
+let state = `landing`; // Provides the starting state. Can be "landing", "redTractor", "greenTractor", "blueTractor", "chase", "winner", "loser".
 let disneyFont; // Defines custom disneyFont.
 let titleFont; // Defines custom titleFont.
 // let gameFont; // Defines custom gameFont.
@@ -28,6 +28,9 @@ let mater = undefined;
 
 let tractorImage = undefined;
 let tractor = undefined;
+
+let frankImage = undefined;
+let frank = undefined;
 
 
 let voiceString = `
@@ -190,32 +193,8 @@ function preload () {
 // Description of setup()
 function setup() {
 createCanvas(1280, 720); // Sets the canvas size to 16:9 aspect ratio.
-generateMater(); // Calls the generateMater function.
-generateTractor(); // Calls the generateTractor function.
-// generateFrank(); // Calls the generateFrank function.
 generateAudioInput(); // Calls the generateAudioInput function upon starting the redTractor state.
 }
-
-
-function generateMater() {
-  let x = 0; // Spawns mater at the x orgin point.
-  let y = 0; // Spawns mater at the y orgin point.
-  mater = new Mater (x, y, materImage); // Sends arguments to constructor in Mater.js.
-}
-
-
-function generateTractor() {
-  let x = random(100, 1000); // Spawns the tractor at a range of positions along the X axis
-  let y = 600; // Spawns the tractor at the y position of 600. (Left side of canvas).
-  tractor = new Tractor (x, y, tractorImage); // Sends arguments to constructor in Tractor.js.
-}
-
-
-// function generateFrank() {
-//   let x = 1200; // Spawns the tractor at the y position of 1200. (Right side of canvas)
-//   let y = random(100, 1000); // Spawns Frank at a range of positions along the y axis
-//   tractor = new Frank (x, y, frankImage); // Sends arguments to constructor in Frank.js.
-// }
 
 
 function generateAudioInput() {
@@ -340,6 +319,8 @@ function displayTypewritterEffect() {
 function responsiveVoiceTimer() {
   if (voiceTimer == 0) { // Says, when the voiceTimer reaches zero (0), then...
     state = `redTractor`; // Change the state to redTractor.
+    generateMater(); // Calls the generateMater function.
+    generateTractor(); // Calls the generateTractor function.
   }
 }
 
@@ -378,6 +359,8 @@ function redTractor() { // RedTractor function
   createMater(); // Calls the createMater function.
   createTractor(); // Calls the createTractor function.
   createStateChangeDelayTimer(); // Calls the createStateChangeDelay function.
+
+
 }
 
 
@@ -402,6 +385,7 @@ function createAudioInputLevel() {
 
   if (level > maxLoudness) {
     state = `chase`; // Chnages the state to chase.
+    generateFrank(); // Calls the generateFrank function.
   }
 
   console.log(level); // Console logs audio input for testing purposes.
@@ -410,7 +394,7 @@ function createAudioInputLevel() {
 
 function createMater() {
   mater.display(); // Calls the display class in Mater.js.
-  mater.overlap(tractor); // Calls the overlap class in Mater.js.
+  mater.overlapTractor(tractor); // Calls the overlap class in Mater.js.
   mater.handleInput(); // Calls the handleInput class in Mater.js.
   mater.move(); // Calls the move class in Mater.js.
 }
@@ -441,6 +425,19 @@ function stateDelay() {
   }
 }
 
+
+function generateMater() {
+  let x = 0; // Spawns mater at the x orgin point.
+  let y = 0; // Spawns mater at the y orgin point.
+  mater = new Mater (x, y, materImage); // Sends arguments to constructor in Mater.js.
+}
+
+
+function generateTractor() {
+  let x = random(100, 1000); // Spawns the tractor at a range of positions along the X axis
+  let y = 600; // Spawns the tractor at the y position of 600. (Left side of canvas).
+  tractor = new Tractor (x, y, tractorImage); // Sends arguments to constructor in Tractor.js.
+}
 
 
 // GREENTRACTOR FUNCTION
@@ -504,6 +501,7 @@ function touchTractorHeadingText() {
 function chase() {
   background(colour.grey.r, colour.grey.g, colour.grey.b); // Sets background to red in colour.
   chaseTractorHeadingText(); // Calls the touchTractorHeadingText.
+  createFrank(); // Calls the createFrank function.
 }
 
 
@@ -515,6 +513,21 @@ function chaseTractorHeadingText() {
   textAlign(CENTER, CENTER); // Positions the text allignment to center.
   text(chaseText.string, chaseText.x, chaseText.y); // Displays the Sub Heading.
   pop(); // Isolates code from using global properties.
+}
+
+
+function createFrank() {
+  frank.display(); // Calls the display class in frank.js.
+  frank.overlapMater(mater); // Calls the overlap class in Mater.js.
+  frank.move(); // Calls the move class in frank.js.
+}
+
+
+    // generateFrank
+function generateFrank() {
+  let x = random(320, 960); // Spawns Frank at a random position on the x axis.
+  let y = 0; // Spawns Frank at the top of the canvas.
+  frank = new Frank (x, y, frankImage); // Sends arguments to constructor in Frank.js.
 }
 
 
@@ -580,4 +593,5 @@ function loadFonts() {
 function loadImages() {
   materImage = loadImage (`assets/images/materTest.jpg`) // Preloads the image of mater for efficient load times.
   tractorImage = loadImage (`assets/images/tractorTest.jpg`) // Preloads the image of tractor for efficient load times.
+  frankImage = loadImage (`assets/images/frankTest.png`) // Preloads the image of frank for efficient load times.
 }

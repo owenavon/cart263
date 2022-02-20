@@ -26,7 +26,7 @@ class Mater { // Creates a class that is called from script.js.
   }
 
 
-  overlap(tractor) { // Provides tractor as an argument to connect mater class to tractor class. Locates the center point of both mater and tractor.
+  overlapTractor(tractor) { // Provides tractor as an argument to connect mater class to tractor class. Locates the center point of both mater and tractor.
     if (this.x > tractor.x - tractor.image.width / 2 && // If mater's x position is greater than tractor's x position, minus tractors's width / 2.
         this.x < tractor.x + tractor.image.width / 2 && // If mater's x position is less than tractor's x position, plus tractors's width / 2.
         this.y > tractor.y - tractor.image.height / 2 && // If mater's y position is greater than tractor's y position, minus tractor's width / 2.
