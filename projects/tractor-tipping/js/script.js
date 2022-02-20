@@ -524,7 +524,7 @@ function keyPressed () { // p5 function to perform action with keyboard input.
 
 // LOADFONTS FUNCTION
 function loadFonts() {
-  titleFont = loadFont ("assets/fonts/magnetob.ttf") // Preloads the custom downloaded font for efficient load times.
+  titleFont = loadFont ("assets/fonts/disney.ttf") // Preloads the custom downloaded font for efficient load times.
   disneyFont = loadFont ("assets/fonts/disney.ttf") // Preloads the custom downloaded font for efficient load times.
 }
 
