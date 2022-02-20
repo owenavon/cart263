@@ -601,7 +601,7 @@ function createAudioInputLevel() {
 function createStateChangeDelayTimer() {
   if (stateDelayTimer == 0) { // Says, when the voiceTimer reaches zero (0), then...
     state = `tractorHonkTwo`; // Change the state to tractorHonkTwo.
-    generateTractors();
+    // generateTractors();
   }
 }
 
