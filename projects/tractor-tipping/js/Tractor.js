@@ -10,11 +10,29 @@ class Tractor { // Creates a class that is called from script.js.
     this.rotationSpeed = 0.1; // Assigns a rotation speed.
   }
 
+  // resetAll() {
+  //   reset(x, y, tractorImage);
+  //   this.display();
+  //   this.overlapMater(mater);
+  // }
+
+  reset(x, y, tractorImage) {
+    this.x = x;
+    this.y = y;
+    this.image = tractorImage; // Defines image variable in script.js.
+    this.angle = 0;
+    this.maxAngle = 96; // Assigns a maxAngle so that the tractor tips onto it's side.
+    this.width = 0; // Assigns an intial width of 0.
+    this.height = 0; // Assigns an intial height of 0.
+    this.rotationSpeed = 3; // Assigns a rotation speed.
+  }
+
+
   update() {
     this.display();
-    // this.top();
     this.overlapMater(mater);
   }
+
 
   display() {
     push(); // Isolates code from using global properties.
@@ -27,8 +45,7 @@ class Tractor { // Creates a class that is called from script.js.
 
 
   tip() {
-      // this.angle += this.rotationSpeed; // Allows the sausageDog to rotate.
-      this.angle = constrain(this.angle, this.maxAngle, 0); // Tips the tractor 90 degrees.
+    this.angle = constrain(this.angle, this.maxAngle, 0); // Tips the tractor 90 degrees.
   }
 
 
@@ -42,7 +59,7 @@ class Tractor { // Creates a class that is called from script.js.
         this.x < mater.x + mater.image.width / 2 && // If tractors's x position is less than maters's x position, plus tmaters's width / 2.
         this.y > mater.y - mater.image.height / 2 && // If tractors's y position is greater than maters's y position, minus maters's width / 2.
         this.y < mater.y + mater.image.height / 2) { // If tractors's y position is less than maters's y position, plus maters's width / 2.
-          this.touchMaterState(); // Then, call the touchTractor function.
+        this.touchMaterState(); // Then, call the touchTractor function.
     }
   }
 

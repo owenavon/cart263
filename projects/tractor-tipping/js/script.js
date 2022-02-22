@@ -22,7 +22,7 @@ let pageMargin = 50; // Page margins for a sheet of paper effect.
 
 let microphone; // Defines microphone for AudioInput
 let minLoudness = 0.3; // Assigns a minimum loudness value
-let maxLoudness = 0.5; // Assigns a maximum loudness value
+let maxLoudness = 0.7; // Assigns a maximum loudness value
 
 let materImage = undefined;
 let mater = undefined;
@@ -32,7 +32,7 @@ const NUM_TRACTORS = 1; // 1 Tractor object is created, and will not be changed 
 
 let tractorImages = []; // Empty anmimal images array.
 let tractors = []; // Empty animal object array.
-let tractor = undefined;
+// let tractor = undefined;
 
 let frankImage = undefined;
 let frank = undefined;
@@ -180,17 +180,17 @@ let colour = {
 };
 
 
-// let gameSound = {
-//   wrongSFX: undefined, // Sets wrongSFX as a variable.
-//   failSFX: undefined, // Sets failSFX as a variable.
-//   winnerSFX: undefined // Sets winnerSFX as a variable.
-// };
+let gameSound = {
+  honkSFX: undefined, // Sets honkSFX as a variable.
+};
 
 
 // Description of preload()
 function preload () {
+
+  loadImages(); // Calls the loadImages function.
+  loadSounds(); // Calls the loadSounds function
   loadFonts(); // Calls the loadFonts function.
-  loadImages(); // Calls the loadImages.
 }
 
 
@@ -378,13 +378,86 @@ function createtractorHonkOneHeadingText() {
 }
 
 
+    // CREATE AUDIO INPUT FUNCTION
+function createAudioInputLevel() {
+  let level = microphone.getLevel(); // Assigns level to getLevel function.
+
+  if (level > minLoudness) {
+
+    for (let i = 0; i < tractors.length; i++) { // Loop that counts to the value indicated in tractor.
+      tractors[i].tip(); // Calls the tractor tip function, which makes the tractor rotate 90 degrees.
+    }
+
+    generateStateDelayTimer(); // Calls the generateStateDelayTimer which adds a 3 second delay to the state change.
+    playHonk(); // Calls the playHonk function to add sound effect.
+  }
+
+  if (level > maxLoudness) {
+    state = `chase`; // Changes the state to chase.
+    generateFrank(); // Calls the generateFrank function.
+  }
+
+  console.log(level); // Console logs audio input for testing purposes.
+}
+
+
+// GENERATE MATER FUNCTION
+function generateMater() {
+  let x = 0; // Spawns mater at the x orgin point.
+  let y = 0; // Spawns mater at the y orgin point.
+  mater = new Mater (x, y, materImage); // Sends arguments to constructor in Mater.js.
+}
+
+
+// GENERATE TRACTOR FUNCTION
+function generateTractors() { // Generates the animals.
+  for (let i = 0; i < NUM_TRACTORS; i++) { // For loop to duplicate the animals.
+    let x = random(0, width); // Random x postion for image placement.
+    let y = random(0, height); // Random y postion for image placement.
+    let tractorImage = random(tractorImages); // Random image from animalImages array.
+    let tractor = new Tractor(x, y, tractorImage); // Sends parameters to constructor in Tractor class.
+    tractors.push(tractor); // Add tractor into tractors array.
+  }
+}
+
+
+    // CREATE MATER FUNCTION
+function createMater() {
+  mater.display(); // Calls the display class in Mater.js.
+  mater.handleInput(); // Calls the handleInput class in Mater.js.
+  mater.move(); // Calls the move class in Mater.js.
+}
+
+
+    // CREATE TRACTOR FUNCTION
+function createTractor() {
+  for (let i = 0; i < tractors.length; i++) { // Loop that counts to the value indicated in tractor.
+    tractors[i].update(); // Display one tractor at a random postion.
+  }
+}
+
+
+    // CREATE STATECHANGEDELAY FUNCTION
+function createStateChangeDelayTimer() {
+  if (stateDelayTimer == 0) { // Says, when the voiceTimer reaches zero (0), then...
+    state = `tractorHonkTwo`; // Change the state to tractorHonkTwo.
+  }
+}
+
+
+
 // tractorHonkTwo FUNCTION
 function tractorHonkTwo() {
   background(colour.green.r, colour.green.g, colour.green.b); // Sets background to green in colour.
   createtractorHonkTwoHeadingText(); // Calls the createtractorHonkTwoHeadingText.
+
   createAudioInputLevel(); // Calls the createAudioInputLevels function.
   createMater(); // Calls the createMater function.
-  createTractor(); // Calls the createTractor function.
+  // createTractor();
+
+  // NEED TO FIGURE OUT HOW TO DISPLAY TRACTOR WITH CREATETRACTOR RESET.
+
+  createTractorReset(); // Calls the createTractorReset function
 }
 
 
@@ -398,6 +471,11 @@ function createtractorHonkTwoHeadingText() {
   pop(); // Isolates code from using global properties.
 }
 
+function createTractorReset() {
+  for (let i = 0; i < tractors.length; i++) { // Loop that counts to the value indicated in tractor.
+    tractors[i].reset(random(0, width), random(0, height));
+  }
+}
 
 
 // tractorHonkThree FUNCTION
@@ -511,6 +589,22 @@ function winnerHeadingText() {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // KEYPRESSED FUNCTION
 function keyPressed () { // p5 function to perform action with keyboard input.
   if (keyCode === 13 && state === `landing`) { // When the "Enter" key is pushed, and the state is in "landing", switch to the "instruction" state.
@@ -521,18 +615,9 @@ function keyPressed () { // p5 function to perform action with keyboard input.
 }
 
 
-
-// LOADFONTS FUNCTION
-function loadFonts() {
-  titleFont = loadFont ("assets/fonts/disney.ttf") // Preloads the custom downloaded font for efficient load times.
-  disneyFont = loadFont ("assets/fonts/disney.ttf") // Preloads the custom downloaded font for efficient load times.
-}
-
-
-
 // LOADIMAGES FUNCTION
 function loadImages() {
-  materImage = loadImage (`assets/images/materTest.jpg`) // Preloads the image of mater for efficient load times.
+  materImage = loadImage (`assets/images/materRight.png`) // Preloads the image of mater for efficient load times.
   frankImage = loadImage (`assets/images/frankTest.png`) // Preloads the image of frank for efficient load times.
 
 
@@ -543,78 +628,36 @@ function loadImages() {
 }
 
 
-// GENERATE MATER FUNCTION
-function generateMater() {
-  let x = 0; // Spawns mater at the x orgin point.
-  let y = 0; // Spawns mater at the y orgin point.
-  mater = new Mater (x, y, materImage); // Sends arguments to constructor in Mater.js.
+// LOADFONTS FUNCTION
+function loadSounds() {
+  gameSound.honkSFX = loadSound (`./assets/sounds/honk.mp3`); // Preloads the "horn" sound effect for efficient load times.
 }
 
 
-// GENERARE TRACTOR FUNCTION
-function generateTractors() { // Generates the animals.
-  for (let i = 0; i < NUM_TRACTORS; i++) { // For loop to duplicate the animals.
-    let x = random(0, width); // Random x postion for image placement.
-    let y = random(0, height); // Random y postion for image placement.
-    let tractorImage = random(tractorImages); // Random image from animalImages array.
-    let tractor = new Tractor(x, y, tractorImage); // Sends parameters to constructor in Tractor class.
-    tractors.push(tractor); // Add tractor into tractors array.
-  }
+// LOADFONTS FUNCTION
+function loadFonts() {
+  titleFont = loadFont ("assets/fonts/disney.ttf") // Preloads the custom downloaded font for efficient load times.
+  disneyFont = loadFont ("assets/fonts/disney.ttf") // Preloads the custom downloaded font for efficient load times.
 }
 
 
-// CREATE MATER FUNCTION
-function createMater() {
-  mater.display(); // Calls the display class in Mater.js.
-  mater.handleInput(); // Calls the handleInput class in Mater.js.
-  mater.move(); // Calls the move class in Mater.js.
-}
-
-
-// CREATE TRACTOR FUNCTION
-function createTractor() {
-  for (let i = 0; i < tractors.length; i++) { // Loop that counts to the value indicated in tractor.
-    tractors[i].update(); // Display one tractor at a random postion.
-  }
-}
-
-
-
-// CREATE AUDIO INPUT FUNCTION
-function createAudioInputLevel() {
-  let level = microphone.getLevel(); // Assigns level to getLevel function.
-
-  if (level > minLoudness) {
-    // tractor.tip(); // Calls the tractor tip function, which makes the tractor rotate 90 degrees.
-    generateStateDelayTimer(); // Calls the generateStateDelayTimer which adds a 3 second delay to the state change.
-  }
-
-  if (level > maxLoudness) {
-    state = `chase`; // Changes the state to chase.
-    generateFrank(); // Calls the generateFrank function.
-  }
-
-  console.log(level); // Console logs audio input for testing purposes.
-}
-
-
-function createStateChangeDelayTimer() {
-  if (stateDelayTimer == 0) { // Says, when the voiceTimer reaches zero (0), then...
-    state = `tractorHonkTwo`; // Change the state to tractorHonkTwo.
-    // generateTractors();
-  }
-}
-
-
-    // STATEDELAY SETUP
+// STATEDELAY SETUP
 function generateStateDelayTimer() {
   setInterval(stateDelay, 1000); // Creates a timer that calls the function trickTimer.
 }
 
 
-    // STATEDELAY FUNCTION
+// STATEDELAY FUNCTION
 function stateDelay() {
   if (stateDelayTimer > 0) { // Says, if the timer is an interger greater then zero (0), then...
     stateDelayTimer--; // Decrease the number by 1.
+  }
+}
+
+
+// HONK FUNCION
+function playHonk() {
+  if (!gameSound.honkSFX.isPlaying()) { // States that if the horn sound effect is not playing, it will be played.
+    gameSound.honkSFX.play();
   }
 }
