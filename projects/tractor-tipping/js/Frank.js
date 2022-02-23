@@ -1,11 +1,11 @@
 class Frank {
-  constructor(x, y, image) {
+  constructor(x, y, frankImage) {
     this.x = x;
     this.y = y;
-    this.image = image;
+    this.image = frankImage;
     this.vx = 0;
     this.vy = 0;
-    this.speed = 3;
+    this.speed = 1;
   }
 
   display() {
@@ -17,7 +17,7 @@ class Frank {
   }
 
 
-  touchMaterState() { // Function that calls the touchMaterState in script.js.
+  touchMater() { // Function that calls the touchMaterState in script.js.
     state = `loser`; // Runs the loser state.
   }
 
@@ -27,7 +27,7 @@ class Frank {
         this.x < mater.x + mater.image.width / 2 && // If frank's x position is less than mater's x position, plus mater's width / 2.
         this.y > mater.y - mater.image.height / 2 && // If frank's y position is greater than mater's y position, minus mater's width / 2.
         this.y < mater.y + mater.image.height / 2) { // If frank's y position is less than mater's y position, plus mater's width / 2.
-          this.touchMaterState(); // Then, call the touchMaterState function.
+          this.touchMater(); // Then, call the touchMaterState function.
     }
   }
 

@@ -10,11 +10,7 @@ class Tractor { // Creates a class that is called from script.js.
     this.rotationSpeed = 0.1; // Assigns a rotation speed.
   }
 
-  // resetAll() {
-  //   reset(x, y, tractorImage);
-  //   this.display();
-  //   this.overlapMater(mater);
-  // }
+
 
   reset(x, y, tractorImage) {
     this.x = x;
@@ -49,8 +45,9 @@ class Tractor { // Creates a class that is called from script.js.
   }
 
 
-  touchMaterState() { // Function that calls the touchTractor state in script.js.
-    state = `touchTractor`; // Runs the touchTractor state.
+  materTouch() { // Function that calls the touchTractor state in script.js.
+    state = `frankChase`; // Runs the touchTractor state.
+    generateFrank(); // Calls the generateFrank function in script.js.
   }
 
 
@@ -59,7 +56,7 @@ class Tractor { // Creates a class that is called from script.js.
         this.x < mater.x + mater.image.width / 2 && // If tractors's x position is less than maters's x position, plus tmaters's width / 2.
         this.y > mater.y - mater.image.height / 2 && // If tractors's y position is greater than maters's y position, minus maters's width / 2.
         this.y < mater.y + mater.image.height / 2) { // If tractors's y position is less than maters's y position, plus maters's width / 2.
-        this.touchMaterState(); // Then, call the touchTractor function.
+        this.materTouch(); // Then, call the touchTractor function.
     }
   }
 
