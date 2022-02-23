@@ -432,7 +432,8 @@ function createMater() {
     // CREATE TRACTOR FUNCTION
 function createTractor() {
   for (let i = 0; i < tractors.length; i++) { // Loop that counts to the value indicated in tractor.
-    tractors[i].update(); // Display one tractor at a random postion.
+    tractors[i].display();
+    tractors[i].overlapMater(mater);
   }
 }
 
