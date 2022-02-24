@@ -24,12 +24,6 @@ class Tractor { // Creates a class that is called from script.js.
   }
 
 
-  update() {
-    this.display();
-    this.overlapMater(mater);
-  }
-
-
   display() {
     push(); // Isolates code from using global properties.
     imageMode(CENTER); // Formats image from the center outwards.
@@ -45,9 +39,18 @@ class Tractor { // Creates a class that is called from script.js.
   }
 
 
-  materTouch() { // Function that calls the touchTractor state in script.js.
-    state = `frankChase`; // Runs the touchTractor state.
-    generateFrank(); // Calls the generateFrank function in script.js.
+  distanceToMater(mater) { // Function that determines the distance between mater and tractor, and thus decides to allow microphone input or not.
+    this.d = dist(this.x, this.y, mater.x, mater.y) // Assigns mater's and tractors a and y position to d.
+
+    if (this.d > 301) { // Says, if the the distance between mater and tractor is more then 301, turn the microphone input ability off.
+      console.log(`Mic off`);
+      microphone.stop(); // Does not alow microphone input.
+    }
+
+    else if (this.d < 300) { // Says, if the distance between mater and tractor is less then 300, turn the microphone input ability on.
+      console.log(`Mic on`); // Does allow microphone input.
+      microphone.start();
+    }
   }
 
 
@@ -58,6 +61,12 @@ class Tractor { // Creates a class that is called from script.js.
         this.y < mater.y + mater.image.height / 2) { // If tractors's y position is less than maters's y position, plus maters's width / 2.
         this.materTouch(); // Then, call the touchTractor function.
     }
+  }
+
+
+  materTouch() { // Function that calls the touchTractor state in script.js.
+    state = `frankChase`; // Runs the touchTractor state.
+    generateFrank(); // Calls the generateFrank function in script.js.
   }
 
 

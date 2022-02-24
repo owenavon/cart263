@@ -2,18 +2,17 @@
 // A Night at the Movies - Tractor Tipping
 // Owen Avon
 
-// Tip Tractors with the use of voice.
+// Tip Tractors with the use of voice. See README.md for a more elaborate program breakdown.
 
 "use strict";
 
-
-let state = `landing`; // Provides the starting state. Can be "landing", "tractorHonkOne", "tractorHonkTwo", "tractorHonkThree", "touchTractor" "frankChase", "winner", "loser".
+let state = `landing`; // Provides the starting state. Can be "landing", "instruction" "tractorHonkOne", "tractorHonkTwo", "tractorHonkThree", "frankChase", "winner", "loser".
 let disneyFont; // Defines custom disneyFont.
 let titleFont; // Defines custom titleFont.
 // let gameFont; // Defines custom gameFont.
 // let timer = 5; // Set's the timer value.
 
-let voiceTimer = 11; // Sets the voiceTimer to 11 seconds.
+let voiceTimer = 10; // Sets the voiceTimer to 9 seconds.
 
 let stateDelayTimerOne = 3; // Sets the stateDelayTimerOne to 3 seconds.
 let stateDelayTimerTwo = 3; // Sets the stateDelayTimerTwo to 3 seconds.
@@ -23,8 +22,8 @@ let currentCharacter = 0; // Starts without showing any characters on screen.
 let pageMargin = 50; // Page margins for a sheet of paper effect.
 
 let microphone; // Defines microphone for AudioInput
-let minLoudness = 0.3; // Assigns a minimum loudness value
-let maxLoudness = 0.7; // Assigns a maximum loudness value
+let minLoudness = 1.5; // Assigns a minimum loudness value. Any value below this will have no action.
+let maxLoudness = 3.0; // Assigns a maximum loudness value. Any value above this will trigger Frank.
 
 let materImage = undefined;
 let mater = undefined;
@@ -38,11 +37,13 @@ let tractors = []; // Empty animal object array.
 let frankImage = undefined;
 let frank = undefined;
 
+let introGif = undefined;
 
 let voiceString = `
-Okay now here's what you do.
+K here's what you do.
 You just sneak up in front of 'em and then honk.
-And they do the rest!`; // The text that the typewriter will write.
+And they do the rest.
+Watch!`; // The text that the typewriter will write.
 
 
 let disneyText = {
@@ -64,7 +65,7 @@ let titleText = {
 };
 
 let startText = {
-  string: `Press ENTER to start tipping`,
+  string: `Press ENTER to Start Tipping`,
   x: 640,
   y: 550
 };
@@ -88,15 +89,9 @@ let tractorRoundThreeText = {
   y: 125
 }
 
-let touchTractorText = {
-  string: `Mr. Tractor don't like confrontation.`,
-  x: 640,
-  y: 275
-};
-
 // Display near the top, fade out after 5 seconds.
 let frankChaseText = {
-  string: `Uh oh, all that noise caught Franks attention. You better Run!`,
+  string: `Uh oh, all that noise caught Franks attention. You better run!`,
   x: 640,
   y: 125
 };
@@ -104,19 +99,19 @@ let frankChaseText = {
 let loserText = {
   string: `Hehe, Frank got ye!`,
   x: 640,
-  y: 275
+  y: 350
 };
 
 let winnerText = {
   string: `See ya Frank!`,
   x: 640,
-  y: 275
+  y: 350
 };
 
 
 let fontSize = {
-  extraSmall: 16, // Sets a font size of 16px.
-  small: 18, // // Sets a font size of 18px.
+  extraSmall: 18, // Sets a font size of 18px.
+  small: 22, // // Sets a font size of 22px.
   medium: 32, // Sets a font size of 32px.
   large: 96 // Sets a font size of 96px.
 };
@@ -212,8 +207,8 @@ function generateAudioInput() {
 
 // GENERATE MATER FUNCTION
 function generateMater() {
-  let x = 0; // Spawns mater at the x orgin point.
-  let y = 0; // Spawns mater at the y orgin point.
+  let x = 190; // Spawns mater at the x orgin point.
+  let y = 100; // Spawns mater at the y orgin point.
   mater = new Mater (x, y, materImage); // Sends arguments to constructor in Mater.js.
 }
 
@@ -222,8 +217,8 @@ function generateMater() {
 // GENERATE TRACTOR FUNCTION
 function generateTractors() { // Generates the animals.
   for (let i = 0; i < NUM_TRACTORS; i++) { // For loop to duplicate the animals.
-    let x = random(0, width); // Random x postion for image placement.
-    let y = random(0, height); // Random y postion for image placement.
+    let x = random(640, 1280); // Random x postion for image placement.
+    let y = random(150, 570); // Random y postion for image placement.
     let tractorImage = random(tractorImages); // Random image from animalImages array.
     let tractor = new Tractor(x, y, tractorImage); // Sends parameters to constructor in Tractor class.
     tractors.push(tractor); // Add tractor into tractors array.
@@ -257,9 +252,6 @@ function draw() { // P5 Function that displays output on canvas.
   }
   else if (state === `tractorHonkThree`) { // Indicates that when the state equates to "tractorHonkThree", start said state.
     tractorHonkThree(); // Calls tractorHonkThree function.
-  }
-  else if (state === `touchTractor`) { // Indicates that when the state equates to "touchTractor", start said state.
-    touchTractor(); // Calls touchTractor function.
   }
   else if (state === `frankChase`) { // Indicates that when the state equates to "frankChase", start said state.
     frankChase(); // Calls frankChase function.
@@ -297,9 +289,9 @@ function disneyPixarText() {
 
 function subHeadingText() {
   push(); // Isolates code from using global properties.
-  textFont(`courier`); // Displays the text font as courier.
-  textSize(fontSize.extraSmall); // Displays the font size as 16px.
-  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in white colour.
+  textFont(`calibri`); // Displays the text font as calibri.
+  textSize(fontSize.extraSmall); // Displays the font size as 18px.
+  fill(colour.grey.r, colour.grey.g, colour.grey.b); // Displays the instructions in grey colour.
   textAlign(CENTER, CENTER); // Positions the text allignment to center.
   text(presentsText.string, presentsText.x, presentsText.y); // Displays the Sub Heading.
   pop(); // Isolates code from using global properties.
@@ -319,8 +311,8 @@ function headingText() {
 
 function startingText() {
   push(); // Isolates code from using global properties.
-  textFont(`courier`); // Displays the text font as courier.
-  textSize(fontSize.small); // Displays the font size as 18px.
+  textFont(`calibri`); // Displays the text font as calibri.
+  textSize(fontSize.small); // Displays the font size as 22px.
   fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in white colour.
   textAlign(CENTER, CENTER); // Positions the text allignment to center.
   text(startText.string, startText.x, startText.y); // Displays the Sub Heading.
@@ -331,7 +323,7 @@ function startingText() {
 
 // INSTRUCTION FUNCTION
 function instruction() {
-  background(0); // Sets background to black in colour.
+  background(introGif); // Sets background to black in colour.
   displayTypewritterEffect(); // Calls the displayTypewritterEffect function.
   responsiveVoiceTimer(); // Calls the responsiveVoiceTimer function.
 }
@@ -343,12 +335,12 @@ function displayTypewritterEffect() {
   push(); // Isolates code from using global properties.
   fill(colour.grey.r, colour.grey.g, colour.grey.b); // Displays the written text in grey
   textSize(fontSize.medium); // Displays the font size as 32px.
-  textFont(`Courier`); // Displays the text font as courier.
-  textAlign(LEFT, TOP); // Positions the text allignment to top left.
-  text(currentString, pageMargin + 50, pageMargin + 25); // Draw the current string on the page, with some margins.
+  textFont(`Calibri`); // Displays the text font as calibri.
+  textAlign(CENTER, TOP); // Positions the text allignment to top left.
+  text(currentString, pageMargin + 600, pageMargin + 400); // Draw the current string on the page, with some margins.
   pop(); // Isolates code from using global properties.
 
-  currentCharacter += random(0,0.4); // Increase the current character so that we get a longer and longer substring above. Using fractional numbers allows us to slow down the pace.
+  currentCharacter += random(0,0.45); // Increase the current character so that we get a longer and longer substring above. Using fractional numbers allows us to slow down the pace.
 }
 
 
@@ -376,8 +368,8 @@ function tractorHonkOne() { // tractorHonkOne function
 
 function tractorHonkOneHeadingText() {
   push(); // Isolates code from using global properties.
-  textFont(`courier`); // Displays the text font as courier.
-  textSize(fontSize.extraSmall); // Displays the font size as 32px.
+  textFont(`calibri`); // Displays the text font as calibri.
+  textSize(fontSize.extraSmall); // Displays the font size as 18px.
   fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in white colour.
   textAlign(CENTER, CENTER); // Positions the text allignment to center.
   text(tipInstructionText.string, tipInstructionText.x, tipInstructionText.y); // Displays the Sub Heading.
@@ -409,8 +401,8 @@ function tractorHonkTwo() {
 
 function tractorHonkTwoHeadingText() {
   push(); // Isolates code from using global properties.
-  textFont(`courier`); // Displays the text font as courier.
-  textSize(fontSize.small); // Displays the font size as 32px.
+  textFont(`calibri`); // Displays the text font as calibri.
+  textSize(fontSize.small); // Displays the font size as 22px.
   fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in white colour.
   textAlign(CENTER, CENTER); // Positions the text allignment to center.
   text(tractorRoundTwoText.string, tractorRoundTwoText.x, tractorRoundTwoText.y); // Displays the Sub Heading.
@@ -444,8 +436,8 @@ function tractorHonkThree() {
 
 function tractorHonkThreeHeadingText() {
   push(); // Isolates code from using global properties.
-  textFont(`courier`); // Displays the text font as courier.
-  textSize(fontSize.Small); // Displays the font size as 32px.
+  textFont(`calibri`); // Displays the text font as calibri.
+  textSize(fontSize.small); // Displays the font size as 22px.
   fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in white colour.
   textAlign(CENTER, CENTER); // Positions the text allignment to center.
   text(tractorRoundThreeText.string, tractorRoundThreeText.x, tractorRoundThreeText.y); // Displays the Sub Heading.
@@ -456,27 +448,9 @@ function tractorHonkThreeHeadingText() {
 // UPDATESTATE THREE DELAY TIMER FUNCTION
 function updateStateThreeDelayTimer() {
   if (stateDelayTimerThree == 0) { // Says, when the voiceTimer reaches zero (0), then...
-  state = `winner`; // Change the state to winner.
+  state = `frankChase`; // Change the state to winner.
+  generateFrank(); // Calls the generateFrank function.
   }
-}
-
-
-
-// TOUCHTRACTOR FUNCTION
-function touchTractor() {
-  background(colour.black.r, colour.black.g, colour.black.b); // Sets background to red in colour.
-  touchTractorHeadingText(); // Calls the touchTractorHeadingText.
-}
-
-
-function touchTractorHeadingText() {
-  push(); // Isolates code from using global properties.
-  textFont(`courier`); // Displays the text font as courier.
-  textSize(fontSize.medium); // Displays the font size as 32px.
-  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in white colour.
-  textAlign(CENTER, CENTER); // Positions the text allignment to center.
-  text(touchTractorText.string, touchTractorText.x, touchTractorText.y); // Displays the Sub Heading.
-  pop(); // Isolates code from using global properties.
 }
 
 
@@ -484,7 +458,7 @@ function touchTractorHeadingText() {
 // frankChase FUNCTION
 function frankChase() {
   background(colour.grey.r, colour.grey.g, colour.grey.b); // Sets background to red in colour.
-  frankChaseTractorHeadingText(); // Calls the touchTractorHeadingText.
+  frankChaseTractorHeadingText(); // Calls the frankChaseTractorHeadingText function.
 
   updateMater(); // Calls the createMater function.
   updateFrank(); // Calls the updateFrank function.
@@ -493,8 +467,8 @@ function frankChase() {
 
 function frankChaseTractorHeadingText() {
   push(); // Isolates code from using global properties.
-  textFont(`courier`); // Displays the text font as courier.
-  textSize(fontSize.small); // Displays the font size as 32px.
+  textFont(`calibri`); // Displays the text font as calibri.
+  textSize(fontSize.small); // Displays the font size as 22px.
   fill(colour.black.r, colour.black.g, colour.black.b); // Displays the instructions in black colour.
   textAlign(CENTER, CENTER); // Positions the text allignment to center.
   text(frankChaseText.string, frankChaseText.x, frankChaseText.y); // Displays the Sub Heading.
@@ -518,7 +492,7 @@ function loser() { // loser function
 
 function loserHeadingText() {
   push(); // Isolates code from using global properties.
-  textFont(`courier`); // Displays the text font as courier.
+  textFont(`calibri`); // Displays the text font as calibri.
   textSize(fontSize.medium); // Displays the font size as 32px.
   fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in white colour.
   textAlign(CENTER, CENTER); // Positions the text allignment to center.
@@ -537,7 +511,7 @@ function winner() { // loser function
 
 function winnerHeadingText() {
   push(); // Isolates code from using global properties.
-  textFont(`courier`); // Displays the text font as courier.
+  textFont(`calibri`); // Displays the text font as calibri.
   textSize(fontSize.medium); // Displays the font size as 32px.
   fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in white colour.
   textAlign(CENTER, CENTER); // Positions the text allignment to center.
@@ -570,6 +544,7 @@ function winnerHeadingText() {
 function loadImages() {
   materImage = loadImage (`assets/images/materRight.png`) // Preloads the image of mater for efficient load times.
   frankImage = loadImage (`assets/images/frankTest.png`) // Preloads the image of frank for efficient load times.
+  introGif = loadImage (`assets/images/introGif.gif`) // Preloads the introGif for efficient load times.
 
 
   for (let i = 0; i < NUM_TRACTOR_IMAGES; i++) { // Loop that counts up by 1 untill 3.
@@ -610,7 +585,7 @@ function keyPressed () { // p5 function to perform action with keyboard input.
 function talkingMater() {
   responsiveVoice.speak(voiceString, "Australian Male", { // Uses responsiveVoice api to speak the variable "voiceString" aloud.
     pitch: 1.1, // Increases the voice's pitch.
-    rate: 0.70, // Decreases the voice's rate.
+    rate: 0.80, // Decreases the voice's rate.
     volume: 1 // Sets the speakers voice to 100%.
   });
 }
@@ -640,6 +615,7 @@ function updateTractor() {
   for (let i = 0; i < tractors.length; i++) { // Loop that counts to the value indicated in tractor.
     tractors[i].display();
     tractors[i].overlapMater(mater);
+    tractors[i].distanceToMater(mater);
   }
 }
 
@@ -648,10 +624,9 @@ function updateTractor() {
 // UPDATE TRACTOR RESET FUNCTION
 function updateTractorReset() {
   for (let i = 0; i < tractors.length; i++) { // Loop that counts to the value indicated in tractor.
-    tractors[i].reset(random(0, width), random(0, height), random(tractorImages));
+    tractors[i].reset(random(640, 1280), random(150, 570), random(tractorImages)); // Re-positions a random tractor from the tractor array within the given X and Y coordinates.
   }
 }
-
 
 // HONK FUNCION
 function playHonk() {
@@ -665,6 +640,8 @@ function playHonk() {
 // CREATE AUDIO INPUT FUNCTION
 function updateAudioInputLevel() {
   let level = microphone.getLevel(); // Assigns level to getLevel function.
+
+
 
   if (level > minLoudness) {
 

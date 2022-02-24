@@ -8,17 +8,13 @@ class Frank {
     this.speed = 1;
   }
 
+
   display() {
     push(); // Isolates code from using global properties.
     imageMode(CENTER); // Formats image from the center outwards.
     translate(this.x, this.y); // Transalte the image postion.
-    image(this.image, 150, 0); // Orgin point has been moved to where we want to draw due to translate.
+    image(this.image, 100, 0); // Orgin point has been moved to where we want to draw due to translate.
     pop(); // Isolates code from using global properties.
-  }
-
-
-  touchMater() { // Function that calls the touchMaterState in script.js.
-    state = `loser`; // Runs the loser state.
   }
 
 
@@ -32,9 +28,23 @@ class Frank {
   }
 
 
+  touchMater() { // Function that calls the touchMaterState in script.js.
+    state = `loser`; // Runs the loser state.
+  }
+
+
   move() {
     this.y += this.vy; // Provides vertical velocity to Frank.
     this.vy = this.speed; // Provides a moving speed for Frank.
+
+    if (this.y > height) { // If Frank makes it off the screen without touching Mater, then...
+      this.gameWinner(); // Call the gamerWinner function.
+    }
+  }
+
+
+  gameWinner() {
+    state = `winner`; // Runs the winner state.
   }
 
 }
