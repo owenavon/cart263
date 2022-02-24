@@ -67,6 +67,7 @@ class Tractor { // Creates a class that is called from script.js.
   materTouch() { // Function that calls the touchTractor state in script.js.
     state = `frankChase`; // Runs the touchTractor state.
     generateFrank(); // Calls the generateFrank function in script.js.
+    talkingFrankScene(); // Calls the talkingFrankScene.
   }
 
 

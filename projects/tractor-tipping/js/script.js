@@ -9,8 +9,6 @@
 let state = `landing`; // Provides the starting state. Can be "landing", "instruction" "tractorHonkOne", "tractorHonkTwo", "tractorHonkThree", "frankChase", "winner", "loser".
 let disneyFont; // Defines custom disneyFont.
 let titleFont; // Defines custom titleFont.
-// let gameFont; // Defines custom gameFont.
-// let timer = 5; // Set's the timer value.
 
 let voiceTimer = 10; // Sets the voiceTimer to 9 seconds.
 
@@ -18,15 +16,19 @@ let stateDelayTimerOne = 3; // Sets the stateDelayTimerOne to 3 seconds.
 let stateDelayTimerTwo = 3; // Sets the stateDelayTimerTwo to 3 seconds.
 let stateDelayTimerThree = 3; // Sets the stateDelayTimerThree to 3 seconds.
 
-let currentCharacter = 0; // Starts without showing any characters on screen.
+let introCurrentCharacter = 0; // Starts without showing any characters on screen.
+
+let loserCurrentCharacter = 0; // Starts without showing any characters on screen.
+let winnerCurrentCharacter = 0; // Starts without showing any characters on screen.
+
 let pageMargin = 50; // Page margins for a sheet of paper effect.
 
-let microphone; // Defines microphone for AudioInput
+let microphone; // Defines microphone for AudioInput.
 let minLoudness = 1.5; // Assigns a minimum loudness value. Any value below this will have no action.
 let maxLoudness = 3.0; // Assigns a maximum loudness value. Any value above this will trigger Frank.
 
-let materImage = undefined;
-let mater = undefined;
+let materImage = undefined; // Assigns materImage as undefined.
+let mater = undefined; // Assigns mater as undefined.
 
 const NUM_TRACTOR_IMAGES = 3; // 3 different tractor images. Constant value, so it will not be changed throughout the program.
 const NUM_TRACTORS = 1; // 1 Tractor object is created, and will not be changed throughout the program.
@@ -34,16 +36,36 @@ const NUM_TRACTORS = 1; // 1 Tractor object is created, and will not be changed 
 let tractorImages = []; // Empty anmimal images array.
 let tractors = []; // Empty animal object array.
 
-let frankImage = undefined;
-let frank = undefined;
+let frankImage = undefined; // Assigns frankImage as undefined.
+let frank = undefined; // Assigns frank as undefined.
 
-let introGif = undefined;
+let introGif = undefined; // Assigns introGif as undefined.
 
-let voiceString = `
+
+let introVoiceString = `
 K here's what you do.
 You just sneak up in front of 'em and then honk.
 And they do the rest.
 Watch!`; // The text that the typewriter will write.
+
+let tractorHonkOneVoiceString = `
+Use arrow keys to move Mater near tractor. When close, "honk" into the microphone, but not to loud. Make sure you don't touch tractor...`;
+
+let tractorHonkTwoVoiceString = `
+Fun eh!? Why don't you try er again?`;
+
+let tractorHonkThreeVoiceString = `
+Maybe one last time, for good luck sake, right?`;
+
+let frankSceneVoiceString = `
+Uh oh, all that noise caught Franks attention. You better run!`;
+
+let loserVoiceString = `
+That's Frank!`; // The text that the typewriter will write.
+
+let winnerVoiceString = `
+Haha haha, I swear tractors is so dumb.
+I'll tell you what buddy, it don't get much better than this.`; // The text that the typewriter will write.
 
 
 let disneyText = {
@@ -68,44 +90,6 @@ let startText = {
   string: `Press ENTER to Start Tipping`,
   x: 640,
   y: 550
-};
-
-// Display near the top of the canvas. Fade out after 5 seconds.
-let tipInstructionText = {
-  string: `Use the arrow keys to move Mater near tractor. When close, "honk" into the microphone, but not to loud. Also, make sure you don't touch tractor...`,
-  x: 640,
-  y: 125
-}
-
-let tractorRoundTwoText = {
-  string: `Fun eh!? Why don't you try er again?`,
-  x: 640,
-  y: 125
-}
-
-let tractorRoundThreeText = {
-  string: `Maybe one last time, for good luck sake, right?`,
-  x: 640,
-  y: 125
-}
-
-// Display near the top, fade out after 5 seconds.
-let frankChaseText = {
-  string: `Uh oh, all that noise caught Franks attention. You better run!`,
-  x: 640,
-  y: 125
-};
-
-let loserText = {
-  string: `Hehe, Frank got ye!`,
-  x: 640,
-  y: 350
-};
-
-let winnerText = {
-  string: `See ya Frank!`,
-  x: 640,
-  y: 350
 };
 
 
@@ -324,13 +308,13 @@ function startingText() {
 // INSTRUCTION FUNCTION
 function instruction() {
   background(introGif); // Sets background to black in colour.
-  displayTypewritterEffect(); // Calls the displayTypewritterEffect function.
+  generateIntroCaption(); // Calls the generateIntroCaption function.
   responsiveVoiceTimer(); // Calls the responsiveVoiceTimer function.
 }
 
 
-function displayTypewritterEffect() {
-  let currentString = voiceString.substring(0, currentCharacter); // The substring() method will return all the characters of a string between the starting and ending positions (starts at 0).
+function generateIntroCaption() {
+  let currentString = introVoiceString.substring(0, introCurrentCharacter); // The substring() method will return all the characters of a string between the starting and ending positions (starts at 0).
 
   push(); // Isolates code from using global properties.
   fill(colour.grey.r, colour.grey.g, colour.grey.b); // Displays the written text in grey
@@ -340,7 +324,7 @@ function displayTypewritterEffect() {
   text(currentString, pageMargin + 600, pageMargin + 400); // Draw the current string on the page, with some margins.
   pop(); // Isolates code from using global properties.
 
-  currentCharacter += random(0,0.45); // Increase the current character so that we get a longer and longer substring above. Using fractional numbers allows us to slow down the pace.
+  introCurrentCharacter += random(0,0.45); // Increase the current character so that we get a longer and longer substring above. Using fractional numbers allows us to slow down the pace.
 }
 
 
@@ -349,6 +333,7 @@ function responsiveVoiceTimer() {
     state = `tractorHonkOne`; // Change the state to tractorHonkOne.
     generateMater(); // Calls the generateMater function.
     generateTractors(); // Calls the generateTractors function.
+    talkingTractorHonkOne(); // Calls the talkingTractorHonkOne function.
   }
 }
 
@@ -357,7 +342,6 @@ function responsiveVoiceTimer() {
 // tractorHonkOne FUNCTION
 function tractorHonkOne() { // tractorHonkOne function
   background(colour.red.r, colour.red.g, colour.red.b); // Sets background to red in colour.
-  tractorHonkOneHeadingText(); // Calls the createtractorHonkOneHeadingText.
   updateStateOneDelayTimer(); // Calls the updateStateOneDelayTimer function.
 
   updateAudioInputLevel(); // Calls the updateAudioInputLevels function.
@@ -366,22 +350,12 @@ function tractorHonkOne() { // tractorHonkOne function
 }
 
 
-function tractorHonkOneHeadingText() {
-  push(); // Isolates code from using global properties.
-  textFont(`calibri`); // Displays the text font as calibri.
-  textSize(fontSize.extraSmall); // Displays the font size as 18px.
-  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in white colour.
-  textAlign(CENTER, CENTER); // Positions the text allignment to center.
-  text(tipInstructionText.string, tipInstructionText.x, tipInstructionText.y); // Displays the Sub Heading.
-  pop(); // Isolates code from using global properties.
-}
-
-
 // UPDATE STATEONE DELAY ONE FUNCTION
 function updateStateOneDelayTimer() {
   if (stateDelayTimerOne == 0) { // Says, when the voiceTimer reaches zero (0), then...
     state = `tractorHonkTwo`; // Change the state to tractorHonkTwo.
     updateTractorReset(); // Calls the updateTractorReset function.
+    talkingTractorHonkTwo(); // Calls the talkingTractorHonkTwo function.
   }
 }
 
@@ -390,23 +364,11 @@ function updateStateOneDelayTimer() {
 // tractorHonkTwo FUNCTION
 function tractorHonkTwo() {
   background(colour.green.r, colour.green.g, colour.green.b); // Sets background to green in colour.
-  tractorHonkTwoHeadingText(); // Calls the createtractorHonkTwoHeadingText.
   updateStateTwoDelayTimer(); // Calls the updateStateTwoDelayTimer function.
 
   updateAudioInputLevel(); // Calls the updateAudioInputLevels function.
   updateMater(); // Calls the createMater function.
   updateTractor(); // Calls the updateTractor function.
-}
-
-
-function tractorHonkTwoHeadingText() {
-  push(); // Isolates code from using global properties.
-  textFont(`calibri`); // Displays the text font as calibri.
-  textSize(fontSize.small); // Displays the font size as 22px.
-  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in white colour.
-  textAlign(CENTER, CENTER); // Positions the text allignment to center.
-  text(tractorRoundTwoText.string, tractorRoundTwoText.x, tractorRoundTwoText.y); // Displays the Sub Heading.
-  pop(); // Isolates code from using global properties.
 }
 
 
@@ -416,6 +378,7 @@ function updateStateTwoDelayTimer() {
   if (stateDelayTimerTwo == 0) { // Says, when the voiceTimer reaches zero (0), then...
   state = `tractorHonkThree`; // Change the state to tractorHonkTwo.
   updateTractorReset(); // Calls the updateTractorReset function.
+  talkingTractorHonkThree(); // Calls the talkingTractorHonkThree function.
   }
 }
 
@@ -425,7 +388,6 @@ function updateStateTwoDelayTimer() {
 // tractorHonkThree FUNCTION
 function tractorHonkThree() {
   background(colour.blue.r, colour.blue.g, colour.blue.b); // Sets background to blue in colour.
-  tractorHonkThreeHeadingText(); // Calls the createtractorHonkTwoHeadingText.
   updateStateThreeDelayTimer(); // Calls the updateStateOneDelayTimer function.
 
   updateAudioInputLevel(); // Calls the updateAudioInputLevels function.
@@ -434,22 +396,13 @@ function tractorHonkThree() {
 }
 
 
-function tractorHonkThreeHeadingText() {
-  push(); // Isolates code from using global properties.
-  textFont(`calibri`); // Displays the text font as calibri.
-  textSize(fontSize.small); // Displays the font size as 22px.
-  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in white colour.
-  textAlign(CENTER, CENTER); // Positions the text allignment to center.
-  text(tractorRoundThreeText.string, tractorRoundThreeText.x, tractorRoundThreeText.y); // Displays the Sub Heading.
-  pop(); // Isolates code from using global properties.
-}
-
 
 // UPDATESTATE THREE DELAY TIMER FUNCTION
 function updateStateThreeDelayTimer() {
   if (stateDelayTimerThree == 0) { // Says, when the voiceTimer reaches zero (0), then...
   state = `frankChase`; // Change the state to winner.
   generateFrank(); // Calls the generateFrank function.
+  talkingFrankScene(); // Calls the talkingFrankScene.
   }
 }
 
@@ -458,75 +411,55 @@ function updateStateThreeDelayTimer() {
 // frankChase FUNCTION
 function frankChase() {
   background(colour.grey.r, colour.grey.g, colour.grey.b); // Sets background to red in colour.
-  frankChaseTractorHeadingText(); // Calls the frankChaseTractorHeadingText function.
 
   updateMater(); // Calls the createMater function.
   updateFrank(); // Calls the updateFrank function.
 }
 
 
-function frankChaseTractorHeadingText() {
-  push(); // Isolates code from using global properties.
-  textFont(`calibri`); // Displays the text font as calibri.
-  textSize(fontSize.small); // Displays the font size as 22px.
-  fill(colour.black.r, colour.black.g, colour.black.b); // Displays the instructions in black colour.
-  textAlign(CENTER, CENTER); // Positions the text allignment to center.
-  text(frankChaseText.string, frankChaseText.x, frankChaseText.y); // Displays the Sub Heading.
-  pop(); // Isolates code from using global properties.
-}
-
-
-
-
-
-
-
-
 
 // LOSER FUNCTION
 function loser() { // loser function
   background(colour.brightRed.r, colour.brightRed.g, colour.brightRed.b); // Sets background to brightRed in colour.
-  loserHeadingText(); // Calls the loserHeadingText function.
+  generateLoserCaption(); // Calls the generateLoserCaption function.
 }
 
 
-function loserHeadingText() {
+function generateLoserCaption() {
+  let loserCurrentString = loserVoiceString.substring(0, loserCurrentCharacter); // The substring() method will return all the characters of a string between the starting and ending positions (starts at 0).
+
   push(); // Isolates code from using global properties.
-  textFont(`calibri`); // Displays the text font as calibri.
+  fill(colour.grey.r, colour.grey.g, colour.grey.b); // Displays the written text in grey
   textSize(fontSize.medium); // Displays the font size as 32px.
-  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in white colour.
-  textAlign(CENTER, CENTER); // Positions the text allignment to center.
-  text(loserText.string, loserText.x, loserText.y); // Displays the Sub Heading.
+  textFont(`Calibri`); // Displays the text font as calibri.
+  textAlign(CENTER, TOP); // Positions the text allignment to top left.
+  text(loserCurrentString, pageMargin + 600, pageMargin + 400); // Draw the current string on the page, with some margins.
   pop(); // Isolates code from using global properties.
-}
 
+  loserCurrentCharacter += random(0,0.45); // Increase the current character so that we get a longer and longer substring above. Using fractional numbers allows us to slow down the pace.
+}
 
 
 // WINNER FUNCTION
 function winner() { // loser function
   background(colour.brightGreen.r, colour.brightGreen.g, colour.brightGreen.b); // Sets background to brightRed in colour.
-  winnerHeadingText(); // Calls the loserHeadingText function.
+  generateWinnerCaption(); // Calls the generateWinnerCaption function.
 }
 
 
-function winnerHeadingText() {
+function generateWinnerCaption() {
+  let winnerCurrentString = winnerVoiceString.substring(0, winnerCurrentCharacter); // The substring() method will return all the characters of a string between the starting and ending positions (starts at 0).
+
   push(); // Isolates code from using global properties.
-  textFont(`calibri`); // Displays the text font as calibri.
+  fill(colour.grey.r, colour.grey.g, colour.grey.b); // Displays the written text in grey
   textSize(fontSize.medium); // Displays the font size as 32px.
-  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in white colour.
-  textAlign(CENTER, CENTER); // Positions the text allignment to center.
-  text(winnerText.string, winnerText.x, winnerText.y); // Displays the Sub Heading.
+  textFont(`Calibri`); // Displays the text font as calibri.
+  textAlign(CENTER, TOP); // Positions the text allignment to top left.
+  text(winnerCurrentString, pageMargin + 600, pageMargin + 400); // Draw the current string on the page, with some margins.
   pop(); // Isolates code from using global properties.
+
+  winnerCurrentCharacter += random(0,0.45); // Increase the current character so that we get a longer and longer substring above. Using fractional numbers allows us to slow down the pace.
 }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -574,22 +507,81 @@ function loadFonts() {
 function keyPressed () { // p5 function to perform action with keyboard input.
   if (keyCode === 13 && state === `landing`) { // When the "Enter" key is pushed, and the state is in "landing", switch to the "instruction" state.
     state = `instruction`; // Runs the "simulation" state.
-    talkingMater(); // Calls the talkingMater function which uses responsive voice api.
+    talkingMaterIntro(); // Calls the talkingMaterIntro function which uses responsive voice api.
     generateStateVoiceDelay(); // Calls the generateStateVoiceDelay function.
   }
 }
 
 
 
-// RESPONSIVEVOICE FUNCTION
-function talkingMater() {
-  responsiveVoice.speak(voiceString, "Australian Male", { // Uses responsiveVoice api to speak the variable "voiceString" aloud.
+// TALKING MATER INTRO FUNCTION
+function talkingMaterIntro() {
+  responsiveVoice.speak(introVoiceString, "Australian Male", { // Uses responsiveVoice api to speak the variable "introVoiceString" aloud.
     pitch: 1.1, // Increases the voice's pitch.
     rate: 0.80, // Decreases the voice's rate.
     volume: 1 // Sets the speakers voice to 100%.
   });
 }
 
+
+// TALKING VOICE IN TRACTOR HONK ONE
+function talkingTractorHonkOne() {
+  responsiveVoice.speak(tractorHonkOneVoiceString, "UK English Female", { // Uses responsiveVoice api to speak the variable "tractorHonkOneVoiceString" aloud.
+    pitch: 1, // Increases the voice's pitch.
+    rate: 1, // Decreases the voice's rate.
+    volume: 1 // Sets the speakers voice to 100%.
+  });
+}
+
+
+// TALKING VOICE IN TRACTOR HONK TWO
+function talkingTractorHonkTwo() {
+  responsiveVoice.speak(tractorHonkTwoVoiceString, "UK English Female", { // Uses responsiveVoice api to speak the variable "tractorHonkTwoVoiceString" aloud.
+    pitch: 1, // Increases the voice's pitch.
+    rate: 1, // Decreases the voice's rate.
+    volume: 1 // Sets the speakers voice to 100%.
+  });
+}
+
+
+// TALKING VOICE IN TRACTOR HONK THREE
+function talkingTractorHonkThree() {
+  responsiveVoice.speak(tractorHonkThreeVoiceString, "UK English Female", { // Uses responsiveVoice api to speak the variable "tractorHonkThreeVoiceString" aloud.
+    pitch: 1, // Increases the voice's pitch.
+    rate: 1, // Decreases the voice's rate.
+    volume: 1 // Sets the speakers voice to 100%.
+  });
+}
+
+
+// TALKING VOICE IN TALKING FRANK
+function talkingFrankScene() {
+  responsiveVoice.speak(frankSceneVoiceString, "UK English Female", { // Uses responsiveVoice api to speak the variable "frankSceneVoiceString" aloud.
+    pitch: 1, // Increases the voice's pitch.
+    rate: 1, // Decreases the voice's rate.
+    volume: 1 // Sets the speakers voice to 100%.
+  });
+}
+
+
+// TALKING MATER LOSER FUNCTION
+function talkingMaterLoser() {
+  responsiveVoice.speak(loserVoiceString, "Australian Male", { // Uses responsiveVoice api to speak the variable "introVoiceString" aloud.
+    pitch: 1.1, // Increases the voice's pitch.
+    rate: 0.80, // Decreases the voice's rate.
+    volume: 1 // Sets the speakers voice to 100%.
+  });
+}
+
+
+// TALKING MATER WINNER FUNCTION
+function talkingMaterWinner() {
+  responsiveVoice.speak(winnerVoiceString, "Australian Male", { // Uses responsiveVoice api to speak the variable "introVoiceString" aloud.
+    pitch: 1.1, // Increases the voice's pitch.
+    rate: 0.80, // Decreases the voice's rate.
+    volume: 1 // Sets the speakers voice to 100%.
+  });
+}
 
 
 // UPDATE FRANK FUNCTION
@@ -666,6 +658,7 @@ function updateAudioInputLevel() {
   if (level > maxLoudness) {
     state = `frankChase`; // Changes the state to frankChase.
     generateFrank(); // Calls the generateFrank function.
+    talkingFrankScene() // Calls the talkingFrankScene.
   }
 
   console.log(level); // Console logs audio input for testing purposes.
