@@ -30,7 +30,8 @@ class Frank {
 
   touchMater() { // Function that calls the touchMaterState in script.js.
     state = `loser`; // Runs the loser state.
-    talkingMaterLoser(); // Calls the talkingMaterLoser function in script.js
+    generateDelayWaitLoser();
+    generateLoserDelay(); // Calls the generateLoserDelay function is script.js
   }
 
 
@@ -47,6 +48,7 @@ class Frank {
   gameWinner() {
     state = `winner`; // Runs the winner state.
     talkingMaterWinner(); // Calls the talkingMaterWinner function in script.js
+    generateWinnerDelay(); // Calls the generateWinnerDelay function is script.js
   }
 
 }

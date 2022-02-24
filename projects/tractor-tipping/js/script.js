@@ -10,11 +10,15 @@ let state = `landing`; // Provides the starting state. Can be "landing", "instru
 let disneyFont; // Defines custom disneyFont.
 let titleFont; // Defines custom titleFont.
 
-let voiceTimer = 10; // Sets the voiceTimer to 9 seconds.
+let voiceTimer = 10; // Sets the voiceTimer to 10 seconds.
+let voiceWinnerTimer = 9; // Sets the voiceWinnerTimer to 9 seconds.
+let voiceLoserTimer = 3; // Sets the voiceLoserTimer to 3 seconds.
 
 let stateDelayTimerOne = 3; // Sets the stateDelayTimerOne to 3 seconds.
 let stateDelayTimerTwo = 3; // Sets the stateDelayTimerTwo to 3 seconds.
 let stateDelayTimerThree = 3; // Sets the stateDelayTimerThree to 3 seconds.
+
+let stateDelayLoser = 3; // Sets th stateDelayLoser to 3 seconds.
 
 let introCurrentCharacter = 0; // Starts without showing any characters on screen.
 
@@ -24,8 +28,8 @@ let winnerCurrentCharacter = 0; // Starts without showing any characters on scre
 let pageMargin = 50; // Page margins for a sheet of paper effect.
 
 let microphone; // Defines microphone for AudioInput.
-let minLoudness = 1.5; // Assigns a minimum loudness value. Any value below this will have no action.
-let maxLoudness = 3.0; // Assigns a maximum loudness value. Any value above this will trigger Frank.
+let minLoudness = 0.5; // Assigns a minimum loudness value. Any value below this will have no action.
+let maxLoudness = 1.5; // Assigns a maximum loudness value. Any value above this will trigger Frank.
 
 let materImage = undefined; // Assigns materImage as undefined.
 let mater = undefined; // Assigns mater as undefined.
@@ -40,6 +44,8 @@ let frankImage = undefined; // Assigns frankImage as undefined.
 let frank = undefined; // Assigns frank as undefined.
 
 let introGif = undefined; // Assigns introGif as undefined.
+let loserGif = undefined; // Assigns loserGif as undefined.
+let winnerGif = undefined; // Assigns winnerGif as undefined.
 
 
 let introVoiceString = `
@@ -65,31 +71,27 @@ That's Frank!`; // The text that the typewriter will write.
 
 let winnerVoiceString = `
 Haha haha, I swear tractors is so dumb.
-I'll tell you what buddy, it don't get much better than this.`; // The text that the typewriter will write.
+I'll tell you what buddy,
+it don't get much better.`; // The text that the typewriter will write.
 
 
 let disneyText = {
   string: `Disney PIXAR`,
   x: 640,
-  y: 125
+  y: 235
 };
 
-let presentsText = {
-  string: `presents`,
-  x: 640,
-  y: 225
-};
 
 let titleText = {
   string: `Tractor Tipping`,
   x: 640,
-  y: 315
+  y: 360
 };
 
 let startText = {
   string: `Press ENTER to Start Tipping`,
   x: 640,
-  y: 550
+  y: 500
 };
 
 
@@ -103,6 +105,7 @@ let fontSize = {
 
 let gameSound = {
   honkSFX: undefined, // Sets honkSFX as a variable.
+  combineSFX: undefined // Sets combineSFX as a variable.
 };
 
 
@@ -112,19 +115,9 @@ let colour = {
     g: 0,
     b: 0
   },
-  brightRed: {
-    r: 255,
-    g: 0,
-    b: 0
-  },
   green: {
     r: 0,
     g: 140,
-    b: 0
-  },
-  brightGreen: {
-    r: 0,
-    g: 255,
     b: 0
   },
   blue: {
@@ -254,7 +247,6 @@ function draw() { // P5 Function that displays output on canvas.
 function landing() {
   background(colour.purple.r, colour.purple.g, colour.purple.b); // Sets background to purple in colour.
   disneyPixarText(); // Calls the disneyPixarText function.
-  subHeadingText(); // Calls the presentsText function.
   headingText(); // Calls the headingText function.
   startingText(); // Calls the startingText function.
 }
@@ -267,17 +259,6 @@ function disneyPixarText() {
   fill(colour.grey.r, colour.grey.g, colour.grey.b); // Displays the instructions in white colour.
   textAlign(CENTER, CENTER); // Positions the text allignment to center.
   text(disneyText.string, disneyText.x, disneyText.y); // Displays the Sub Heading.
-  pop(); // Isolates code from using global properties.
-}
-
-
-function subHeadingText() {
-  push(); // Isolates code from using global properties.
-  textFont(`calibri`); // Displays the text font as calibri.
-  textSize(fontSize.extraSmall); // Displays the font size as 18px.
-  fill(colour.grey.r, colour.grey.g, colour.grey.b); // Displays the instructions in grey colour.
-  textAlign(CENTER, CENTER); // Positions the text allignment to center.
-  text(presentsText.string, presentsText.x, presentsText.y); // Displays the Sub Heading.
   pop(); // Isolates code from using global properties.
 }
 
@@ -297,7 +278,7 @@ function startingText() {
   push(); // Isolates code from using global properties.
   textFont(`calibri`); // Displays the text font as calibri.
   textSize(fontSize.small); // Displays the font size as 22px.
-  fill(colour.white.r, colour.white.g, colour.white.b); // Displays the instructions in white colour.
+  fill(colour.grey.r, colour.grey.g, colour.grey.b); // Displays the instructions in white colour.
   textAlign(CENTER, CENTER); // Positions the text allignment to center.
   text(startText.string, startText.x, startText.y); // Displays the Sub Heading.
   pop(); // Isolates code from using global properties.
@@ -420,29 +401,25 @@ function frankChase() {
 
 // LOSER FUNCTION
 function loser() { // loser function
-  background(colour.brightRed.r, colour.brightRed.g, colour.brightRed.b); // Sets background to brightRed in colour.
-  generateLoserCaption(); // Calls the generateLoserCaption function.
+  background(loserGif); // Sets background to loserGif.
+  updateDelayedLoserCaption(); // Calls the updateDelayedLoserCaption function.
 }
 
 
-function generateLoserCaption() {
-  let loserCurrentString = loserVoiceString.substring(0, loserCurrentCharacter); // The substring() method will return all the characters of a string between the starting and ending positions (starts at 0).
 
-  push(); // Isolates code from using global properties.
-  fill(colour.grey.r, colour.grey.g, colour.grey.b); // Displays the written text in grey
-  textSize(fontSize.medium); // Displays the font size as 32px.
-  textFont(`Calibri`); // Displays the text font as calibri.
-  textAlign(CENTER, TOP); // Positions the text allignment to top left.
-  text(loserCurrentString, pageMargin + 600, pageMargin + 400); // Draw the current string on the page, with some margins.
-  pop(); // Isolates code from using global properties.
-
-  loserCurrentCharacter += random(0,0.45); // Increase the current character so that we get a longer and longer substring above. Using fractional numbers allows us to slow down the pace.
+// UPDATE DEALYED LOSER CAPTION
+function updateDelayedLoserCaption() {
+  if (stateDelayLoser == 1) { // Says, when the stateDelayLoser reaches three (3), then...
+    generateLoserCaption(); // Calls the generateLoserCaption
+    talkingMaterLoser(); // Calls the talkingMaterLoser function in script.js
+  }
 }
+
 
 
 // WINNER FUNCTION
 function winner() { // loser function
-  background(colour.brightGreen.r, colour.brightGreen.g, colour.brightGreen.b); // Sets background to brightRed in colour.
+  background(winnerGif); // Sets background to winnerGif.
   generateWinnerCaption(); // Calls the generateWinnerCaption function.
 }
 
@@ -467,17 +444,13 @@ function generateWinnerCaption() {
 
 
 
-
-
-
-
-
-
 // LOADIMAGES FUNCTION
 function loadImages() {
   materImage = loadImage (`assets/images/materRight.png`) // Preloads the image of mater for efficient load times.
   frankImage = loadImage (`assets/images/frankTest.png`) // Preloads the image of frank for efficient load times.
   introGif = loadImage (`assets/images/introGif.gif`) // Preloads the introGif for efficient load times.
+  loserGif = loadImage (`assets/images/loserGif.gif`) // Preloads the loserGif for efficient load times.
+  winnerGif = loadImage (`assets/images/winnerGif.gif`) // Preloads the winnerGif for efficient load times.
 
 
   for (let i = 0; i < NUM_TRACTOR_IMAGES; i++) { // Loop that counts up by 1 untill 3.
@@ -490,14 +463,15 @@ function loadImages() {
 
 // LOADFONTS FUNCTION
 function loadSounds() {
-  gameSound.honkSFX = loadSound (`./assets/sounds/honk.mp3`); // Preloads the "horn" sound effect for efficient load times.
+  gameSound.honkSFX = loadSound (`./assets/sounds/honk.mp3`); // Preloads the "honk" sound effect for efficient load times.
+  gameSound.combineSFX = loadSound (`./assets/sounds/combine.mp3`); // Preloads the "combine" sound effect for efficient load times.
 }
 
 
 
 // LOADFONTS FUNCTION
 function loadFonts() {
-  titleFont = loadFont ("assets/fonts/disney.ttf") // Preloads the custom downloaded font for efficient load times.
+  titleFont = loadFont ("assets/fonts/magneto.ttf") // Preloads the custom downloaded font for efficient load times.
   disneyFont = loadFont ("assets/fonts/disney.ttf") // Preloads the custom downloaded font for efficient load times.
 }
 
@@ -718,4 +692,69 @@ function stateDelayThree() {
   if (stateDelayTimerThree > 0) { // Says, if the timer is an interger greater then zero (0), then...
     stateDelayTimerThree--; // Decrease the number by 1.
   }
+}
+
+
+// GENERATE STATE VOICE LOSER SETUP
+function generateLoserDelay() {
+  setInterval(stateLoserDelay, 1000); // Creates a timer that calls the function trickTimer.
+}
+
+
+// STATE VOICE LOSER FUNCTION
+function stateLoserDelay() {
+  if (voiceLoserTimer > 0) { // Says, if the timer is an interger greater then zero (0), then...
+    voiceLoserTimer--; // Decrease the number by 1.
+  }
+  else if (voiceLoserTimer === 0) { // Says, if the timer reaches zero (0), then...
+    location.reload(); // Reload the program.
+  }
+}
+
+
+// GENERATE STATE VOICE WINNER SETUP
+function generateWinnerDelay() {
+  setInterval(stateWinnerDelay, 1000); // Creates a timer that calls the function trickTimer.
+}
+
+
+// STATE VOICE WINNER FUNCTION
+function stateWinnerDelay() {
+  if (voiceWinnerTimer > 0) { // Says, if the timer is an interger greater then zero (0), then...
+    voiceWinnerTimer--; // Decrease the number by 1.
+  }
+  else if (voiceWinnerTimer === 0) { // Says, if the timer reaches zero (0), then...
+    location.reload(); // Reload the program.
+  }
+}
+
+
+
+// STATE DELAY THREE SETUP
+function generateDelayWaitLoser() {
+  setInterval(stateDelayLoserWait, 1000); // Creates a timer that calls the function stateDelayThree.
+}
+
+
+// STATE DELAY THREE FUNCTION
+function stateDelayLoserWait() {
+  if (stateDelayLoser > 0) { // Says, if the timer is an interger greater then zero (0), then...
+    stateDelayLoser--; // Decrease the number by 1.
+  }
+}
+
+
+
+function generateLoserCaption() {
+  let loserCurrentString = loserVoiceString.substring(0, loserCurrentCharacter); // The substring() method will return all the characters of a string between the starting and ending positions (starts at 0).
+
+  push(); // Isolates code from using global properties.
+  fill(colour.grey.r, colour.grey.g, colour.grey.b); // Displays the written text in grey
+  textSize(fontSize.medium); // Displays the font size as 32px.
+  textFont(`Calibri`); // Displays the text font as calibri.
+  textAlign(CENTER, TOP); // Positions the text allignment to top left.
+  text(loserCurrentString, pageMargin + 600, pageMargin + 400); // Draw the current string on the page, with some margins.
+  pop(); // Isolates code from using global properties.
+
+  loserCurrentCharacter += random(0,0.45); // Increase the current character so that we get a longer and longer substring above. Using fractional numbers allows us to slow down the pace.
 }

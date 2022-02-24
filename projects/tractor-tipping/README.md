@@ -38,7 +38,8 @@ Technical Aspects:
 
 
 Audio Credit:
-"Track" by "Person" | Attribution...
+"Honk Honk" by "mkoenig" | Attribution 3.0 Unported (CC BY 3.0)
+"Tractor_Drive_06" by "BenDrain" | CC0 1.0 Universal (CC0 1.0) Public Domain Dedication
 
 Font Credits:
 "Font" by  "Person" | Note from author: "..."
