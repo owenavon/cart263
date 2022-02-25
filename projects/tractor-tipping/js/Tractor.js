@@ -10,6 +10,7 @@ class Tractor { // Creates a class that is called from script.js.
     this.rotationSpeed = 0.1; // Assigns a rotation speed.
   }
 
+
   // RESET TRACTOR POSITION UPON STATE CHANGE
   reset(x, y, tractorImage) {
     this.x = x;
@@ -22,6 +23,7 @@ class Tractor { // Creates a class that is called from script.js.
     this.rotationSpeed = 3; // Assigns a rotation speed.
   }
 
+
   // DISPLAY TRACTOR
   display() {
     push(); // Isolates code from using global properties.
@@ -31,6 +33,7 @@ class Tractor { // Creates a class that is called from script.js.
     image(this.image, this.width, this.height); // Orgin point has been moved to where we want to draw due to translate.
     pop(); // Isolates code from using global properties.
   }
+
 
   // TIP TRACTOR
   tip() {
@@ -42,6 +45,7 @@ class Tractor { // Creates a class that is called from script.js.
     this.x = constrain(this.x, 160, 1130); // Constrains Tractor to the canvas width.
     this.y = constrain(this.y, 80, 640); // Constrains Tractor to the canvas width.
   }
+
 
   // CALCULATE DISTANCE BETWEEN TRACTOR AND MATER
   distanceToMater(mater) { // Function that determines the distance between mater and tractor, and thus decides to allow microphone input or not.
@@ -58,6 +62,7 @@ class Tractor { // Creates a class that is called from script.js.
     }
   }
 
+
   // CALCULATE OVERLAP BETWEEN TRACTOR AND MATER
   overlapMater(mater) { // Provides tractor as an argument to connect mater class to tractor class. Locates the center point of both mater and tractor.
     if (this.x > mater.x - mater.image.width / 2 && // If tractors's x position is greater than maters's x position, minus tmaters's width / 2.
@@ -68,6 +73,7 @@ class Tractor { // Creates a class that is called from script.js.
     }
   }
 
+
   // FUNCTIONS THAT ARE CALLED WHEN TRACTOR AND MATER OVERLAP
   materTouch() { // Function that calls the touchTractor state in script.js.
     state = `frankChase`; // Runs the touchTractor state.
@@ -75,5 +81,6 @@ class Tractor { // Creates a class that is called from script.js.
     talkingFrankScene(); // Calls the talkingFrankScene.
     playCombineSound(); // Calls the playCombineSound function.
   }
+
 
 }

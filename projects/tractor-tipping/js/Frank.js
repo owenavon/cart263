@@ -8,6 +8,7 @@ class Frank {
     this.speed = 1;
   }
 
+
   // DISPLAY FRANK
   display() {
     push(); // Isolates code from using global properties.
@@ -16,6 +17,7 @@ class Frank {
     image(this.image, 100, 0); // Orgin point has been moved to where we want to draw due to translate.
     pop(); // Isolates code from using global properties.
   }
+
 
   // CALCULATE DISTANCE BETWEEN FRANK AND MATER
   overlapMater(mater) { // Provides tractor as an argument to connect mater class to tractor class. Locates the center point of both mater and tractor.
@@ -27,12 +29,14 @@ class Frank {
     }
   }
 
+
   // FUNCTIONS THAT ARE CALLED WHEN FRANK AND MATER OVERLAP
   touchMater() { // Function that calls the touchMaterState in script.js.
     state = `loser`; // Runs the loser state.
     generateDelayWaitLoser();
     generateLoserDelay(); // Calls the generateLoserDelay function is script.js
   }
+
 
   // PROVIDE FRANK VELOCITY AND FOLLOW MATER ABILITY
   move(mater) {
@@ -61,11 +65,13 @@ class Frank {
     }
   }
 
+
   // FUNCTIONS THAT ARE CALLED WHEN FRANK EXCEEDS THE CANVAS HEIGHT
   gameWinner() {
     state = `winner`; // Runs the winner state.
     talkingMaterWinner(); // Calls the talkingMaterWinner function in script.js
     generateWinnerDelay(); // Calls the generateWinnerDelay function is script.js
   }
+
 
 }

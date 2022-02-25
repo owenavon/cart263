@@ -12,6 +12,7 @@ class Mater { // Creates a class that is called from script.js.
     this.height = 0; // Assigns an intial height of zero (0).
   }
 
+
   // DISPLAY MATER
   display() {
     push(); // Isolates code from using global properties.
@@ -20,6 +21,7 @@ class Mater { // Creates a class that is called from script.js.
     image(this.image, this.width, this.height); // Orgin point has been moved to where we want to draw due to translate.
     pop(); // Isolates code from using global properties.
   }
+
 
   // ASSIGN MATER MOVMENT VIA KEYBOARD
   handleInput() {
@@ -44,6 +46,7 @@ class Mater { // Creates a class that is called from script.js.
     }
   }
 
+
   // PROVIDE MATER VELOCITY AND CONSTRAIN
   move() {
     this.x += this.vx; // Provides a horizontal velocity to mater.
@@ -52,5 +55,6 @@ class Mater { // Creates a class that is called from script.js.
     this.x = constrain(this.x, 160, 1130); // Constrains Mater to the canvas width.
     this.y = constrain(this.y, 80, 640); // Constrains Mater to the canvas width.
   }
+
 
 }

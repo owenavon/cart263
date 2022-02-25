@@ -6,6 +6,7 @@
 
 "use strict";
 
+
 let state = `landing`; // Provides the starting state. Can be "landing", "instruction" "tractorHonkOne", "tractorHonkTwo", "tractorHonkThree", "frankChase", "winner", "loser".
 let disneyFont; // Defines custom disneyFont.
 let titleFont; // Defines custom titleFont.
@@ -29,7 +30,7 @@ let pageMargin = 50; // Page margins for a sheet of paper effect.
 
 let microphone; // Defines microphone for AudioInput.
 let minLoudness = 1.5; // Assigns a minimum loudness value. Any value below this will have no action.
-let maxLoudness = 4.0; // Assigns a maximum loudness value. Any value above this will trigger Frank.
+let maxLoudness = 3.0; // Assigns a maximum loudness value. Any value above this will trigger Frank.
 
 let materImage = undefined; // Assigns materImage as undefined.
 let mater = undefined; // Assigns mater as undefined.
@@ -43,10 +44,6 @@ let tractors = []; // Empty animal object array.
 let frankImage = undefined; // Assigns frankImage as undefined.
 let frank = undefined; // Assigns frank as undefined.
 
-let introGif = undefined; // Assigns introGif as undefined.
-let loserGif = undefined; // Assigns loserGif as undefined.
-let winnerGif = undefined; // Assigns winnerGif as undefined.
-
 
 let introVoiceString = `
 K here's what you do.
@@ -55,32 +52,31 @@ And they do the rest.
 Watch!`; // The text that the typewriter will write.
 
 let tractorHonkOneVoiceString = `
-Use the arrow keys to move Mater near tractor. When close, "honk" into the microphone, but not to loud. Make sure you don't touch tractor...`;
+Use the arrow keys to move Mater near tractor. When close, "honk" into the microphone, but not too loud. Make sure you don't touch tractor...`;
 
 let tractorHonkTwoVoiceString = `
-Fun eh!? Why don't you try er again?`;
+Fun eh!? Why don't you try er' again?`;
 
 let tractorHonkThreeVoiceString = `
 Maybe one last time? You know, for good luck...`;
 
 let frankSceneVoiceString = `
-Uh oh, all that noise caught Franks attention. You bettrt get above Frank!`;
+Oh no, all that noise caught Franks attention. You better get above him!`;
 
 let loserVoiceString = `
 That's Frank!`; // The text that the typewriter will write.
 
 let winnerVoiceString = `
-Haha haha, I swear tractors is so dumb.
+Haha, I swear tractors is so dumb.
 I'll tell you what buddy,
-it don't get much better!`; // The text that the typewriter will write.
+it don't get much better than this!`; // The text that the typewriter will write.
 
 
 let disneyText = {
   string: `Disney PIXAR`,
   x: 640,
-  y: 235
+  y: 250
 };
-
 
 let titleText = {
   string: `Tractor Tipping`,
@@ -95,11 +91,14 @@ let startText = {
 };
 
 
-let fontSize = {
-  extraSmall: 18, // Sets a font size of 18px.
-  small: 22, // // Sets a font size of 22px.
-  medium: 32, // Sets a font size of 32px.
-  large: 96 // Sets a font size of 96px.
+let imageBackground = { // Generates an imageBackground object
+  introGif: undefined, // Assigns introGif as undefined.
+  backgroundHonkOne: undefined, // Assigns backgroundHonkOne as undefined.
+  backgroundHonkTwo: undefined, // Assigns backgroundHonkTwo as undefined.
+  backgroundHonkThree: undefined, // Assigns backgroundHonkThree as undefined.
+  backgroundChase: undefined, // Assigns backgroundChase as undefined.
+  loserGif: undefined, // Assigns loserGif as undefined.
+  winnerGif: undefined // Assigns winnerGif as undefined.
 };
 
 
@@ -109,17 +108,15 @@ let gameSound = {
 };
 
 
+let fontSize = {
+  extraSmall: 18, // Sets a font size of 18px.
+  small: 22, // // Sets a font size of 22px.
+  medium: 32, // Sets a font size of 32px.
+  large: 96 // Sets a font size of 96px.
+};
+
+
 let colour = {
-  red: {
-    r: 140,
-    g: 0,
-    b: 0
-  },
-  green: {
-    r: 0,
-    g: 140,
-    b: 0
-  },
   blue: {
     r: 0,
     g: 0,
@@ -131,24 +128,14 @@ let colour = {
     b: 0
   },
   grey: {
-    r: 175,
-    g: 175,
-    b: 175
+    r: 200,
+    g: 200,
+    b: 200
   },
-  white: {
-    r: 255,
-    g: 255,
-    b: 255
-  },
-  black: {
-    r: 0,
-    g: 0,
-    b: 0
-  }
 };
 
 
-// Description of preload()
+// CALLS FUNCTIONS FOR PRELOAD CAPABILITY
 function preload () {
   loadImages(); // Calls the loadImages function.
   loadSounds(); // Calls the loadSounds function
@@ -156,20 +143,19 @@ function preload () {
 }
 
 
-
-// Description of setup()
+// FUNCTIONS INSIDE OF SETUP
 function setup() {
 createCanvas(1280, 720); // Sets the canvas size to 16:9 aspect ratio.
 generateAudioInput(); // Calls the generateAudioInput function upon starting the tractorHonkOne state.
 }
 
 
+// GENERATE AUDIO INPUT
 function generateAudioInput() {
   microphone = new p5.AudioIn(); // Connects to p5.Audio Library
   microphone.start(); // Starts the microphone.
   userStartAudio(); // starts the AudioContext on a user gesture, to enable audio input in browser.
 }
-
 
 
 // GENERATE MATER FUNCTION
@@ -180,11 +166,10 @@ function generateMater() {
 }
 
 
-
 // GENERATE TRACTOR FUNCTION
 function generateTractors() { // Generates the animals.
   for (let i = 0; i < NUM_TRACTORS; i++) { // For loop to duplicate the animals.
-    let x = random(640, 1280); // Random x postion for image placement.
+    let x = random(640, 1200); // Random x postion for image placement.
     let y = random(150, 570); // Random y postion for image placement.
     let tractorImage = random(tractorImages); // Random image from animalImages array.
     let tractor = new Tractor(x, y, tractorImage); // Sends parameters to constructor in Tractor class.
@@ -193,8 +178,7 @@ function generateTractors() { // Generates the animals.
 }
 
 
-
-// generateFrank
+// GENERATE FRANK
 function generateFrank() {
   let x = random(260, 1020); // Spawns Frank at a random position on the x axis.
   let y = 0; // Spawns Frank at the top of the canvas.
@@ -202,8 +186,7 @@ function generateFrank() {
 }
 
 
-
-// Description of draw()
+// STATES INSIDE OF DRAW
 function draw() { // P5 Function that displays output on canvas.
   if (state === `landing`) { // Indicates that when the state equates to "landing", start said state.
     landing(); // Calls landing function.
@@ -230,7 +213,6 @@ function draw() { // P5 Function that displays output on canvas.
     winner(); // Calls winner function.
   }
 }
-
 
 
 // LANDING FUNCTION
@@ -275,10 +257,9 @@ function startingText() {
 }
 
 
-
 // INSTRUCTION FUNCTION
 function instruction() {
-  background(introGif); // Sets background to black in colour.
+  background(imageBackground.introGif); // // Calls introGif from the imageBackground object.
   generateIntroCaption(); // Calls the generateIntroCaption function.
   responsiveVoiceTimer(); // Calls the responsiveVoiceTimer function.
 }
@@ -309,12 +290,12 @@ function responsiveVoiceTimer() {
 }
 
 
-
 // tractorHonkOne FUNCTION
 function tractorHonkOne() { // tractorHonkOne function
-  background(colour.red.r, colour.red.g, colour.red.b); // Sets background to red in colour.
+  background(imageBackground.backgroundHonkOne); // Calls backgroundHonkOne from the imageBackground object.
   updateStateOneDelayTimer(); // Calls the updateStateOneDelayTimer function.
 
+  // CALLS OUTSIDE OF DRAW
   updateAudioInputLevel(); // Calls the updateAudioInputLevels function.
   updateMater(); // Calls the updateMater function.
   updateTractor(); // Calls the updateTractor function.
@@ -331,17 +312,16 @@ function updateStateOneDelayTimer() {
 }
 
 
-
 // tractorHonkTwo FUNCTION
 function tractorHonkTwo() {
-  background(colour.green.r, colour.green.g, colour.green.b); // Sets background to green in colour.
+  background(imageBackground.backgroundHonkTwo); // Calls backgroundHonkTwo from the imageBackground object.
   updateStateTwoDelayTimer(); // Calls the updateStateTwoDelayTimer function.
 
+  // CALLS OUTSIDE OF DRAW
   updateAudioInputLevel(); // Calls the updateAudioInputLevels function.
   updateMater(); // Calls the createMater function.
   updateTractor(); // Calls the updateTractor function.
 }
-
 
 
 // UPDATE STATE ONE DELAY TIMER FUNCTION
@@ -354,18 +334,16 @@ function updateStateTwoDelayTimer() {
 }
 
 
-
-
 // tractorHonkThree FUNCTION
 function tractorHonkThree() {
-  background(colour.blue.r, colour.blue.g, colour.blue.b); // Sets background to blue in colour.
+  background(imageBackground.backgroundHonkThree); // Calls backgroundHonkThree from the imageBackground object.
   updateStateThreeDelayTimer(); // Calls the updateStateOneDelayTimer function.
 
+  // CALLS OUTSIDE OF DRAW
   updateAudioInputLevel(); // Calls the updateAudioInputLevels function.
   updateMater(); // Calls the createMater function.
   updateTractor(); // Calls the updateTractor function.
 }
-
 
 
 // UPDATESTATE THREE DELAY TIMER FUNCTION
@@ -378,26 +356,25 @@ function updateStateThreeDelayTimer() {
 }
 
 
-
 // frankChase FUNCTION
 function frankChase() {
-  background(colour.grey.r, colour.grey.g, colour.grey.b); // Sets background to red in colour.
+  background(imageBackground.backgroundChase); // Calls backgroundChase from the imageBackground object.
 
+  // CALLS OUTSIDE OF DRAW
   updateMater(); // Calls the createMater function.
   updateFrank(); // Calls the updateFrank function.
   playCombineSound(); // Calls the playCombineSound function.
 }
 
 
-
 // LOSER FUNCTION
 function loser() { // loser function
-  background(loserGif); // Sets background to loserGif.
+  background(imageBackground.loserGif); // Calls loserGif from the imageBackground object.
   updateDelayedLoserCaption(); // Calls the updateDelayedLoserCaption function.
 
+  // CALLS OUTSIDE OF DRAW
   stopCombineSound(); // Calls the stopCombineSound function.
 }
-
 
 
 // UPDATE DEALYED LOSER CAPTION
@@ -409,12 +386,12 @@ function updateDelayedLoserCaption() {
 }
 
 
-
 // WINNER FUNCTION
 function winner() { // loser function
-  background(winnerGif); // Sets background to winnerGif.
+  background(imageBackground.winnerGif); // Calls winnerGif from the imageBackground object.
   generateWinnerCaption(); // Calls the generateWinnerCaption function.
 
+  // CALLS OUTSIDE OF DRAW
   stopCombineSound(); // Calls the stopCombineSound function.
 }
 
@@ -434,26 +411,27 @@ function generateWinnerCaption() {
 }
 
 
-
-
-
+// FUNCTIONS OUTSIDE OF DRAW
 
 
 // LOADIMAGES FUNCTION
 function loadImages() {
-  materImage = loadImage (`assets/images/materRight.png`) // Preloads the image of mater for efficient load times.
-  frankImage = loadImage (`assets/images/frankTest.png`) // Preloads the image of frank for efficient load times.
-  introGif = loadImage (`assets/images/introGif.gif`) // Preloads the introGif for efficient load times.
-  loserGif = loadImage (`assets/images/loserGif.gif`) // Preloads the loserGif for efficient load times.
-  winnerGif = loadImage (`assets/images/winnerGif.gif`) // Preloads the winnerGif for efficient load times.
+  materImage = loadImage (`assets/images/mater.png`) // Preloads the image of mater for efficient load times.
+  frankImage = loadImage (`assets/images/frank.png`) // Preloads the image of frank for efficient load times.
 
+  imageBackground.introGif = loadImage (`assets/images/introGif.gif`) // Preloads the introGif for efficient load times.
+  imageBackground.backgroundHonkOne = loadImage (`assets/images/background50.png`) // Preloads the introGif for efficient load times.
+  imageBackground.backgroundHonkTwo = loadImage (`assets/images/background60.png`) // Preloads the introGif for efficient load times.
+  imageBackground.backgroundHonkThree = loadImage (`assets/images/background70.png`) // Preloads the introGif for efficient load times.
+  imageBackground.backgroundChase = loadImage (`assets/images/background80.png`) // Preloads the introGif for efficient load times.
+  imageBackground.loserGif = loadImage (`assets/images/loserGif.gif`) // Preloads the loserGif for efficient load times.
+  imageBackground.winnerGif = loadImage (`assets/images/winnerGif.gif`) // Preloads the winnerGif for efficient load times.
 
   for (let i = 0; i < NUM_TRACTOR_IMAGES; i++) { // Loop that counts up by 1 untill 3.
     let tractorImage = loadImage(`assets/images/tractor${i}.png`); // Load tractor images dynamically.
     tractorImages.push(tractorImage); // Push's the animal images into the array.
   }
 }
-
 
 
 // LOADFONTS FUNCTION
@@ -463,13 +441,11 @@ function loadSounds() {
 }
 
 
-
 // LOADFONTS FUNCTION
 function loadFonts() {
-  titleFont = loadFont ("assets/fonts/magneto.ttf") // Preloads the custom downloaded font for efficient load times.
+  titleFont = loadFont ("assets/fonts/sarnia.ttf") // Preloads the custom downloaded font for efficient load times.
   disneyFont = loadFont ("assets/fonts/disney.ttf") // Preloads the custom downloaded font for efficient load times.
 }
-
 
 
 // KEYPRESSED FUNCTION
@@ -480,7 +456,6 @@ function keyPressed () { // p5 function to perform action with keyboard input.
     generateStateVoiceDelay(); // Calls the generateStateVoiceDelay function.
   }
 }
-
 
 
 // TALKING MATER INTRO FUNCTION
@@ -561,14 +536,12 @@ function updateFrank() {
 }
 
 
-
 // UPDATE MATER FUNCTION
 function updateMater() {
   mater.display(); // Calls the display class in Mater.js.
   mater.handleInput(); // Calls the handleInput class in Mater.js.
   mater.move(); // Calls the move class in Mater.js.
 }
-
 
 
 // UPDATE TRACTOR FUNCTION
@@ -588,6 +561,7 @@ function updateTractorReset() {
     tractors[i].reset(random(640, 1280), random(150, 570), random(tractorImages)); // Re-positions a random tractor from the tractor array within the given X and Y coordinates.
   }
 }
+
 
 // HONK FUNCTION
 function playHonk() {
@@ -611,12 +585,9 @@ function stopCombineSound() {
 }
 
 
-
 // CREATE AUDIO INPUT FUNCTION
 function updateAudioInputLevel() {
   let level = microphone.getLevel(); // Assigns level to getLevel function.
-
-
 
   if (level > minLoudness) {
 
@@ -643,7 +614,6 @@ function updateAudioInputLevel() {
     generateFrank(); // Calls the generateFrank function.
     talkingFrankScene() // Calls the talkingFrankScene function.
     playCombineSound(); // Calls the playCombineSound function.
-
   }
 
   console.log(level); // Console logs audio input for testing purposes.
@@ -740,7 +710,6 @@ function stateWinnerDelay() {
 }
 
 
-
 // STATE DELAY THREE SETUP
 function generateDelayWaitLoser() {
   setInterval(stateDelayLoserWait, 1000); // Creates a timer that calls the function stateDelayThree.
@@ -753,7 +722,6 @@ function stateDelayLoserWait() {
     stateDelayLoser--; // Decrease the number by 1.
   }
 }
-
 
 
 function generateLoserCaption() {
