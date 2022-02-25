@@ -10,8 +10,7 @@ class Tractor { // Creates a class that is called from script.js.
     this.rotationSpeed = 0.1; // Assigns a rotation speed.
   }
 
-
-
+  // RESET TRACTOR POSITION UPON STATE CHANGE
   reset(x, y, tractorImage) {
     this.x = x;
     this.y = y;
@@ -23,7 +22,7 @@ class Tractor { // Creates a class that is called from script.js.
     this.rotationSpeed = 3; // Assigns a rotation speed.
   }
 
-
+  // DISPLAY TRACTOR
   display() {
     push(); // Isolates code from using global properties.
     imageMode(CENTER); // Formats image from the center outwards.
@@ -33,12 +32,18 @@ class Tractor { // Creates a class that is called from script.js.
     pop(); // Isolates code from using global properties.
   }
 
-
+  // TIP TRACTOR
   tip() {
     this.angle = constrain(this.angle, this.maxAngle, 0); // Tips the tractor 90 degrees.
   }
 
+  // CONSTRAIN TRACTOR
+  constrain() {
+    this.x = constrain(this.x, 160, 1130); // Constrains Tractor to the canvas width.
+    this.y = constrain(this.y, 80, 640); // Constrains Tractor to the canvas width.
+  }
 
+  // CALCULATE DISTANCE BETWEEN TRACTOR AND MATER
   distanceToMater(mater) { // Function that determines the distance between mater and tractor, and thus decides to allow microphone input or not.
     this.d = dist(this.x, this.y, mater.x, mater.y) // Assigns mater's and tractors a and y position to d.
 
@@ -53,7 +58,7 @@ class Tractor { // Creates a class that is called from script.js.
     }
   }
 
-
+  // CALCULATE OVERLAP BETWEEN TRACTOR AND MATER
   overlapMater(mater) { // Provides tractor as an argument to connect mater class to tractor class. Locates the center point of both mater and tractor.
     if (this.x > mater.x - mater.image.width / 2 && // If tractors's x position is greater than maters's x position, minus tmaters's width / 2.
         this.x < mater.x + mater.image.width / 2 && // If tractors's x position is less than maters's x position, plus tmaters's width / 2.
@@ -63,12 +68,12 @@ class Tractor { // Creates a class that is called from script.js.
     }
   }
 
-
+  // FUNCTIONS THAT ARE CALLED WHEN TRACTOR AND MATER OVERLAP
   materTouch() { // Function that calls the touchTractor state in script.js.
     state = `frankChase`; // Runs the touchTractor state.
     generateFrank(); // Calls the generateFrank function in script.js.
     talkingFrankScene(); // Calls the talkingFrankScene.
+    playCombineSound(); // Calls the playCombineSound function.
   }
-
 
 }

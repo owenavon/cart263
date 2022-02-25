@@ -28,8 +28,8 @@ let winnerCurrentCharacter = 0; // Starts without showing any characters on scre
 let pageMargin = 50; // Page margins for a sheet of paper effect.
 
 let microphone; // Defines microphone for AudioInput.
-let minLoudness = 0.5; // Assigns a minimum loudness value. Any value below this will have no action.
-let maxLoudness = 1.5; // Assigns a maximum loudness value. Any value above this will trigger Frank.
+let minLoudness = 1.5; // Assigns a minimum loudness value. Any value below this will have no action.
+let maxLoudness = 4.0; // Assigns a maximum loudness value. Any value above this will trigger Frank.
 
 let materImage = undefined; // Assigns materImage as undefined.
 let mater = undefined; // Assigns mater as undefined.
@@ -55,16 +55,16 @@ And they do the rest.
 Watch!`; // The text that the typewriter will write.
 
 let tractorHonkOneVoiceString = `
-Use arrow keys to move Mater near tractor. When close, "honk" into the microphone, but not to loud. Make sure you don't touch tractor...`;
+Use the arrow keys to move Mater near tractor. When close, "honk" into the microphone, but not to loud. Make sure you don't touch tractor...`;
 
 let tractorHonkTwoVoiceString = `
 Fun eh!? Why don't you try er again?`;
 
 let tractorHonkThreeVoiceString = `
-Maybe one last time, for good luck sake, right?`;
+Maybe one last time? You know, for good luck...`;
 
 let frankSceneVoiceString = `
-Uh oh, all that noise caught Franks attention. You better run!`;
+Uh oh, all that noise caught Franks attention. You bettrt get above Frank!`;
 
 let loserVoiceString = `
 That's Frank!`; // The text that the typewriter will write.
@@ -72,7 +72,7 @@ That's Frank!`; // The text that the typewriter will write.
 let winnerVoiceString = `
 Haha haha, I swear tractors is so dumb.
 I'll tell you what buddy,
-it don't get much better.`; // The text that the typewriter will write.
+it don't get much better!`; // The text that the typewriter will write.
 
 
 let disneyText = {
@@ -123,27 +123,17 @@ let colour = {
   blue: {
     r: 0,
     g: 0,
-    b: 100
-  },
-  yellow: {
-    r: 185,
-    g: 185,
-    b: 0
+    b: 60
   },
   orange: {
-    r: 255,
-    g: 165,
+    r: 200,
+    g: 120,
     b: 0
   },
-  purple: {
-    r: 50,
-    g: 20,
-    b: 50
-  },
   grey: {
-    r: 200,
-    g: 200,
-    b: 200
+    r: 175,
+    g: 175,
+    b: 175
   },
   white: {
     r: 255,
@@ -184,8 +174,8 @@ function generateAudioInput() {
 
 // GENERATE MATER FUNCTION
 function generateMater() {
-  let x = 190; // Spawns mater at the x orgin point.
-  let y = 100; // Spawns mater at the y orgin point.
+  let x = 160; // Spawns mater at the x orgin point.
+  let y = 80; // Spawns mater at the y orgin point.
   mater = new Mater (x, y, materImage); // Sends arguments to constructor in Mater.js.
 }
 
@@ -206,7 +196,7 @@ function generateTractors() { // Generates the animals.
 
 // generateFrank
 function generateFrank() {
-  let x = random(320, 960); // Spawns Frank at a random position on the x axis.
+  let x = random(260, 1020); // Spawns Frank at a random position on the x axis.
   let y = 0; // Spawns Frank at the top of the canvas.
   frank = new Frank (x, y, frankImage); // Sends arguments to constructor in Frank.js.
 }
@@ -245,7 +235,7 @@ function draw() { // P5 Function that displays output on canvas.
 
 // LANDING FUNCTION
 function landing() {
-  background(colour.purple.r, colour.purple.g, colour.purple.b); // Sets background to purple in colour.
+  background(colour.blue.r, colour.blue.g, colour.blue.b); // Sets background to purple in colour.
   disneyPixarText(); // Calls the disneyPixarText function.
   headingText(); // Calls the headingText function.
   startingText(); // Calls the startingText function.
@@ -267,7 +257,7 @@ function headingText() {
   push(); // Isolates code from using global properties.
   textFont(titleFont); // Displays the text font as magnetob.ttf.
   textSize(fontSize.large); // Displays the font size 96px.
-  fill(colour.yellow.r, colour.yellow.g, colour.yellow.b); // Displays the instructions in orange colour.
+  fill(colour.orange.r, colour.orange.g, colour.orange.b); // Displays the instructions in orange colour.
   textAlign(CENTER, CENTER); // Positions the text allignment to center.
   text(titleText.string, titleText.x, titleText.y); // Displays the title of the game.
   pop(); // Isolates code from using global properties.
@@ -395,6 +385,7 @@ function frankChase() {
 
   updateMater(); // Calls the createMater function.
   updateFrank(); // Calls the updateFrank function.
+  playCombineSound(); // Calls the playCombineSound function.
 }
 
 
@@ -403,6 +394,8 @@ function frankChase() {
 function loser() { // loser function
   background(loserGif); // Sets background to loserGif.
   updateDelayedLoserCaption(); // Calls the updateDelayedLoserCaption function.
+
+  stopCombineSound(); // Calls the stopCombineSound function.
 }
 
 
@@ -421,6 +414,8 @@ function updateDelayedLoserCaption() {
 function winner() { // loser function
   background(winnerGif); // Sets background to winnerGif.
   generateWinnerCaption(); // Calls the generateWinnerCaption function.
+
+  stopCombineSound(); // Calls the stopCombineSound function.
 }
 
 
@@ -562,7 +557,7 @@ function talkingMaterWinner() {
 function updateFrank() {
   frank.display(); // Calls the display class in frank.js.
   frank.overlapMater(mater); // Calls the overlap class in Mater.js.
-  frank.move(); // Calls the move class in frank.js.
+  frank.move(mater); // Calls the move class in frank.js.
 }
 
 
@@ -579,12 +574,12 @@ function updateMater() {
 // UPDATE TRACTOR FUNCTION
 function updateTractor() {
   for (let i = 0; i < tractors.length; i++) { // Loop that counts to the value indicated in tractor.
-    tractors[i].display();
-    tractors[i].overlapMater(mater);
-    tractors[i].distanceToMater(mater);
+    tractors[i].display(); // Calls the display function in tractor.js while in the tractors array.
+    tractors[i].constrain(); // Calls the constrain function in tractor.js while in the tractors array.
+    tractors[i].overlapMater(mater); // Calls the overlap function in tractor.js while in the tractors array.
+    tractors[i].distanceToMater(mater); // Calls the distanceToMater function in tractor.js while in the tractors array.
   }
 }
-
 
 
 // UPDATE TRACTOR RESET FUNCTION
@@ -594,11 +589,25 @@ function updateTractorReset() {
   }
 }
 
-// HONK FUNCION
+// HONK FUNCTION
 function playHonk() {
-  if (!gameSound.honkSFX.isPlaying()) { // States that if the horn sound effect is not playing, it will be played.
-    gameSound.honkSFX.play();
+  if (!gameSound.honkSFX.isPlaying()) { // States that if the honk sound effect is not playing, then...
+    gameSound.honkSFX.play(); // Plays combineSFX.
   }
+}
+
+
+// COMBINE FUNCTION
+function playCombineSound() {
+  if (!gameSound.combineSFX.isPlaying()) { // States that if the cobine sound effect is playing, then...
+    gameSound.combineSFX.play(); // Stop combineSFX.
+  }
+}
+
+
+// COMBINE FUNCION
+function stopCombineSound() {
+  gameSound.combineSFX.stop();
 }
 
 
@@ -632,7 +641,9 @@ function updateAudioInputLevel() {
   if (level > maxLoudness) {
     state = `frankChase`; // Changes the state to frankChase.
     generateFrank(); // Calls the generateFrank function.
-    talkingFrankScene() // Calls the talkingFrankScene.
+    talkingFrankScene() // Calls the talkingFrankScene function.
+    playCombineSound(); // Calls the playCombineSound function.
+
   }
 
   console.log(level); // Console logs audio input for testing purposes.
