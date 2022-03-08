@@ -1,0 +1,16 @@
+#secret-document {
+  font-fmaily: monospace;
+  font-size: 1.25rem;
+  width: 50vw;
+  margin: auto;
+}
+
+.redacted {
+  background-color: #000000;
+  user-select: none;
+}
+
+.revealed {
+  color: #ff0000;
+  text-decoration: underline;
+}
