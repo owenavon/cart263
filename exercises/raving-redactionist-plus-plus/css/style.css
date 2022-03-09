@@ -7,10 +7,14 @@
 
 .redacted {
   background-color: #000000;
+  color: #000000;
+  transition: background-color 0.5s ease;
   user-select: none;
 }
 
 .revealed {
   color: #ff0000;
+  transition: background-color 0.5s ease;
+  transition: color 0.5s ease;
   text-decoration: underline;
 }
