@@ -6,7 +6,8 @@
 
 "use strict";
 
-const HALF_SECOND = 500; // Assigns 500 milliseconds to HALF_SECOND constant.
+const HALF_SECOND = 500; // Assigns 500 milliseconds (0.5 seond) to HALF_SECOND constant.
+const ONE_SECOND = 1000; // Assigns 1000 milliseconds (1 second) to ONE_SECOND constant.
 const TEN_PERCENT = 0.1; // Assigns 0.1 value to TEN_PERCENT constant.
 
 let letter = [
@@ -21,7 +22,15 @@ let letter = [
   `n`
 ];
 
+
+let instruction = [
+  `The Russians are hacking. Quick redact the revealed information. Take note of the spoken letters.`,
+  `Incorect Password. Maybe hearing it backwards is easier for you?`,
+  `Too many incorect Passwords.`
+];
+
 let currentIndex = 0;
+let lastValue = 0;
 
 setInterval(revelation, HALF_SECOND); // Calls revelation function every 0.5 second.
 $(`.top-secret`).on(`click`, redact); // Selects top-secret class, calls click listener, and calls function redact.
@@ -32,9 +41,11 @@ function redact(event) { // Defines the redact function. event is passed since t
   spokenLetter(); // Calls the spokenLetter function
 }
 
+
 function revelation() { // Defines the revelation function.
   $(`.redacted`).each(attemptReveal); // Selects currently redacted text.
 }
+
 
 function attemptReveal() { // Defines the attemptReveal function.
   let numberPercentage = Math.random(); // Assigns numberPercentage to random function.
@@ -47,22 +58,42 @@ function attemptReveal() { // Defines the attemptReveal function.
   }
 }
 
+setInterval(spokenInstruction(), ONE_SECOND); // Calls spokenInstruction after one second
+
+function spokenInstruction() {
+  responsiveVoice.speak(instruction[0]);
+}
+
+
 function spokenLetter() { // Defines the spokenLetter function
-  responsiveVoice.speak(letter[currentIndex]); // Assigns the letter array to responsiveVoice
+  responsiveVoice.speak(letter[currentIndex]); // Assigns the letter array to responsiveVoice, from 0 to 8.
   currentIndex = currentIndex + 1; // Allows each click on the top-secret class to progress through the array.
 
   if (currentIndex === letter.length + 1) { // If the array has been said, then the subsequent click will...
     passwordPrompt(); // Call the passwordPrompt function.
   }
+
+  if (letter[8]) {
+    responsiveVoice.speak(letter[lastValue]); // Assigns the letter array to responsiveVoice, from 0 to 8.
+    lastValue = lastValue + 1; // Allows each click on the top-secret class to progress through the array.
+  }
+
+  else if (lastValue === letter.length + 1) { // If the array has been said, then the subsequent click will...
+    responsiveVoice.speak(instruction[2]); // Responsive Voice says the password was incorect too many times.
+  }
 }
+
 
 function passwordPrompt() { // Defines the passwordPrompt function
   let secretWord = prompt("Enter password to terminate infiltration:")
   if (secretWord == `cessation`) {
     window.close(); // Closes window for security reasons.
   }
-  else {
-    responsiveVoice.speak(`Incorect Password`);
-    currentIndex = 0;
+
+  else if (letter[7]) { // Sets the current index to 8. The last element in the array. {
+    responsiveVoice.speak(instruction[1]); // Responsive Voice says the password was incorect.
+    letter.reverse(); // Tells the array to call the elements backwards.
+    lastValue = 7
+    lastValue = lastValue - letter.length + 1; // Starts at the last element in the array.
   }
 }
