@@ -38,7 +38,7 @@ let letterBackward = [
 
 
 let instruction = [
-  `The Russians are hacking. Quick redact the revealed information. Take note of the spoken letters.`,
+  `The Russians are hacking. Quickly redact the revealed information. Take note of the spoken letters.`,
   `Incorect Password. Maybe hearing it backwards is easier for you?`,
   `Incorrect. System shutdown for American integrity.`
 ];
@@ -46,12 +46,14 @@ let instruction = [
 let currentIndex = 0;
 let currentIndexBackward = 0;
 
-let clicks = 0;
+let clickCounter = 0;
 
-function onClick() {
-  clicks += 1;
-  document.getElementById("clicks").innerHTML = clicks;
-};
+function onClick() { // Defines the onClick function.
+  $(`#click`).on(`click`); //
+  clickCounter += 1; // Allows the click counter to increase by 1 after each click.
+  console.log(`Click # ${clickCounter}`); // Console logs the click counter.
+  $("#counter-value").text(clickCounter); // Assigns the clickCounter value to counterValue ID to be used in HTML.
+}
 
 
 setInterval(revelation, HALF_SECOND); // Calls revelation function every 0.5 second.
@@ -62,7 +64,7 @@ function redact(event) { // Defines the redact function. event is passed since t
   $(this).removeClass(`revealed`); // Removes the revealed class.
   $(this).addClass(`redacted`); // Adds the redacted class.
 
-  if (clicks >= ELEVEN) {
+  if (clickCounter >= ELEVEN) {
     spokenLetterBackward(); // Calls the spokenLetterBackward function if the user has made 12 previous clicks.
   }
   else { // Otherwise...
@@ -127,7 +129,7 @@ function spokenLetterBackward() { // Defines the spokenLetterBackward.
 
 
 function passwordPromptFinal() { // Defines the passwordPrompt function
-  let secretWord = prompt("Enter SUPER IMPORTANT password to terminate infiltration:")
+  let secretWord = prompt("Enter the SUPER IMPORTANT password to terminate infiltration:")
   if (secretWord == `cessation`) {
     window.close(); // Closes window for security reasons.
   }

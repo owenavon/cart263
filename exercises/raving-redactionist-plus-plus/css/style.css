@@ -3,6 +3,16 @@
   font-size: 1.25rem;
   width: 50vw;
   margin: auto;
+  background-color: #ffffe0;
+  padding: 50px;
+}
+
+#saved-secrets-text {
+  font-weight: 600;
+}
+
+#counter-value {
+  color: #007500;
 }
 
 .redacted {
