@@ -1,3 +1,11 @@
+#main-bold-text {
+  margin: auto;
+  text-align: center;
+  padding-bottom: 30px;
+  font-size: 1.5em;
+  text-decoration: underline;
+}
+
 #secret-document {
   font-fmaily: monospace;
   font-size: 1.25rem;

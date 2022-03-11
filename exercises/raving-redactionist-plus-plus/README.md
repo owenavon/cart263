@@ -3,17 +3,17 @@
 Exercise 06: Raving Redactionist Plus Plus
 Owen Avon
 
-// A hacker is un-censoring top secret information. You must click on the revealed information in order for it to redact as quickly as possible. When you click, take note of the letter that is spoken aloud. Enter the keyword to jam the hacking.
+// A Russian hacker un-censors top secret information in real time. You must click on the revealed information to redact it as quickly as possible. When you click, take note of the letter that is spoken aloud. When prompted, enter the password to terminate the infiltration.
 
 Added functionality:
-
-** Improve the visual presentation by working with the CSS and HTML - Modal instruction box
+** Improve the visual presentation (sort of) by working with the CSS and HTML
 ** Use a fading effect to fade the redaction effect in and out (this will likely require .animate())
-** Add an ending of some kind to the experience if the user allows all the secrets to be revealed (“YOU LOST THE COLD WAR!!”) - Annyang! says a letter every time the user clicks on revealed text.
-** Custom: Implement a text input field for the user to enter the secret keyword. The Keyword will stop the hacking.
+** Add an ending of some kind to the experience if the user allows all the secrets to be revealed (“YOU LOST THE COLD WAR!!”)
+** Reposition the user as someone trying to get the secrets with an interesting revelation mechanics (maybe if they successfully print the document they win???)
+** Custom: Implement a text input field for the user to enter an auditorily observed secret password. The password will stop the hacking
 
-Audio Credit:
-"" by "" |
+API Credit:
+jQuery accessible via https://jquery.com/
+ResponsiveVoice accessible via https://responsivevoice.org/
 
-Font Credits:
-"" by "" |
+No external resources were used.
