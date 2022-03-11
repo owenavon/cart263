@@ -1,4 +1,4 @@
-# aving Redactionist Plus Plus
+# Raving Redactionist Plus Plus
 
 Exercise 06: Raving Redactionist Plus Plus
 Owen Avon
