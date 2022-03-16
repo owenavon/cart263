@@ -8,12 +8,47 @@
 
     <!-- CSS stylesheet(s) -->
     <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.13.1/themes/vader/jquery-ui.css" />
 
     <!-- Library script(s) go here -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js" integrity="sha256-eTyxS0rkjpLEo16uXTS0uVCS4815lc40K2iVpWDvdSY=" crossorigin="anonymous"></script>
   </head>
 
   <body>
-    <!-- HTML would go here if needed. -->
+    <!-- The poem, secret letters are in spans with class "secret" -->
+    <section id="poem">
+      <h2><span class="secret">T</span>his Is Just To Say</h2>
+      <p>
+        I <span class="secret">h</span>ave eaten<br />
+        the plums<br />
+        that wer<span class="secret">e</span> in<br />
+        the icebox
+      </p>
+      <p>
+        and which<br />
+        you we<span class="secret">r</span>e probably<br />
+        saving<br />
+        for br<span class="secret">e</span>akfast
+      </p>
+      <p>
+        Forgive <span class="secret">m</span>e<br />
+        they were del<span class="secret">i</span>cious<br />
+        so sweet<br />
+        a<span class="secret">n</span>d so cold
+      </p>
+      <h4>William Carlos Williams</h4>
+    </section>
+
+    <!-- The secret answer area-->
+    <section id="answer"></section>
+
+    <!-- The solved dialog box-->
+    <div id="solved-dialog" title="Da Vinci?!">
+      <p>
+      You are soooooo smart!
+      </p>
+    </div>
 
     <!-- My script(s) -->
     <script src="js/script.js"></script>

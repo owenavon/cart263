@@ -1,6 +1,13 @@
-/*********************************************
+#poem {
+  font-size: 1.2rem;
+}
 
-Here is a description of any special CSS used.
-By default that's nothing.
+#answer {
+  width: 10rem;
+  height: 2rem;
+  border: 1px dashed black;
+}
 
-**********************************************/
+.found {
+  color: red;
+}

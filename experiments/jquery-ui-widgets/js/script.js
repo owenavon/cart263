@@ -12,10 +12,10 @@ $(`#introduction-dialog`).dialog({
       $(`#escape-tunnel`).show({ // Shows the escape-tunnel id once the user clicks on the Escape Tunnel button.
         effect: `blind` // Animates the appearance of the blind effect.
       });
-      $(this).dialog(`close`);
+      $(this).dialog(`close`); // Dialog creates a dialog box using the introduction-dialog id.
     }
   }
-}); // .dialog creates a dialog box using the introduction-dialog id.
+});
 
 $(`#prisoner`).effect({
   effect: `shake`, // Default effect to shake element.
