@@ -1,0 +1,27 @@
+#prison {
+  width: 30vw; /* Dimensions of the prison */
+  height: 30vw; /* Dimensions of the prison */
+  border: 5px dashed black;  /* The prison walls */
+  display: grid; /* CSS grid for alignment of elements in the prison */
+  justify-content: center;
+  align-content: center;
+}
+
+#prisoner {
+  font-size: 2rem; I/* Increases font size */
+}
+
+#escape-tunnel {
+  width: 5vw; /* Tunnel dimensions */
+  height: 5vw;
+  border: 2px dashed black; /* Tunnel outline */
+  border-radius: 100%;/* Make it a circle */
+  display: grid;/* Use CSS grid to align the label in it */
+  justify-content: center;
+  align-content: center;
+}
+
+.prisoner-dragging {
+  color: #4444ff;
+  text-decoration: underline;
+}
