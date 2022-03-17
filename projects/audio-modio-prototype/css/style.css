@@ -1,6 +1,22 @@
-/*********************************************
+body {
+  font-family: "calibri";
+}
 
-Here is a description of any special CSS used.
-By default that's nothing.
+p {
+  font-size: 18px;
+}
 
-**********************************************/
+#start {
+  font-size: 1.2rem;
+  border-radius: 15px;
+}
+
+#stop {
+  font-size: 1.2rem;
+  border-radius: 15px;
+}
+
+#download {
+  font-size: 18px;
+  color: green;
+}
