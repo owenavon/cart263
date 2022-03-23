@@ -5,15 +5,22 @@
 
 "use strict";
 
-  const downloadLink = document.getElementById('download');
+
+  const downloadRaw = document.getElementById('download-raw');
   const player = document.getElementById('player');
   const startButton = document.getElementById('start');
   const stopButton = document.getElementById('stop');
 
-  $("#player").hide(); // Hides the player id by default.
-  $("#download").hide(); // Hides the download id by default.
-  $("#stop").hide(); // Hides the stop button by default.
 
+  $("#player").hide(); // Hides the player id by default.
+  $("#download-raw").hide(); // Hides the download-raw id by default.
+  $("#download-edit").hide(); // Hides the download-edit id by default.
+  $("#stop").hide(); // Hides the stop button by default.
+  $("#done-edit").hide(); // Hides the done-edit button by default.
+  $("#see-visualizer").hide(); // Hides the see-visualizer button by default.
+  $(".master-controls").hide(); // Hides the master editable sliders by default.
+
+  $("#start-stop-button").text(`Press the "Start" button to record your voice.`); // Default displayed text
 
   const handleSuccess = function(stream) {
     const options = {
@@ -22,40 +29,80 @@
     const recordedChunks = [];
     const mediaRecorder = new MediaRecorder(stream, options);
 
+
     // DATAAVAILABLE METHOD
     mediaRecorder.addEventListener('dataavailable', function(e) { // dataavailable fires when mediaRecorder delivers media.
       if (e.data.size > 0) recordedChunks.push(e.data);
     });
 
+
     // EVENT lISTENER UPON STOP BUTTON
     mediaRecorder.addEventListener('stop', function() { // Defines actions that happen upon cliking on the stop button
-      downloadLink.href = URL.createObjectURL(new Blob(recordedChunks)); // Gnerates audio doownload link.
-      downloadLink.download = 'testRecording.wav'; // Name the recording to testRecording.wav.
+      player.src = URL.createObjectURL(new Blob(recordedChunks)); // Assigns the recorded audio src to player.
 
-      $("#download").show(); // Shows the download button once the recording has stopped.
+      downloadRaw.href = URL.createObjectURL(new Blob(recordedChunks)); // Gnerates audio doownload link.
+      downloadRaw.download = 'testRecording.wav'; // Name the recording to testRecording.wav.
+      $("#download-raw").show(); // Shows the download-raw button once the recording has stopped.
 
-      player.src = URL.createObjectURL(new Blob(recordedChunks)); // Assigns an src to player
+      $("#download-edit").show(); // Shows the download-show button once the user says the modifications are complete.
+
+      $("#edit-recording").text(`Edit your recording`); // Default displayed text.
       $("#player").show(); // Displays the player interface upon stopping the event litener.
+      $(".master-controls").show(); // Shows the master editable sliders by default.
+      $("#done-edit").show(); // Displays the done-edit button.
+      $("#see-visualizer").show(); // Displays the see-visualizer button.
 
+      $("#press-play-text").text(`Press the "Play" arrow to hear your recording.`); // Dynamically changes the html text upon clicking the start button.
+
+      $("#start-stop-button").hide(); // Hides the player interface upon stopping the event litener.
+      $("#start-stop-record").hide(); // Hides the player interface upon stopping the event litener.
       $("#stop").hide(); // Hides the player interface upon stopping the event litener.
       $("#start").hide(); // Hides the player interface upon stopping the event litener.
-
-
     });
+
 
     // STOP RECORIDNG
     stopButton.addEventListener('click', function() { // Event listener that listens for button click.
       mediaRecorder.stop(); // Stops audio input recording upon event listener button.
     });
 
+
     // START RECORDING
     startButton.addEventListener('click', function() { // Event listener that listens for button click.
       mediaRecorder.start(); // Starts audio input recording upon event listener button.
 
+      $("#start-stop-button").hide(`Press the "Start" button to record your voice.`); // Default displayed text
+      $("#start-stop-record").text(`Press the "Stop" button to terminate the recording.`); // Dynamically changes the html text upon clicking the start button.
+
       $("#stop").show(); // Shows the stop button once the user has started the recording.
       $("#start").hide(); // Hides the start button once the user has started the recording.
+
     });
+
+
+    // CROSS BROWSER
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    const audioCtx = new AudioContext();
+
+    // VOLUME
+    const gainNode = audioCtx.createGain();
+
+    const volumeControl = document.querySelector('[data-action="volume"]');
+    volumeControl.addEventListener('input', function() {
+    	gainNode.gain.value = this.value;
+    }, false);
+
+
+    // PANNING
+    const pannerOptions = {pan: 0};
+    const panner = new StereoPannerNode(audioCtx, pannerOptions);
+
+    const pannerControl = document.querySelector('[data-action="panner"]');
+    pannerControl.addEventListener('input', function() {
+    	panner.pan.value = this.value;
+    }, false);
   };
+
 
   // GET USER MEDIA VIA AUDIO INPUT
   navigator.mediaDevices.getUserMedia({

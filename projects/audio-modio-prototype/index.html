@@ -13,23 +13,55 @@
     <!-- Library script(s) go here -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js" integrity="sha256-eTyxS0rkjpLEo16uXTS0uVCS4815lc40K2iVpWDvdSY=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pizzicato/0.6.4/Pizzicato.min.js"></script>
   </head>
   </head>
 
   <body>
-    <h1>Audio Modio</h1>
-    <p>Press the "Start" button to record your voice.</p>
+    <section id="main-content">
+      <h1>Audio Modio</h1>
+      <h2><span id="start-stop-button"></span></h2>
+      <h2><span id="start-stop-record"></span></h2>
+      <h2><span id="press-play-text"></span></h2>
+
+      <audio id="player" controls></audio>
+
+        <h2><span id="edit-recording"></span></h2>
+        <section class="master-controls">
+
+          <p class ="slider-title">Volume</p>
+          <input type="range" id="volume" class="control-volume" min="0" max="2" value="1" list="gain-vals" step="0.01" data-action="volume" />
+
+          <datalist id="gain-vals">
+            <option value="0" label="min">
+            <option value="2" label="max">
+          </datalist>
 
 
-    <audio id="player" controls></audio>
+          <p class ="slider-title">Panning</p>
+          <input type="range" id="panner" class="control-panner" list="pan-vals" min="-1" max="1" value="0" step="0.01" data-action="panner" />
 
-    <button id="start">Start</button>
-    <button id="stop">Stop</button>
+          <datalist id="pan-vals">
+            <option value="-1" label="left">
+            <option value="1" label="right">
+          </datalist>
+        </section>
 
-    <hr>
+        <br>
 
-    <a id="download">Download</a>
+      <button id="start">Start</button>
+      <button id="stop">Stop</button>
+      <button id="done-edit">Done Editing</button>
+      <button id="see-visualizer">See Visualizer</button>
 
+      <hr>
+
+      <a id="download-raw">Download Raw</a>
+
+      <br><br>
+
+      <a id="download-edit">Download Edit</a>
+    </section>
 
     <!-- My script(s) -->
     <script src="js/script.js"></script>
