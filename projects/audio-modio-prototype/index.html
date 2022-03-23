@@ -13,13 +13,16 @@
     <!-- Library script(s) go here -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js" integrity="sha256-eTyxS0rkjpLEo16uXTS0uVCS4815lc40K2iVpWDvdSY=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pizzicato/0.6.4/Pizzicato.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pizzicato/0.6.4/Pizzicato.min.js"></script> -->
   </head>
   </head>
 
   <body>
     <section id="main-content">
-      <h1>Audio Modio</h1>
+
+      <div id="record-rectangle"></div>
+
+      <h1>Audio&ndash;Modio</h1>
       <h2><span id="start-stop-button"></span></h2>
       <h2><span id="start-stop-record"></span></h2>
       <h2><span id="press-play-text"></span></h2>
@@ -49,18 +52,23 @@
 
         <br>
 
-      <button id="start">Start</button>
-      <button id="stop">Stop</button>
-      <button id="done-edit">Done Editing</button>
-      <button id="see-visualizer">See Visualizer</button>
+        <div class="button-container">
+          <button id="start">Start</button>
+          <button id="stop">Stop</button>
+          <button id="see-visualizer">See Visualizer</button>
+          <button id="done-edit">Done Editing</button>
+        </div>
 
-      <hr>
+        <br>
 
       <a id="download-raw">Download Raw</a>
 
-      <br><br>
-
       <a id="download-edit">Download Edit</a>
+
+      <div id="visualizer" title="Get lost in the visuals of your voice...">
+        <p>Dynamic visualizer coming soon!</p>
+      </div>
+
     </section>
 
     <!-- My script(s) -->

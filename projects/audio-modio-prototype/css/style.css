@@ -12,13 +12,19 @@ body {
 
 #main-content {
   border-style: solid;
+  border-radius: 20px;
   padding: 20px;
   background-color: #ffffff;
+}
+
+#player {
+  /* padding-left: 65px; */
 }
 
 h1 {
   font-size: 36px;
   font-family: monospace;
+  text-align: center;
 }
 
 h2 {
@@ -29,36 +35,88 @@ h2 {
   margin-bottom: 0px;
 }
 
+.button-container {
+  text-align: center;
+}
+
 #start {
   font-size: 1.2rem;
   border-radius: 15px;
   cursor: pointer;
+  padding: 5px 50px;
+  border: none;
+  transition-duration: 0.4s;
+}
+
+#start:hover {
+  background-color: #8B0000;
+  color: #ffffff;
 }
 
 #stop {
   font-size: 1.2rem;
   border-radius: 15px;
   cursor: pointer;
+  padding: 5px 50px;
+  border: none;
+  transition-duration: 0.4s;
 }
 
-#done-edit {
-  font-size: 1.2rem;
-  border-radius: 15px;
-  cursor: pointer;
+#stop:hover {
+  background-color: #8B0000;
+  color: #ffffff;
 }
 
 #see-visualizer {
   font-size: 1.2rem;
   border-radius: 15px;
+  padding: 5px 50px;
   cursor: pointer;
+  border: none;
+  transition-duration: 0.4s;
+}
+
+#see-visualizer:hover {
+  background-color: #007500;
+  color: #ffffff;
+}
+
+#done-edit {
+  font-size: 1.2rem;
+  border-radius: 15px;
+  padding: 5px 50px;
+  cursor: pointer;
+  border: none;
+  transition-duration: 0.4s;
+}
+
+#done-edit:hover {
+  background-color: #007500;
+  color: #ffffff;
 }
 
 #download-raw {
   font-size: 18px;
   color: green;
+  border: none;
+  padding-left: 50px;
+  text-decoration: none;
+}
+
+#download-raw:hover {
+  text-decoration: underline;
 }
 
 #download-edit {
   font-size: 18px;
   color: red;
+  padding-left: 110px;
+}
+
+#record-rectangle {
+  width: 100%;
+  height: 20px;
+  display: inline-block;
+  background-color: #8B0000;
+  border-radius: 20px;
 }
