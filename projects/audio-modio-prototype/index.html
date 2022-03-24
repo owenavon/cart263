@@ -28,54 +28,55 @@
       <h2><span id="press-play-text"></span></h2>
 
       <audio id="player" controls></audio>
+      <h2><span id="edit-recording"></span></h2>
 
-        <h2><span id="edit-recording"></span></h2>
-        <section class="master-controls">
+      <div id="accordion">
 
-          <p class ="slider-title">Volume</p>
+        <h3>Volume</h3>
+        <div>
           <input type="range" id="volume" class="control-volume" min="0" max="2" value="1" list="gain-vals" step="0.01" data-action="volume" />
-
           <datalist id="gain-vals">
             <option value="0" label="min">
             <option value="2" label="max">
           </datalist>
+        </div>
 
-
-          <p class ="slider-title">Panning</p>
+        <h3>Panning</h3>
+        <div>
           <input type="range" id="panner" class="control-panner" list="pan-vals" min="-1" max="1" value="0" step="0.01" data-action="panner" />
-
           <datalist id="pan-vals">
             <option value="-1" label="left">
             <option value="1" label="right">
           </datalist>
-        </section>
-
-        <br>
-
-        <div class="button-container">
-          <button id="start">Start</button>
-          <button id="stop">Stop</button>
-          <button id="see-visualizer">See Visualizer</button>
-          <button id="done-edit">Done Editing</button>
         </div>
 
-        <br>
+        <h3>Future effects...</h3>
+        <div></div>
+      </div>
 
+      <span class="space"></span>
+
+      <div class="button-container">
+        <button id="start">Start</button>
+        <button id="stop">Stop</button>
+        <button id="see-visualizer">See Visualizer</button>
+        <button id="done-edit">Done Editing (Not yet functional)</button>
+      </div>
+
+      <span class="space"></span>
+
+      <!-- Change to button -->
+      
       <a id="download-raw">Download Raw</a>
-
-      <a id="download-edit">Download Edit</a>
+      <a id="download-edit">Download Edit (Not yet functional)</a>
 
       <div id="visualizer" title="Get lost in the Visuals">
-
         <div id="visual-content">
           <canvas id="canvas"></canvas>
           <input type="file" id="thefile" accept="audio/*" />
           <audio id="audio" controls></audio>
         </div>
-
       </div>
-
-
 
     </section>
 

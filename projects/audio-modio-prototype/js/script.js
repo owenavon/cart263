@@ -5,35 +5,36 @@
 
   "use strict";
 
+  const downloadRaw = document.getElementById('download-raw'); // Assigns download-raw id to the downloadRaw constant.
+  const downloadEdit = document.getElementById('download-edit'); // Assigns download-raw id to the downloadRaw constant.
+  const player = document.getElementById('player'); // Assigns player id to player constant.
+  const startButton = document.getElementById('start'); // Assigns start id to startButton constant.
+  const stopButton = document.getElementById('stop'); // Assigns stop id to stopButton constant.
+  const visualizerButton = document.getElementById('see-visualizer'); // Assigns see-visualizer id to visualizerButton constant.
 
-  const downloadRaw = document.getElementById('download-raw');
-  const player = document.getElementById('player');
-  const startButton = document.getElementById('start');
-  const stopButton = document.getElementById('stop');
-  const visualizerButton = document.getElementById('see-visualizer');
 
-
-  $("#player").hide(); // Hides the player id by default.
-  $("#download-raw").hide(); // Hides the download-raw id by default.
-  $("#download-edit").hide(); // Hides the download-edit id by default.
-  $("#stop").hide(); // Hides the stop button by default.
-  $("#done-edit").hide(); // Hides the done-edit button by default.
-  $("#see-visualizer").hide(); // Hides the see-visualizer button by default.
+  $(`#player`).hide(); // Hides the player id by default.
+  $(`#download-raw`).hide(); // Hides the download-raw id by default.
+  $(`#download-edit`).hide(); // Hides the download-edit id by default.
+  $(`#stop`).hide(); // Hides the stop button by default.
+  $(`#done-edit`).hide(); // Hides the done-edit button by default.
+  $(`#see-visualizer`).hide(); // Hides the see-visualizer button by default.
   $(`#visualizer`).hide(); // Hides the visualizer content upon starting the program.
-  $(".master-controls").hide(); // Hides the master editable sliders by default.
-  $("#visual-content").hide();
+  $(`.master-controls`).hide(); // Hides the master editable sliders by default.
+  $(`#visual-content`).hide(); // Hides the visual content.
+  $(`#accordion`).hide(); // Hides the accordion by default.
+  $(`#record-rectangle`).hide(); // Hides the record-rectangle by default.
+
+  $(`#start-stop-button`).text(`Press the "Start" button to record your voice.`); // Default displayed text
 
 
-  $("#start-stop-button").text(`Press the "Start" button to record your voice.`); // Default displayed text
-
-  $(`#record-rectangle`).hide();
-
+  // Assigns the stream function to the handleSuccess constant.
   const handleSuccess = function(stream) {
     const options = {
       mimeType: 'audio/webm'
     };
-    const recordedChunks = [];
-    const mediaRecorder = new MediaRecorder(stream, options);
+    const recordedChunks = []; // Creates an empty array called recorded chunks.
+    const mediaRecorder = new MediaRecorder(stream, options); // Assigns the MediaRecorder class to the mediaRecorder constant.
 
 
     // DATA_AVAILABLE METHOD
@@ -48,35 +49,40 @@
 
       downloadRaw.href = URL.createObjectURL(new Blob(recordedChunks)); // Gnerates audio doownload link.
       downloadRaw.download = 'testRecording.wav'; // Name the recording to testRecording.wav.
+
+      // Displays content
       $("#download-raw").show(); // Shows the download-raw button once the recording has stopped.
-
       $("#download-edit").show(); // Shows the download-show button once the user says the modifications are complete.
-
-      $("#edit-recording").text(`Edit your recording:`); // Default displayed text.
       $("#player").show(); // Displays the player interface upon stopping the event litener.
       $(".master-controls").show(); // Shows the master editable sliders by default.
       $("#done-edit").show(); // Displays the done-edit button.
       $("#see-visualizer").show(); // Displays the see-visualizer button.
 
-      $("#start-stop-record").hide(); // Hides the start-stop-record text.
+      // Text strings
+      $("#edit-recording").text(`Edit your recording (not yet functional):`); // Default displayed text.
       $("#press-play-text").text(`Press the "Play" arrow to hear your recording.`); // Dynamically changes the html text upon clicking the start button.
 
+      // Hides buttons
+      $("#start-stop-record").hide(); // Hides the start-stop-record text.
       $("#start-stop-button").hide(); // Hides the player interface upon stopping the event litener.
       $("#start-stop-record").hide(); // Hides the player interface upon stopping the event litener.
       $("#stop").hide(); // Hides the player interface upon stopping the event litener.
       $("#start").hide(); // Hides the player interface upon stopping the event litener.
 
+      // Accordion UI
+      $("#accordion").show(); // Shows the accordion.
+      $(`#accordion`).accordion(); // Creates the accordion UI.
+
+      // Removes the setInterval
       setInterval(function() {
         $(`#record-rectangle`).remove(); // Removes the recording rectangle.
       });
-
     });
 
 
     // STOP RECORIDNG
     stopButton.addEventListener('click', function() { // Event listener that listens for button click.
       mediaRecorder.stop(); // Stops audio input recording upon event listener button.
-
     });
 
 
@@ -84,12 +90,17 @@
     startButton.addEventListener('click', function() { // Event listener that listens for button click.
       mediaRecorder.start(); // Starts audio input recording upon event listener button.
 
-      $("#start-stop-button").hide(); // Hides the start-stop-button text.
+      // Displays content
+      $("#stop").show(); // Shows the stop button once the user has started the recording.
+
+      // Text strings
       $("#start-stop-record").text(`Press the "Stop" button to terminate the recording.`); // Dynamically changes the html text upon clicking the start button.
 
-      $("#stop").show(); // Shows the stop button once the user has started the recording.
+      // Hides buttons
       $("#start").hide(); // Hides the start button once the user has started the recording.
+      $("#start-stop-button").hide(); // Hides the start-stop-button text.
 
+      // Simulates html blink tag
       setInterval(function() {
         $(`#record-rectangle`).fadeToggle(1000);
       });
@@ -99,63 +110,61 @@
     // CALLS DIALOG BOX
     visualizerButton.addEventListener(`click`, function() {
       $(`#visualizer`).dialog();
-
       $("#visual-content").show(); // Displays the html content that builds the visualizer.
 
 
-      // SEE VISUALIZER
-      // https://codepen.io/nfj525/pen/rVBaab
+    // SEE VISUALIZER (Current code will be heavily modified, and is only to show intention)
+    // https://codepen.io/nfj525/pen/rVBaab
 
-      let file = document.getElementById("thefile");
-      let audio = document.getElementById("audio");
+    let file = document.getElementById("thefile");
+    let audio = document.getElementById("audio");
 
-      file.onchange = function() {
-        let files = this.files;
-        audio.src = URL.createObjectURL(files[0]);
-        audio.load();
-        audio.play();
-        let context = new AudioContext();
-        let src = context.createMediaElementSource(audio);
-        let analyser = context.createAnalyser();
+    file.onchange = function() {
+      let files = this.files;
+      audio.src = URL.createObjectURL(files[0]);
+      audio.load();
+      audio.play();
+      let context = new AudioContext();
+      let src = context.createMediaElementSource(audio);
+      let analyser = context.createAnalyser();
 
-        let canvas = document.getElementById("canvas");
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        let ctx = canvas.getContext("2d");
+      let canvas = document.getElementById("canvas");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      let ctx = canvas.getContext("2d");
 
-        src.connect(analyser);
-        analyser.connect(context.destination);
+      src.connect(analyser);
+      analyser.connect(context.destination);
 
-        analyser.fftSize = 256;
+      analyser.fftSize = 256;
 
-        let bufferLength = analyser.frequencyBinCount;
-        console.log(bufferLength);
+      let bufferLength = analyser.frequencyBinCount;
+      console.log(bufferLength);
 
-        let dataArray = new Uint8Array(bufferLength);
+      let dataArray = new Uint8Array(bufferLength);
 
-        let WIDTH = canvas.width;
-        let HEIGHT = 300;
+      let WIDTH = canvas.width;
+      let HEIGHT = 300;
 
-        let barWidth = (WIDTH / bufferLength) * 2.5;
-        let barHeight;
-        let x = 0;
+      let barWidth = (WIDTH / bufferLength) * 2.5;
+      let barHeight;
+      let x = 0;
 
-        function renderFrame() {
-          requestAnimationFrame(renderFrame);
+      function renderFrame() {
+        requestAnimationFrame(renderFrame);
+        x = 0;
 
-          x = 0;
+        analyser.getByteFrequencyData(dataArray);
 
-          analyser.getByteFrequencyData(dataArray);
+        ctx.fillStyle = "#000";
+        ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
-          ctx.fillStyle = "#000";
-          ctx.fillRect(0, 0, WIDTH, HEIGHT);
+        for (let i = 0; i < bufferLength; i++) {
+          barHeight = dataArray[i];
 
-          for (let i = 0; i < bufferLength; i++) {
-            barHeight = dataArray[i];
-
-            let r = barHeight + (25 * (i/bufferLength));
-            let g = 250 * (i/bufferLength);
-            let b = 50;
+          let r = barHeight + (25 * (i/bufferLength));
+          let g = 250 * (i/bufferLength);
+          let b = 50;
 
             ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
             ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
@@ -167,11 +176,10 @@
         audio.play();
         renderFrame();
       };
-
-
     });
 
 
+    // Curenlty does not connect to src getUserMedia();
     // CROSS BROWSER
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     const audioCtx = new AudioContext();
