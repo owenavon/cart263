@@ -1,9 +1,9 @@
-// Audio Modio
-// Owen Avon
+  // Audio Modio
+  // Owen Avon
 
-// Prototype that displays the potential of modifying a users voice with the api tuna.
+  // Prototype that displays the potential of modifying a users voice with the api tuna.
 
-"use strict";
+  "use strict";
 
 
   const downloadRaw = document.getElementById('download-raw');
@@ -21,6 +21,7 @@
   $("#see-visualizer").hide(); // Hides the see-visualizer button by default.
   $(`#visualizer`).hide(); // Hides the visualizer content upon starting the program.
   $(".master-controls").hide(); // Hides the master editable sliders by default.
+  $("#visual-content").hide();
 
 
   $("#start-stop-button").text(`Press the "Start" button to record your voice.`); // Default displayed text
@@ -94,10 +95,81 @@
       });
     });
 
-    // SEE VISUALIZER
+
+    // CALLS DIALOG BOX
     visualizerButton.addEventListener(`click`, function() {
-      $(`#visualizer`).dialog(); // Opens the dialogbox.
-    })
+      $(`#visualizer`).dialog();
+
+      $("#visual-content").show(); // Displays the html content that builds the visualizer.
+
+
+      // SEE VISUALIZER
+      // https://codepen.io/nfj525/pen/rVBaab
+
+      let file = document.getElementById("thefile");
+      let audio = document.getElementById("audio");
+
+      file.onchange = function() {
+        let files = this.files;
+        audio.src = URL.createObjectURL(files[0]);
+        audio.load();
+        audio.play();
+        let context = new AudioContext();
+        let src = context.createMediaElementSource(audio);
+        let analyser = context.createAnalyser();
+
+        let canvas = document.getElementById("canvas");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        let ctx = canvas.getContext("2d");
+
+        src.connect(analyser);
+        analyser.connect(context.destination);
+
+        analyser.fftSize = 256;
+
+        let bufferLength = analyser.frequencyBinCount;
+        console.log(bufferLength);
+
+        let dataArray = new Uint8Array(bufferLength);
+
+        let WIDTH = canvas.width;
+        let HEIGHT = 300;
+
+        let barWidth = (WIDTH / bufferLength) * 2.5;
+        let barHeight;
+        let x = 0;
+
+        function renderFrame() {
+          requestAnimationFrame(renderFrame);
+
+          x = 0;
+
+          analyser.getByteFrequencyData(dataArray);
+
+          ctx.fillStyle = "#000";
+          ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+          for (let i = 0; i < bufferLength; i++) {
+            barHeight = dataArray[i];
+
+            let r = barHeight + (25 * (i/bufferLength));
+            let g = 250 * (i/bufferLength);
+            let b = 50;
+
+            ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
+            ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
+
+            x += barWidth + 1;
+          }
+        }
+
+        audio.play();
+        renderFrame();
+      };
+
+
+    });
 
 
     // CROSS BROWSER

@@ -120,3 +120,30 @@ h2 {
   background-color: #8B0000;
   border-radius: 20px;
 }
+
+
+/* VISUALIZER */
+#canvas {
+  height: 300px;
+  width: 500px;
+}
+
+
+/* DIALOG BOX */
+
+.ui-widget.ui-widget-content {
+  border: none !important;
+  border-radius: 15px;
+}
+
+
+.ui-widget-header {
+  font-family: "calibri";
+  background: #f5f5f5 !important;
+  color: #000000 !important;
+  margin: 15px !important;
+}
+
+.ui-widget-content {
+  background: #000000 !important;
+}
