@@ -2,11 +2,11 @@ body {
   font-family: "calibri";
   padding: 0;
   margin: 0;
-  display: grid; /* Set up the grid and justify/align to center */
+  display: grid;
   justify-content: center;
   align-content: center;
-  height: 100vh; /* Body is the height of the viewport */
-  overflow: hidden; /* Hide anything that goes off the window size */
+  height: 100vh;
+  overflow: hidden;
   background-color: #f5f5f5;
 }
 
@@ -17,8 +17,13 @@ body {
   background-color: #ffffff;
 }
 
-#player {
-  /* padding-left: 65px; */
+/* ------------------------ */
+/* REUSABLE CONTENT         */
+/* ------------------------ */
+
+li {
+  font-size: 16px;
+  color: #000000;
 }
 
 h1 {
@@ -31,16 +36,16 @@ h2 {
   font-size: 18px;
 }
 
-.slider-title {
-  margin-bottom: 0px;
+.space {
+  margin: 55px;
 }
+
+/* ------------------------ */
+/* BUTTONS & SLIDERS         */
+/* ------------------------ */
 
 .button-container {
   text-align: center;
-}
-
-.space {
-  margin: 55px;
 }
 
 #start {
@@ -75,34 +80,40 @@ h2 {
   font-size: 1.2rem;
   border-radius: 15px;
   padding: 5px 50px;
+  background-color: #f5f5f5;
+  color: #000000;
   cursor: pointer;
   border: none;
   transition-duration: 0.4s;
 }
 
 #see-visualizer:hover {
-  background-color: #787878;
-  color: #ffffff;
+  background-color: #e1e1e1;
+  color: #006400;
 }
 
 #done-edit {
   font-size: 1.2rem;
   border-radius: 15px;
   padding: 5px 50px;
+  background-color: #f5f5f5;
+  color: #000000;
   cursor: pointer;
   border: none;
   transition-duration: 0.4s;
 }
 
 #done-edit:hover {
-  background-color: #787878;
-  color: #ffffff;
+  background-color: #e1e1e1;
+  color: #006400;
 }
 
 #download-raw {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   border-radius: 15px;
   padding: 5px 50px;
+  background-color: #f5f5f5;
+  color: #00008B;
   cursor: pointer;
   border: none;
   transition-duration: 0.4s;
@@ -110,23 +121,38 @@ h2 {
 
 #download-raw:hover {
   text-decoration: underline;
-  background-color: #787878;
-  color: #ffffff;
+  background-color: #e1e1e1;
+  color: #8B0000;
 }
 
 #download-edit {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   border-radius: 15px;
   padding: 5px 50px;
+  background-color: #f5f5f5;
+  color: #000000;
   cursor: pointer;
   border: none;
   transition-duration: 0.4s;
 }
 
 #download-edit:hover {
-  background-color: #787878;
-  color: #ffffff;
+  background-color: #e1e1e1;
+  color: #006400;
 }
+
+#audio-file {
+  cursor: pointer;
+  border-radius: 50px;
+}
+
+.slider-title {
+  margin-bottom: 0px;
+}
+
+/* ------------------------ */
+/* CONSTRUCTED SHAPES       */
+/* ------------------------ */
 
 #record-rectangle {
   width: 100%;
@@ -136,15 +162,20 @@ h2 {
   border-radius: 20px;
 }
 
+/* ------------------------ */
+/* VISUALIZER               */
+/* ------------------------ */
 
-/* VISUALIZER */
 #canvas {
   height: 300px;
-  width: 500px;
+  width: 670px;
+  margin-bottom: 25px;
 }
 
+/* ------------------------ */
+/* DIALOG BOX               */
+/* ------------------------ */
 
-/* DIALOG BOX */
 .ui-widget.ui-widget-content {
   border: none !important;
   border-radius: 15px;
@@ -161,8 +192,10 @@ h2 {
   background: #000000 !important;
 }
 
+/* ------------------------ */
+/* ACCORDION BOX            */
+/* ------------------------ */
 
-/* ACCORDION BOX */
 .ui-accordion.ui-accordion-content {
   border: none !important;
   border-radius: 15px;
@@ -172,7 +205,6 @@ h2 {
   font-family: "calibri";
   background: #f5f5f5 !important;
   color: #000000 !important;
-
 }
 
 .ui-accordion-content {

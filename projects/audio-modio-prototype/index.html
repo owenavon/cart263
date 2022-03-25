@@ -34,16 +34,16 @@
 
         <h3>Volume</h3>
         <div>
-          <input type="range" id="volume" class="control-volume" min="0" max="2" value="1" list="gain-vals" step="0.01" data-action="volume" />
+          <input type="range" id="volume-slider" class="control-volume" min="0" max="10" value="1" list="gain-vals" step="0.1" data-action="volume" />
           <datalist id="gain-vals">
             <option value="0" label="min">
-            <option value="2" label="max">
+            <option value="10" label="max">
           </datalist>
         </div>
 
         <h3>Panning</h3>
         <div>
-          <input type="range" id="panner" class="control-panner" list="pan-vals" min="-1" max="1" value="0" step="0.01" data-action="panner" />
+          <input type="range" id="panner-slider" class="control-panner" list="pan-vals" min="-1" max="1" value="0" step="0.01" data-action="panner" />
           <datalist id="pan-vals">
             <option value="-1" label="left">
             <option value="1" label="right">
@@ -51,7 +51,15 @@
         </div>
 
         <h3>Future effects...</h3>
-        <div></div>
+        <ul>
+          <li>Delay</li>
+          <li>Compressor</li>
+          <li>Low-pass Filter</li>
+          <li>Modulator(s)</li>
+          <li>Convolver</li>
+          <li>Random Effects?</li>
+          <li>Sliders that do the opposite of what the user inputs!?</li>
+        </ul>
       </div>
 
       <span class="space"></span>
@@ -61,19 +69,18 @@
         <button id="stop">Stop</button>
         <button id="see-visualizer">See Visualizer</button>
         <button id="done-edit">Done Editing (Not yet functional)</button>
+        <br><br>
+        <a id="download-raw">Download Raw</a>
+        <a id="download-edit">Download Edit (Not yet functional)</a>
       </div>
 
       <span class="space"></span>
 
-      <!-- Change to button -->
-      
-      <a id="download-raw">Download Raw</a>
-      <a id="download-edit">Download Edit (Not yet functional)</a>
-
-      <div id="visualizer" title="Get lost in the Visuals">
+      <div id="visualizer" title="Get lost in your Visuals">
         <div id="visual-content">
+          <p><span id="visual-temp-text"></span></p>
           <canvas id="canvas"></canvas>
-          <input type="file" id="thefile" accept="audio/*" />
+          <input type="file" id="audio-file" accept="audio/*" />
           <audio id="audio" controls></audio>
         </div>
       </div>

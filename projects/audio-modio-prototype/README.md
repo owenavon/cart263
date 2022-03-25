@@ -3,22 +3,14 @@
 Project 02: Audio Modio Prototype
 Owen Avon
 
-// A web application that allows the user to record there voice, modify the tones, view the visualization of their voice, and download the recording via .wav.
-
-Added functionality:
-**
-**
-**
-**
-**
+// A web application that allows the user to record their voice, modify the tones, view the visualization of the audio, and download the recording via .wav.
 
 API Credit:
 jQuery accessible via https://releases.jquery.com/
 jQueryUI accessible via https://releases.jquery.com/ui/
-ResponsiveVoice accessible via https://responsivevoice.org/
+
+JS Audio Visualizer
+https://codepen.io/nfj525/pen/rVBaab
 
 Audio Credit:
-"Song name" by "Person" | Attribution...
-
-Font Credits:
-"Font name" by  "Person" | Note...
+"Florid" by "Mid-Air Machine" | Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
