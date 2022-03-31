@@ -44,23 +44,25 @@
 
         <h3>Panning</h3>
         <div>
-          <input type="range" id="panner-slider" class="control-panner" list="pan-vals" min="-1" max="1" value="0" step="0.01" data-action="panner" />
+          <input type="range" id="panner" class="control-panner" list="pan-vals" min="-1" max="1" value="0" step="0.01" data-action="panner" />
           <datalist id="pan-vals">
             <option value="-1" label="left">
             <option value="1" label="right">
           </datalist>
+          <p class="black-font"><span id="pan-location">Panning is set to:</span></p>
         </div>
 
-        <h3>Future effects...</h3>
-        <ul>
-          <li>Delay</li>
-          <li>Compressor</li>
-          <li>Low-pass Filter</li>
-          <li>Modulator(s)</li>
-          <li>Convolver</li>
-          <li>Random Effects?</li>
-          <li>Sliders that do the opposite of what the user inputs!?</li>
-        </ul>
+        <h3>Filters</h3>
+        <div>
+          <input type="range" id="low-pass-slider" min="10" max="22050" step="1" value="400" id="low-pass-filter-frequency" />
+          <p class="black-font"><span id="low-pass-location">Low-pass frequency is set to:</span></p>
+
+          <br>
+
+          <input type="range" id="high-pass-slider" min="0.0001" max="20" step="0.0001" value="10" id="low-pass-filter-peak" />
+          <p class="black-font"><span id="high-pass-location">High-pass frequency is set to:</span></p>
+        </div>
+
       </div>
 
       <span class="space"></span>
@@ -79,7 +81,6 @@
 
       <div id="visualizer" title="Get lost in your Visuals">
         <div id="visual-content">
-          <p><span id="visual-temp-text"></span></p>
           <canvas id="canvas"></canvas>
           <input type="file" id="audio-file" accept="audio/*" />
           <audio id="audio" controls></audio>

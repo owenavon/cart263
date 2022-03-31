@@ -5,12 +5,17 @@
 
   "use strict";
 
+  const LEFT_PAN = -0.1;
+  const RIGHT_PAN = 0.1;
+
   const downloadRaw = document.getElementById('download-raw'); // Assigns download-raw id to the downloadRaw constant.
   const downloadEdit = document.getElementById('download-edit'); // Assigns download-raw id to the downloadRaw constant.
   const player = document.getElementById('player'); // Assigns player id to player constant.
   const startButton = document.getElementById('start'); // Assigns start id to startButton constant.
   const stopButton = document.getElementById('stop'); // Assigns stop id to stopButton constant.
   const visualizerButton = document.getElementById('see-visualizer'); // Assigns see-visualizer id to visualizerButton constant.
+
+
 
   // Hides content
   $(`#player`).hide(); // Hides the player id by default.
@@ -32,6 +37,8 @@
   //   source: 'input',
   //   options: { volume: 0.8 }
   // });
+
+
 
 
   // Assigns the stream function to the handleSuccess constant.
@@ -78,6 +85,8 @@
       $(`#accordion`).show(); // Shows the accordion.
       $(`#accordion`).accordion(); // Creates the accordion UI.
 
+
+
       // volume slider
       $(`#volume-slider`).on(`change`, function(event) { // Change method is applied to allow different values to display.
         let volumeInput = $(this).val(); // volumeInput ID is set to val method
@@ -90,17 +99,79 @@
         console.log(recordedChunks);
       });
 
+
+
+
+
       // Panner slider
-      $(`#panner-slider`).on(`change`, function(event) {
+      $(`#panner`).on(`change`, function(event) {
         let pannerInput = $(this).val();
-        alert(pannerInput); // This will be changed to effect the src output...
+        $(`#pan-location`).text(`Panning is set to: ${pannerInput}`); // text method is assigned to pan-location ID, so panner is dsiplayed when the user moves the slider.
+
+        // FIGURE OUT HOW TO SEND AUDIO THROUGH SLIDER.
+        sawtoothWave.play();
+
+        // FIX THIS!
+        if (pannerInput > LEFT_PAN) {
+          pan: 1
+        }
+        else if (pannerInput < RIGHT_PAN) {
+          pan: -1
+        }
+
+        console.log(pannerInput);
       });
+
+
+
+
+
+
+      // TESTING PURPOSES ONLY
+      let sawtoothWave = new Pizzicato.Sound({
+        source: 'wave',
+        options: {
+        type: 'sawtooth'
+        }
+      });
+
+      let stereoPanner = new Pizzicato.Effects.StereoPanner({
+        pan: -1
+      });
+
+      sawtoothWave.addEffect(stereoPanner);
+
+
+
+
+
+
+      // Low-pass filter slider
+      $(`#low-pass-slider`).on(`change`, function(event) { // Change method is applied to allow different values to display.
+        let lowPassInput = $(this).val(); // volumeInput ID is set to val method
+        $(`#low-pass-location`).text(`Low-pass frequency is set to: ${lowPassInput}`); // Text method is assigned to low-pass-location ID, so low-pass-slider is displayed when the user moves the slider.
+      });
+
+
+      // High-pass filter slider
+      $(`#high-pass-slider`).on(`change`, function(event) { // Change method is applied to allow different values to display.
+        let highPassInput = $(this).val(); // volumeInput ID is set to val method
+        $(`#high-pass-location`).text(`High-pass frequency is set to: ${highPassInput}`); // Text method is assigned to high-pass-location ID, so high-pass-slider is displayed when user moves slider.
+      });
+
 
       // Removes the setInterval
       setInterval(function() {
         $(`#record-rectangle`).remove(); // Removes the recording rectangle.
       });
     });
+
+
+    // NEEDS TO BE PROPERALLY INTEGRATED
+    // let lowPassFilter = new Pizzicato.Effects.LowPassFilter({
+    //   frequency: 400,
+    //   peak: 10
+    // });
 
 
     // STOP RECORIDNG
@@ -138,7 +209,6 @@
         width: 700,
         resizable: false
       });
-      $(`#visual-temp-text`).text(`The below visualizer will be replaced by my own creation that uses the src audio, and not an uploaded file. See the proposal document for further information. For the interim, feel free to try with assets/sounds/midAirMachine.mp3`); // Dynamically changes the html text upon clicking the start button.
       $(`#visual-content`).show(); // Displays the html content that builds the visualizer.
 
 
