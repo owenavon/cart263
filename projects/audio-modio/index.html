@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0>
+
+    <title>Audio Modio - Prototype</title>
+
+    <!-- CSS stylesheet(s) -->
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.13.1/themes/vader/jquery-ui.css" />
+
+    <!-- Library script(s) go here -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js" integrity="sha256-eTyxS0rkjpLEo16uXTS0uVCS4815lc40K2iVpWDvdSY=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pizzicato/0.6.4/Pizzicato.min.js"></script>
+  </head>
+  </head>
+
+  <body>
+    <section id="main-content">
+
+      <div id="record-rectangle"></div>
+
+      <h1>Audio&ndash;Modio</h1>
+      <h2><span id="start-stop-button"></span></h2>
+      <h2><span id="start-stop-record"></span></h2>
+      <h2><span id="press-play-text"></span></h2>
+
+      <audio id="player" controls></audio>
+      <h2><span id="edit-recording"></span></h2>
+
+      <div id="accordion">
+
+        <h3>Volume</h3>
+        <div>
+          <input type="range" id="volume-slider" class="control-volume" min="0" max="100" value="1" list="gain-vals" step="1" data-action="volume" />
+          <datalist id="gain-vals">
+            <option value="0" label="min">
+            <option value="100" label="max">
+          </datalist>
+          <p class="black-font"><span id="volume-level">Volume is set to:</span></p>
+        </div>
+
+        <h3>Panning</h3>
+        <div>
+          <input type="range" id="panner-slider" class="control-panner" list="pan-vals" min="-1" max="1" value="0" step="0.01" data-action="panner" />
+          <datalist id="pan-vals">
+            <option value="-1" label="left">
+            <option value="1" label="right">
+          </datalist>
+        </div>
+
+        <h3>Future effects...</h3>
+        <ul>
+          <li>Delay</li>
+          <li>Compressor</li>
+          <li>Low-pass Filter</li>
+          <li>Modulator(s)</li>
+          <li>Convolver</li>
+          <li>Random Effects?</li>
+          <li>Sliders that do the opposite of what the user inputs!?</li>
+        </ul>
+      </div>
+
+      <span class="space"></span>
+
+      <div class="button-container">
+        <button id="start">Start</button>
+        <button id="stop">Stop</button>
+        <button id="see-visualizer">See Visualizer</button>
+        <button id="done-edit">Done Editing (Not yet functional)</button>
+        <br><br>
+        <a id="download-raw">Download Raw</a>
+        <a id="download-edit">Download Edit (Not yet functional)</a>
+      </div>
+
+      <span class="space"></span>
+
+      <div id="visualizer" title="Get lost in your Visuals">
+        <div id="visual-content">
+          <p><span id="visual-temp-text"></span></p>
+          <canvas id="canvas"></canvas>
+          <input type="file" id="audio-file" accept="audio/*" />
+          <audio id="audio" controls></audio>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- My script(s) -->
+    <script src="js/script.js"></script>
+  </body>
+
+</html>

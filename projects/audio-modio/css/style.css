@@ -1,0 +1,224 @@
+body {
+  font-family: "calibri";
+  padding: 0;
+  margin: 0;
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #f5f5f5;
+}
+
+#main-content {
+  border-style: solid;
+  border-radius: 20px;
+  padding: 20px;
+  background-color: #ffffff;
+}
+
+/* ------------------------ */
+/* REUSABLE CONTENT         */
+/* ------------------------ */
+
+li {
+  font-size: 16px;
+  color: #000000;
+}
+
+h1 {
+  font-size: 36px;
+  font-family: monospace;
+  text-align: center;
+}
+
+h2 {
+  font-size: 18px;
+}
+
+.space {
+  margin: 55px;
+}
+
+.black-font {
+  color: #000000;
+}
+
+/* ------------------------ */
+/* BUTTONS & SLIDERS         */
+/* ------------------------ */
+
+.button-container {
+  text-align: center;
+}
+
+#start {
+  font-size: 1.2rem;
+  border-radius: 15px;
+  cursor: pointer;
+  padding: 5px 50px;
+  border: none;
+  transition-duration: 0.4s;
+}
+
+#start:hover {
+  background-color: #8B0000;
+  color: #ffffff;
+}
+
+#stop {
+  font-size: 1.2rem;
+  border-radius: 15px;
+  cursor: pointer;
+  padding: 5px 50px;
+  border: none;
+  transition-duration: 0.4s;
+}
+
+#stop:hover {
+  background-color: #8B0000;
+  color: #ffffff;
+}
+
+#see-visualizer {
+  font-size: 1.2rem;
+  border-radius: 15px;
+  padding: 5px 50px;
+  background-color: #f5f5f5;
+  color: #000000;
+  cursor: pointer;
+  border: none;
+  transition-duration: 0.4s;
+}
+
+#see-visualizer:hover {
+  background-color: #e1e1e1;
+  color: #006400;
+}
+
+#done-edit {
+  font-size: 1.2rem;
+  border-radius: 15px;
+  padding: 5px 50px;
+  background-color: #f5f5f5;
+  color: #000000;
+  cursor: pointer;
+  border: none;
+  transition-duration: 0.4s;
+}
+
+#done-edit:hover {
+  background-color: #e1e1e1;
+  color: #006400;
+}
+
+#download-raw {
+  font-size: 1.3rem;
+  border-radius: 15px;
+  padding: 5px 50px;
+  background-color: #f5f5f5;
+  color: #00008B;
+  cursor: pointer;
+  border: none;
+  transition-duration: 0.4s;
+}
+
+#download-raw:hover {
+  text-decoration: underline;
+  background-color: #e1e1e1;
+  color: #8B0000;
+}
+
+#download-edit {
+  font-size: 1.3rem;
+  border-radius: 15px;
+  padding: 5px 50px;
+  background-color: #f5f5f5;
+  color: #000000;
+  cursor: pointer;
+  border: none;
+  transition-duration: 0.4s;
+}
+
+#download-edit:hover {
+  background-color: #e1e1e1;
+  color: #006400;
+}
+
+#audio-file {
+  cursor: pointer;
+  border-radius: 50px;
+}
+
+.slider-title {
+  margin-bottom: 0px;
+}
+
+/* ------------------------ */
+/* CONSTRUCTED SHAPES       */
+/* ------------------------ */
+
+#record-rectangle {
+  width: 100%;
+  height: 20px;
+  display: inline-block;
+  background-color: #8B0000;
+  border-radius: 20px;
+}
+
+/* ------------------------ */
+/* VISUALIZER               */
+/* ------------------------ */
+
+#canvas {
+  height: 300px;
+  width: 670px;
+  margin-bottom: 25px;
+}
+
+/* ------------------------ */
+/* DIALOG BOX               */
+/* ------------------------ */
+
+.ui-widget.ui-widget-content {
+  border: none !important;
+  border-radius: 15px;
+}
+
+.ui-widget-header {
+  font-family: "calibri";
+  background: #f5f5f5 !important;
+  color: #000000 !important;
+  margin: 15px !important;
+}
+
+.ui-widget-content {
+  background: #000000 !important;
+}
+
+/* ------------------------ */
+/* ACCORDION BOX            */
+/* ------------------------ */
+
+.ui-accordion.ui-accordion-content {
+  border: none !important;
+  border-radius: 15px;
+}
+
+.ui-accordion-header {
+  font-family: "calibri";
+  background: #f5f5f5 !important;
+  color: #000000 !important;
+}
+
+.ui-accordion-content {
+  background: #e1e1e1 !important;
+}
+
+.ui-state-default {
+  border: none !important;
+}
+
+.ui-corner-bottom {
+  border: none !important;
+}
