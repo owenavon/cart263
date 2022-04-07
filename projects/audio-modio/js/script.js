@@ -114,7 +114,10 @@
 
     // Accordion UI
     $(`#accordion`).show(); // Shows the accordion.
-    $(`#accordion`).accordion(); // Creates the accordion UI.
+    $(`#accordion`).accordion({
+      collapsible: true, // Allows the user to collapse the accordion options.
+      active: false // Starts the Accordion as completely collapsed.
+    }); // Creates the accordion UI.
   }
 
 
@@ -268,7 +271,7 @@
       modal: true,
       height: 600,
       width: 700,
-      resizable: false
+      resizable: false,
     });
     $(`#visual-content`).show(); // Displays the html content that builds the visualizer.
 
