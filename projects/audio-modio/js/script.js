@@ -215,16 +215,11 @@
     // SEE VISUALIZER (Current code will be heavily modified, and is only to show intention)
     // https://codepen.io/nfj525/pen/rVBaab
 
-    let file = document.getElementById(`audio-file`);
-    let audio = document.getElementById(`audio`);
+    let visualizerPlayer = document.getElementById(`visualizer-player`);
 
-    file.onchange = function() {
-      let files = this.files;
-      audio.src = URL.createObjectURL(files[0]);
-      audio.load();
-      audio.play();
+      visualizerPlayer.src = URL.createObjectURL(new Blob(recordedChunks));
       let context = new AudioContext();
-      let src = context.createMediaElementSource(audio);
+      let src = context.createMediaElementSource(visualizerPlayer);
       let analyser = context.createAnalyser();
 
       let canvas = document.getElementById(`canvas`);
@@ -272,9 +267,12 @@
           }
         }
 
-        audio.play();
+        // visualizerPlayer.play();
+
+        
+
         renderFrame();
-      };
+
     });
 
 
