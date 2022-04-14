@@ -5,12 +5,17 @@
 
   "use strict";
 
-  const LEFT_PAN = -0.1;
-  const RIGHT_PAN = 0.1;
   const TWO_FIVE_SIX = 256;
 
   const downloadRaw = document.getElementById('download-raw'); // Assigns download-raw id to the downloadRaw constant.
   const downloadEdit = document.getElementById('download-edit'); // Assigns download-raw id to the downloadRaw constant.
+
+
+  // This will be moved soon! - NEED TO MOVE TO APPROPRIATE FUNCTION
+  const downloadRandomEffect = document.getElementById('download-random-effect'); // Assigns download-random-effect id to the downloadRandomEffect constant.
+  const randomEffectPlayer = document.getElementById(`random-effect-player`); // Assigns visualizerPlayer variable to visualizer-player id.
+
+
   const player = document.getElementById('player'); // Assigns player id to player constant.
   const startButton = document.getElementById('start'); // Assigns start id to startButton constant.
   const stopButton = document.getElementById('stop'); // Assigns stop id to stopButton constant.
@@ -22,7 +27,7 @@
     `Audio`,
     `Modio.`,
     `Modify the sound of your voice by using the presets below.`,
-    `Not sure what to change? Say "I'm feeling lucky".`
+    `Do want to apply random effects? Say "Random".` // I'm feeling lucky
   ];
 
 
@@ -42,6 +47,7 @@
     $(`#visual-content`).hide(); // Hides the visual content.
     $(`#accordion`).hide(); // Hides the accordion by default.
     $(`#record-rectangle`).hide(); // Hides the record-rectangle by default.
+    $(`#random-effect-modal`).hide(); // Hides the record-rectangle by default.
 
     // Show content
     $(`#start-stop-button`).text(`Press the "Start" button to record your voice.`); // Default displayed text
@@ -68,6 +74,13 @@
 
     downloadRaw.href = URL.createObjectURL(new Blob(recordedChunks)); // Gnerates audio doownload link.
     downloadRaw.download = 'testRecording.wav'; // Name the recording to testRecording.wav.
+
+
+    // Test for random effect button download.
+    randomEffectPlayer.src = URL.createObjectURL(new Blob(recordedChunks)); // Assigns the recorded audio input src to player.
+
+    downloadRandomEffect.href = URL.createObjectURL(new Blob(recordedChunks)); // Gnerates audio doownload link.
+    downloadRandomEffect.download = 'testRecording.wav'; // Name the recording to testRecording.wav.
 
 
     // FUNCTIONS CALLED INSIDE STOP BUTTON
@@ -131,13 +144,12 @@
   }
 
 
-  // IS THE WEB API INTERFERING WITH ANNYANG?
+  // ANNYANG I'M FEELING LUCKY
   function feelingLuckyVoiceInput() {
     if (annyang) { // If annyang is listening, then...
-      const commands = { // Defines commands.
-        'hello': () => {  // User speaks "hello".
-        alert('Hello world!'); // Alert pops up on screen.
-        console.log(`test`);
+      let commands = { // Defines commands.
+        "random": function() {  // User speaks "hello".
+        randomEffectModal(); // Calls the randomEffectModal function.
       }
     };
     annyang.addCommands(commands); // Add our commands to annyang.
@@ -146,10 +158,21 @@
   }
 
 
+  // PLAY AND DOWNLOAD EIDTED TRACK - NEED TO EDIT (DIALOG BOX)
+  function randomEffectModal() {
+    $(`#random-effect-modal`).dialog({
+      modal: true,
+      height: 400,
+      width: 500,
+      resizable: true
+    });
+  }
+
+
   // VOLUME SLIDER
   function volumeSlider() {
     $(`#volume-slider`).on(`change`, function(event) { // Change method is applied to allow different values to display.
-    let volumeInput = $(this).val(); // volumeInput ID is set to val method
+    let volumeInput = $(this).val(); // volumeInput ID is set to val method.
     $(`#volume-level`).text(`Volume is set to: ${volumeInput}`); // text method is assigned to volume-level ID, so volume-input is dsiplayed when user moves slider.
   });
 
@@ -162,57 +185,37 @@
 
 
   // PAN SLIDER
+  let stereoPanner = new Pizzicato.Effects.StereoPanner({ // Assigns steroPanner to new Pizzicato effect
+    pan: 0
+  });
+
   function panSlider() {
+    const playPanAudio = document.getElementById('play-pan-audio'); // Assigns start id to playPanAudio constant.
+    playPanAudio.addEventListener('click', function() { // Event listener that listens for button click.
 
-    $(`#panner`).on(`change`, function(event) {
-    let pannerInput = $(this).val();
-    $(`#pan-location`).text(`Panning is set to: ${pannerInput}`); // text method is assigned to pan-location ID, so panner is dsiplayed when the user moves the slider.
+      let sawtoothWave = new Pizzicato.Sound({ // Creates a new Pizzicato sound.
+        source: 'wave',
+        volume: 0.3,
+        attack: 0.3,
+        options: {
+        type: 'sawtooth'
+        }
+      });
 
-    // FIGURE OUT HOW TO SEND AUDIO THROUGH SLIDER.
-    sawtoothWave.play();
+      sawtoothWave.addEffect(stereoPanner); // Creates stereo panner effect.
+      sawtoothWave.play(); // Plays the sawtooth effect.
+      });
 
-    // FIX THIS!
-    if (pannerInput > LEFT_PAN) {
-      pan: 1
-      }
-    else if (pannerInput < RIGHT_PAN) {
-      pan: -1
-    }
+      $(`#panner`).on(`change`, function(event) { // Displays panner value upon click on slider.
+      let pannerInput = $(this).val(); // Assigns pannerInput to dynamic value.
+      $(`#pan-location`).text(`Panning is set to: ${pannerInput}`); // text method is assigned to pan-location ID, so panner is dsiplayed when the user moves the slider.
 
-    console.log(pannerInput);
+      stereoPanner.pan = parseFloat(pannerInput) // Converts pannerInput string value into a floating-point number for stereoPanner to pan dynamically.
     });
-
-    // SAWTOOTH EFFECT FUNCTION
-    // TESTING PURPOSES ONLY
-    let sawtoothWave = new Pizzicato.Sound({
-      source: 'wave',
-      options: {
-      type: 'sawtooth'
-      }
-    });
-
-    let stereoPanner = new Pizzicato.Effects.StereoPanner({
-      pan: -1
-    });
-
-    sawtoothWave.addEffect(stereoPanner);
-
-    // NOT YET IMPLEMENTED
-    // PANNING
-    // const pannerOptions = {
-    //   pan: 0
-    // };
-    // const panner = new StereoPannerNode(audioCtx, pannerOptions);
-    //
-    // const pannerControl = document.querySelector('[data-action="panner"]');
-    // pannerControl.addEventListener('input', function() {
-    //   panner.pan.value = this.value;
-    // }, false);
-
   }
 
 
-  // LOW PASS FILTER
+  // LOW PASS FILTER - NEED TO EDIT
   function lowPassFilter() {
     $(`#low-pass-slider`).on(`change`, function(event) { // Change method is applied to allow different values to display.
       let lowPassInput = $(this).val(); // volumeInput ID is set to val method
@@ -221,7 +224,7 @@
   }
 
 
-  // HIGH PASS FILTER
+  // HIGH PASS FILTER - NEED TO EDIT
   function highPassFilter() {
   $(`#high-pass-slider`).on(`change`, function(event) { // Change method is applied to allow different values to display.
     let highPassInput = $(this).val(); // volumeInput ID is set to val method
@@ -230,7 +233,7 @@
   }
 
 
-  // STOP RECORIDNG BUTTON
+  // STOP RECORDING BUTTON
   stopButton.addEventListener('click', function() { // Event listener that listens for button click.
     mediaRecorder.stop(); // Stops audio input recording upon event listener button.
   });
@@ -265,7 +268,7 @@
   }
 
 
-  // CALLS DIALOG BOX
+  // CALLS VISAUALIZER DIALOG BOX
   visualizerButton.addEventListener(`click`, function() {
     $(`#visualizer`).dialog({
       modal: true,

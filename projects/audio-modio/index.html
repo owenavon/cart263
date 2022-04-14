@@ -15,7 +15,7 @@
     <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js" integrity="sha256-eTyxS0rkjpLEo16uXTS0uVCS4815lc40K2iVpWDvdSY=" crossorigin="anonymous"></script>
 
     <!-- Annyang -->
-    <script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.0/annyang.min.js"></script>
 
     <!-- Responsive Voice -->
     <script src="https://code.responsivevoice.org/responsivevoice.js?key=B4UO83HM"></script>
@@ -52,12 +52,14 @@
 
         <h3>Panning</h3>
         <div>
-          <input type="range" id="panner" class="control-panner" list="pan-vals" min="-1" max="1" value="0" step="0.01" data-action="panner" />
+          <button id="play-pan-audio">Play Audio</button>
+          <br><br>
+          <input type="range" id="panner" id="control-panner" list="pan-vals" min="-1" max="1" value="0" step="0.01" data-action="panner" />
           <datalist id="pan-vals">
             <option value="-1" label="left">
             <option value="1" label="right">
           </datalist>
-          <p class="black-font"><span id="pan-location">Panning is set to:</span></p>
+          <p class="black-font"><span id="pan-location">Panning is set to: 0.0</span></p>
         </div>
 
         <h3>Filters</h3>
@@ -91,6 +93,16 @@
         <div id="visual-content">
           <canvas id="canvas"></canvas>
           <audio id="visualizer-player" controls></audio>
+        </div>
+      </div>
+
+      <span class="space"></span>
+
+      <div id="random-effect-modal" title="Listen if you dare">
+        <div id="play-download">
+          <audio id="random-effect-player" controls></audio>
+          <br><br>
+          <a id="download-random-effect">Download Random Effect</a>
         </div>
       </div>
 
