@@ -29,6 +29,10 @@
     <section id="main-content">
 
       <div id="record-rectangle"></div>
+      <button id="help">?</button>
+      <button id="surprise">!</button>
+
+      <span class="space"></span>
 
       <h1>Audio&ndash;Modio</h1>
       <h2><span id="start-stop-button"></span></h2>
@@ -39,7 +43,6 @@
       <h2><span id="edit-recording"></span></h2>
 
       <div id="accordion">
-
         <h3>Volume</h3>
         <div>
           <input type="range" id="volume-slider" class="control-volume" min="0" max="100" value="1" list="gain-vals" step="1" data-action="volume" />
@@ -67,24 +70,21 @@
           <input type="range" id="low-pass-slider" min="10" max="22050" step="1" value="400" id="low-pass-filter-frequency" />
           <p class="black-font"><span id="low-pass-location">Low-pass frequency is set to:</span></p>
 
-          <br>
+          <span class="space"></span>
 
           <input type="range" id="high-pass-slider" min="0.0001" max="20" step="0.0001" value="10" id="low-pass-filter-peak" />
           <p class="black-font"><span id="high-pass-location">High-pass frequency is set to:</span></p>
         </div>
-
       </div>
 
       <span class="space"></span>
 
+      <h2><span id="extra"></span></h2>
       <div class="button-container">
         <button id="start">Start</button>
         <button id="stop">Stop</button>
-        <button id="see-visualizer">See Visualizer</button>
-        <button id="done-edit">Done Editing (Not yet functional)</button>
-        <br><br>
+        <a id="see-visualizer">See Visualizer</a>
         <a id="download-raw">Download Raw</a>
-        <a id="download-edit">Download Edit (Not yet functional)</a>
       </div>
 
       <span class="space"></span>

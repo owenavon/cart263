@@ -7,29 +7,32 @@
 
   const TWO_FIVE_SIX = 256;
 
-  const downloadRaw = document.getElementById('download-raw'); // Assigns download-raw id to the downloadRaw constant.
-  const downloadEdit = document.getElementById('download-edit'); // Assigns download-raw id to the downloadRaw constant.
-
 
   // This will be moved soon! - NEED TO MOVE TO APPROPRIATE FUNCTION
   const downloadRandomEffect = document.getElementById('download-random-effect'); // Assigns download-random-effect id to the downloadRandomEffect constant.
   const randomEffectPlayer = document.getElementById(`random-effect-player`); // Assigns visualizerPlayer variable to visualizer-player id.
 
 
+  const helpButton = document.getElementById('help'); // Assigns help id to helpButton constant.
+  const surpriseButton = document.getElementById('surprise'); // Assigns help id to surpriseButton constant.
   const player = document.getElementById('player'); // Assigns player id to player constant.
   const startButton = document.getElementById('start'); // Assigns start id to startButton constant.
   const stopButton = document.getElementById('stop'); // Assigns stop id to stopButton constant.
   const visualizerButton = document.getElementById('see-visualizer'); // Assigns see-visualizer id to visualizerButton constant.
+  const downloadRaw = document.getElementById('download-raw'); // Assigns download-raw id to the downloadRaw constant.
 
+  let sayInstruction = [
+    `Say "I'm feeling lucky"`,
+    `Say "I'm feeling lucky"`,
+    `Say "I'm feeling lucky"`,
+    `Have you said it yet?`
+  ];
 
   let instruction = [
     `Welcome to`,
-    `Audio`,
-    `Modio.`,
-    `Modify the sound of your voice by using the presets below.`,
-    `Do want to apply random effects? Say "Random".` // I'm feeling lucky
+    `Audio Modio.`,
+    `Modify the sound of your voice by using the sliders below.`,
   ];
-
 
   hideShowContentAtStart(); // Calls the hideContentFromStart function.
 
@@ -48,6 +51,8 @@
     $(`#accordion`).hide(); // Hides the accordion by default.
     $(`#record-rectangle`).hide(); // Hides the record-rectangle by default.
     $(`#random-effect-modal`).hide(); // Hides the record-rectangle by default.
+    $(`#surprise`).hide(); // Hides the surprise button by default.
+    $(`#help`).hide(); // Hides the help button by default.
 
     // Show content
     $(`#start-stop-button`).text(`Press the "Start" button to record your voice.`); // Default displayed text
@@ -73,7 +78,7 @@
     player.src = URL.createObjectURL(new Blob(recordedChunks)); // Assigns the recorded audio input src to player.
 
     downloadRaw.href = URL.createObjectURL(new Blob(recordedChunks)); // Gnerates audio doownload link.
-    downloadRaw.download = 'testRecording.wav'; // Name the recording to testRecording.wav.
+    downloadRaw.download = 'Your_Recording.wav'; // Name the recording to testRecording.wav.
 
 
     // Test for random effect button download.
@@ -87,8 +92,6 @@
     stopRecorderFlash(); // Calls the stopRecorderFlash rectangle.
 
     showHideContentAtStop(); // Calls the show hide conent after stop function.
-    instructionVoice(); // Calls the instructionVoice function.
-    feelingLuckyVoiceInput(); // Calls the feelingLuckyVoiceInput function.
 
     volumeSlider(); // Calls the volumeSlider function.
     panSlider(); // Calls the panSLider function.
@@ -113,10 +116,13 @@
     $(`#player`).show(); // Displays the player interface upon stopping the event listener.
     $(`#done-edit`).show(); // Displays the done-edit button.
     $(`#see-visualizer`).show(); // Displays the see-visualizer button.
+    $(`#surprise`).show(); // Displays the surprise button.
+    $(`#help`).show(); // Displays the help button.
 
     // Text strings
-    $(`#edit-recording`).text(`Edit your recording (not yet functional):`); // Default displayed text.
     $(`#press-play-text`).text(`Press the "Play" arrow to hear your recording.`); // Dynamically changes the html text upon clicking the start button.
+    $(`#edit-recording`).text(`Edit your recording:`); // Default displayed text.
+    $(`#extra`).text(`Extra functionality:`); // Default displayed text.
 
     // Hides buttons
     $(`#start-stop-record`).hide(); // Hides the start-stop-record text.
@@ -134,6 +140,51 @@
   }
 
 
+  // SURPRISE BUTTON
+  surpriseButton.addEventListener('click', function() { // Event listener that listens for button click.
+    rotateMainContent(); // Calls the rotateMainContent function.
+    surpriseInstructionVoice(); // Calls the instructionVoice function.
+    feelingLuckyVoiceInput(); // Calls the feelingLuckyVoiceInput function.
+  });
+
+
+  // ROTATE MAIN-CONTENT
+  function rotateMainContent() {
+    $(document).ready(function () {
+      AnimateRotate(360); // Animates an entire rotation.
+    });
+
+    function AnimateRotate(d) {
+    let rotatedContent = $("#main-content");
+
+    $({deg: 0}).animate({deg: d}, {
+      duration: 6000, // Rotates 360 degrees over 7 seconds.
+      step: function(rotateClick) { // Upon mouse click,
+        rotatedContent.css({ // modifies the css value of id main-content.
+          transform: "rotate(" + rotateClick + "deg)" // Transforms the the id by adding degree to every instance.
+          });
+        }
+      });
+    }
+  }
+
+
+  // HELP BUTTON
+  helpButton.addEventListener('click', function() { // Event listener that listens for button click.
+    instructionVoice(); // Calls the instructionVoice function.
+  });
+
+
+  // SAY INSTRUCTION VOICE FUNCTION
+  function surpriseInstructionVoice() {
+
+  let sayInstructionLength = sayInstruction.length; // Assigns instructionLength to the number of elements in an array.
+    for (let i = 0; i < sayInstructionLength; i++) { // Creates a loop that calls all of the elements in the instruction array in order.
+      responsiveVoice.speak(sayInstruction[i]); // ResponsiveVoice speaks the text in the instruction array.
+    }
+  }
+
+
   // INSTRUCTION VOICE FUNCTION
   function instructionVoice() {
 
@@ -148,7 +199,7 @@
   function feelingLuckyVoiceInput() {
     if (annyang) { // If annyang is listening, then...
       let commands = { // Defines commands.
-        "random": function() {  // User speaks "hello".
+        "I'm feeling lucky": function() {  // User speaks "hello".
         randomEffectModal(); // Calls the randomEffectModal function.
       }
     };
