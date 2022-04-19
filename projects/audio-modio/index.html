@@ -26,6 +26,12 @@
   </head>
 
   <body>
+
+      <!-- <div id="visual-content">
+        <canvas id="canvas"></canvas>
+        <audio id="visualizer-player" controls></audio>
+      </div> -->
+
     <section id="main-content">
 
       <div id="record-rectangle"></div>
@@ -55,7 +61,7 @@
 
         <h3>Panning</h3>
         <div>
-          <button id="play-pan-audio">Play Audio</button>
+          <button id="play-pause-pan-audio">Play / Pause</button>
           <br><br>
           <input type="range" id="panner" id="control-panner" list="pan-vals" min="-1" max="1" value="0" step="0.01" data-action="panner" />
           <datalist id="pan-vals">
@@ -67,18 +73,40 @@
 
         <h3>Filters</h3>
         <div>
-          <input type="range" id="low-pass-slider" min="10" max="22050" step="1" value="400" id="low-pass-filter-frequency" />
-          <p class="black-font"><span id="low-pass-location">Low-pass frequency is set to:</span></p>
+          <button id="play-pause-low-high-audio">Play / Pause</button>
+          <br><br>
+          <input type="range" id="low-pass-slider" min="1005" max="20000" step="1" value="500" id="low-pass-filter-frequency" />
+          <p class="black-font"><span id="low-pass-location">Low-pass frequency is set to: 500</span></p>
 
-          <span class="space"></span>
+          <br>
 
-          <input type="range" id="high-pass-slider" min="0.0001" max="20" step="0.0001" value="10" id="low-pass-filter-peak" />
-          <p class="black-font"><span id="high-pass-location">High-pass frequency is set to:</span></p>
+          <input type="range" id="high-pass-slider" min="0.0001" max="10000" step="0.0001" value="10" id="low-pass-filter-peak" />
+          <p class="black-font"><span id="high-pass-location">High-pass frequency is set to: 500</span></p>
         </div>
+
+        <h3>Ping Pong Delay</h3>
+        <div>
+          <p>Text</p>
+        </div>
+        <h3>Distortion</h3>
+        <div>
+          <p>Text</p>
+        </div>
+        <h3>Ring Modulation</h3>
+        <div>
+          <p>Text</p>
+        </div>
+        <h3>Reverb</h3>
+        <div>
+          <p>Text</p>
+        </div>
+
       </div>
 
       <span class="space"></span>
 
+
+      <!-- Bottom Content -->
       <h2><span id="extra"></span></h2>
       <div class="button-container">
         <button id="start">Start</button>
@@ -102,7 +130,7 @@
         <div id="play-download">
           <audio id="random-effect-player" controls></audio>
           <br><br>
-          <a id="download-random-effect">Download Random Effect</a>
+          <p>Figure out how to apply random effects to recording</p>
         </div>
       </div>
 

@@ -9,9 +9,7 @@
 
 
   // This will be moved soon! - NEED TO MOVE TO APPROPRIATE FUNCTION
-  const downloadRandomEffect = document.getElementById('download-random-effect'); // Assigns download-random-effect id to the downloadRandomEffect constant.
   const randomEffectPlayer = document.getElementById(`random-effect-player`); // Assigns visualizerPlayer variable to visualizer-player id.
-
 
   const helpButton = document.getElementById('help'); // Assigns help id to helpButton constant.
   const surpriseButton = document.getElementById('surprise'); // Assigns help id to surpriseButton constant.
@@ -84,9 +82,6 @@
     // Test for random effect button download.
     randomEffectPlayer.src = URL.createObjectURL(new Blob(recordedChunks)); // Assigns the recorded audio input src to player.
 
-    downloadRandomEffect.href = URL.createObjectURL(new Blob(recordedChunks)); // Gnerates audio doownload link.
-    downloadRandomEffect.download = 'testRecording.wav'; // Name the recording to testRecording.wav.
-
 
     // FUNCTIONS CALLED INSIDE STOP BUTTON
     stopRecorderFlash(); // Calls the stopRecorderFlash rectangle.
@@ -95,8 +90,7 @@
 
     volumeSlider(); // Calls the volumeSlider function.
     panSlider(); // Calls the panSLider function.
-    lowPassFilter(); // Calls the lowPassFilter function.
-    highPassFilter(); // Calls the highPassFilter function.
+    lowHighPassSlider(); // Calls the lowPassFilter function.
   });
 
 
@@ -241,21 +235,20 @@
   });
 
   function panSlider() {
-    const playPanAudio = document.getElementById('play-pan-audio'); // Assigns start id to playPanAudio constant.
+    let yourPanAudio = new Pizzicato.Sound({ // Creates a new Pizzicato sound.
+      source: 'file',
+      options: {
+      path: './assets/sounds/test.mp3' }
+    }, function() {
+      console.log('Pan Slider');
+    });
+
+    const playPanAudio = document.getElementById('play-pause-pan-audio'); // Assigns start id to playPanAudio constant.
     playPanAudio.addEventListener('click', function() { // Event listener that listens for button click.
 
-      let sawtoothWave = new Pizzicato.Sound({ // Creates a new Pizzicato sound.
-        source: 'wave',
-        volume: 0.3,
-        attack: 0.3,
-        options: {
-        type: 'sawtooth'
-        }
-      });
-
-      sawtoothWave.addEffect(stereoPanner); // Creates stereo panner effect.
-      sawtoothWave.play(); // Plays the sawtooth effect.
-      });
+    yourPanAudio.play(); // Plays the sawtooth effect.
+    yourPanAudio.addEffect(stereoPanner); // Creates stereo panner effect.
+    });
 
       $(`#panner`).on(`change`, function(event) { // Displays panner value upon click on slider.
       let pannerInput = $(this).val(); // Assigns pannerInput to dynamic value.
@@ -266,20 +259,49 @@
   }
 
 
-  // LOW PASS FILTER - NEED TO EDIT
-  function lowPassFilter() {
-    $(`#low-pass-slider`).on(`change`, function(event) { // Change method is applied to allow different values to display.
-      let lowPassInput = $(this).val(); // volumeInput ID is set to val method
-      $(`#low-pass-location`).text(`Low-pass frequency is set to: ${lowPassInput}`); // Text method is assigned to low-pass-location ID, so low-pass-slider is displayed when the user moves the slider.
+  // LOW PASS FILTER
+  let lowPassFilter = new Pizzicato.Effects.LowPassFilter({ // Assigns steroPanner to new Pizzicato effect
+    frequency: 400,
+	  peak: 10
+  });
+
+  // HIGH PASS FILTER
+  let highPassFilter = new Pizzicato.Effects.HighPassFilter({
+    frequency: 120,
+    peak: 10
+  });
+
+  function lowHighPassSlider() {
+    let yourLowHighAudio = new Pizzicato.Sound({ // Creates a new Pizzicato sound.
+      source: 'file',
+      options: {
+      path: './assets/sounds/test.mp3' }
+    }, function() {
+      console.log('Low High Pass Filter');
     });
-  }
 
+    const playLowHighAudio = document.getElementById('play-pause-low-high-audio'); // Assigns start id to playLowHighAudio constant.
+    playLowHighAudio.addEventListener('click', function() { // Event listener that listens for button click.
 
-  // HIGH PASS FILTER - NEED TO EDIT
-  function highPassFilter() {
-  $(`#high-pass-slider`).on(`change`, function(event) { // Change method is applied to allow different values to display.
-    let highPassInput = $(this).val(); // volumeInput ID is set to val method
-      $(`#high-pass-location`).text(`High-pass frequency is set to: ${highPassInput}`); // Text method is assigned to high-pass-location ID, so high-pass-slider is displayed when user moves slider.
+      yourLowHighAudio.play(); // Plays the sawtooth effect.
+      yourLowHighAudio.addEffect(lowPassFilter); // Creates stereo panner effect.
+      yourLowHighAudio.addEffect(highPassFilter); // Creates stereo panner effect.
+    });
+
+    $(`#low-pass-slider`).on(`change`, function(event) { // Displays panner value upon click on slider.
+    let lowPassInput = $(this).val(); // Assigns pannerInput to dynamic value.
+    $(`#low-pass-location`).text(`Low-pass frequency is set to: ${lowPassInput}`); // text method is assigned to pan-location ID, so panner is dsiplayed when the user moves the slider.
+
+      lowPassFilter.frequency = parseFloat(lowPassInput) // Converts pannerInput string value into a floating-point number for stereoPanner to pan dynamically.
+      lowPassFilter.peak = parseFloat(lowPassInput) // Converts pannerInput string value into a floating-point number for stereoPanner to pan dynamically.
+    });
+
+    $(`#high-pass-slider`).on(`change`, function(event) { // Displays panner value upon click on slider.
+    let highPassInput = $(this).val(); // Assigns pannerInput to dynamic value.
+    $(`#high-pass-location`).text(`High-pass frequency is set to: ${highPassInput}`); // text method is assigned to pan-location ID, so panner is dsiplayed when the user moves the slider.
+
+      highPassFilter.frequency = parseFloat(highPassInput) // Converts pannerInput string value into a floating-point number for stereoPanner to pan dynamically.
+      highPassFilter.peak = parseFloat(highPassInput) // Converts pannerInput string value into a floating-point number for stereoPanner to pan dynamically.
     });
   }
 
