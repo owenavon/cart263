@@ -21,9 +21,6 @@
 
   let sayInstruction = [
     `Say "I'm feeling lucky"`,
-    `Say "I'm feeling lucky"`,
-    `Say "I'm feeling lucky"`,
-    `Have you said it yet?`
   ];
 
   let instruction = [
@@ -79,18 +76,19 @@
     downloadRaw.download = 'Your_Recording.wav'; // Name the recording to testRecording.wav.
 
 
-    // Test for random effect button download.
-    randomEffectPlayer.src = URL.createObjectURL(new Blob(recordedChunks)); // Assigns the recorded audio input src to player.
-
-
     // FUNCTIONS CALLED INSIDE STOP BUTTON
     stopRecorderFlash(); // Calls the stopRecorderFlash rectangle.
 
     showHideContentAtStop(); // Calls the show hide conent after stop function.
 
+    // Custom Filter sliders
     volumeSlider(); // Calls the volumeSlider function.
     panSlider(); // Calls the panSLider function.
     lowHighPassSlider(); // Calls the lowPassFilter function.
+    pingPongSlider(); // Calls the pingPongSlider function.
+    distortionSlider(); // Calls the distortionSlider function.
+    ringModulatorSlider(); // Calls the ringModulatorSlider function.
+    reverbSlider(); // Calls the reverbSlider function
   });
 
 
@@ -134,49 +132,10 @@
   }
 
 
-  // SURPRISE BUTTON
-  surpriseButton.addEventListener('click', function() { // Event listener that listens for button click.
-    rotateMainContent(); // Calls the rotateMainContent function.
-    surpriseInstructionVoice(); // Calls the instructionVoice function.
-    feelingLuckyVoiceInput(); // Calls the feelingLuckyVoiceInput function.
-  });
-
-
-  // ROTATE MAIN-CONTENT
-  function rotateMainContent() {
-    $(document).ready(function () {
-      AnimateRotate(360); // Animates an entire rotation.
-    });
-
-    function AnimateRotate(d) {
-    let rotatedContent = $("#main-content");
-
-    $({deg: 0}).animate({deg: d}, {
-      duration: 6000, // Rotates 360 degrees over 7 seconds.
-      step: function(rotateClick) { // Upon mouse click,
-        rotatedContent.css({ // modifies the css value of id main-content.
-          transform: "rotate(" + rotateClick + "deg)" // Transforms the the id by adding degree to every instance.
-          });
-        }
-      });
-    }
-  }
-
-
   // HELP BUTTON
   helpButton.addEventListener('click', function() { // Event listener that listens for button click.
     instructionVoice(); // Calls the instructionVoice function.
   });
-
-
-  // SAY INSTRUCTION VOICE FUNCTION
-  function surpriseInstructionVoice() {
-
-  let sayInstructionLength = sayInstruction.length; // Assigns instructionLength to the number of elements in an array.
-    for (let i = 0; i < sayInstructionLength; i++) { // Creates a loop that calls all of the elements in the instruction array in order.
-      responsiveVoice.speak(sayInstruction[i]); // ResponsiveVoice speaks the text in the instruction array.
-    }
-  }
 
 
   // INSTRUCTION VOICE FUNCTION
@@ -189,12 +148,35 @@
   }
 
 
+  // SURPRISE BUTTON
+  surpriseButton.addEventListener('click', function() { // Event listener that listens for button click.
+    surpriseInstructionVoice(); // Calls the instructionVoice function.
+    feelingLuckyVoiceInput(); // Calls the feelingLuckyVoiceInput function.
+  });
+
+
+  // SAY INSTRUCTION VOICE FUNCTION
+  function surpriseInstructionVoice() {
+  let sayInstructionLength = sayInstruction.length; // Assigns instructionLength to the number of elements in an array.
+    for (let i = 0; i < sayInstructionLength; i++) { // Creates a loop that calls all of the elements in the instruction array in order.
+      responsiveVoice.speak(sayInstruction[i]); // ResponsiveVoice speaks the text in the instruction array.
+    }
+  }
+
+
   // ANNYANG I'M FEELING LUCKY
   function feelingLuckyVoiceInput() {
     if (annyang) { // If annyang is listening, then...
       let commands = { // Defines commands.
-        "I'm feeling lucky": function() {  // User speaks "hello".
+        "test": function() {  // User speaks "hello".
+        rotateMainContent(); // Calls the rotateMainContent function.
         randomEffectModal(); // Calls the randomEffectModal function.
+
+
+
+
+
+
       }
     };
     annyang.addCommands(commands); // Add our commands to annyang.
@@ -203,15 +185,89 @@
   }
 
 
-  // PLAY AND DOWNLOAD EIDTED TRACK - NEED TO EDIT (DIALOG BOX)
+  // ROTATE MAIN-CONTENT
+  function rotateMainContent() {
+    $(document).ready(function () {
+      AnimateRotate(360); // Animates an entire rotation.
+    });
+
+    function AnimateRotate(d) {
+    let rotatedContent = $("#main-content").fadeOut(3000);
+
+    $({deg: 0}).animate({deg: d}, {
+      duration: 3000, // Rotates 360 degrees over 7 seconds.
+      step: function(rotateClick) { // Upon mouse click,
+        rotatedContent.css({ // modifies the css value of id main-content.
+          transform: "rotate(" + rotateClick + "deg)" // Transforms the the id by adding degree to every instance.
+          });
+        }
+      });
+    }
+  }
+
+
+  // RANDOM EFFECT DIALOG BOX
   function randomEffectModal() {
     $(`#random-effect-modal`).dialog({
       modal: true,
-      height: 400,
+      height: 500,
       width: 500,
-      resizable: true
+      resizable: false,
+      draggable: false,
+      show: {
+        effect: `fade`,
+        duration: 3000 // Dialog box fades in over 3 seconds
+      },
+      hide: {
+        effect: `fadeOut`,
+        duration: 1000 // Dialog box fades in over 1.5 seconds
+      },
+      buttons: {
+        "Close": function() { // Anonymous function that...
+          $(this).dialog(`close`); // Creates a close button for the dialog box
+          $("#main-content").fadeIn(1500); // Fades the main-content back in over 1.5 seconds
+        }
+      }
     });
   }
+
+
+
+  // RANDOM DISTORTION EFFECT
+  let distortion = new Pizzicato.Effects.Distortion({ // Assigns steroPanner to new Pizzicato effect
+    gain: 0.3
+  });
+
+  function distortionSlider() {
+    let yourDistortedAudio = new Pizzicato.Sound({
+      source: 'file',
+      options: {
+      path: URL.createObjectURL(new Blob(recordedChunks)) }
+      });
+
+      let playDistortedAudio = document.getElementById('play-distorted-audio'); // Assigns start id to playDistortedAudio variable.
+      let pauseDistortedAudio = document.getElementById('pause-distorted-audio'); // Assigns start id to pauseDistortedAudio variable.
+
+      playDistortedAudio.addEventListener('click', function() { // Event listener that listens for button click.
+        yourDistortedAudio.play(); // Plays the recorded src.
+
+        pauseDistortedAudio.addEventListener('click', function() { // Event listener that listens for button click.
+          yourDistortedAudio.stop(); // Stops the recorded src.
+        });
+
+        yourDistortedAudio.addEffect(distortion); // Creates stereo panner effect.
+      });
+
+      $(`#distortion-gain`).on(`change`, function(event) { // Displays panner value upon click on slider.
+      let distortedAudio = $(this).val(); // Assigns pannerInput to dynamic value.
+      $(`#distortion-gain-location`).text(`Distortion is set to: ${distortedAudio}`); // text method is assigned to pan-location ID, so panner is dsiplayed when the user moves the slider.
+
+      distortion.gain = parseFloat(distortedAudio) // Converts pannerInput string value into a floating-point number for stereoPanner to pan dynamically.
+    });
+  }
+
+
+  //---------------------------------------------------------------------//
 
 
   // VOLUME SLIDER
@@ -235,30 +291,30 @@
   });
 
   function panSlider() {
-    let yourPanAudio = new Pizzicato.Sound({
-      source: 'file',
-      options: {
-      path: URL.createObjectURL(new Blob(recordedChunks)) }
+  let yourPanAudio = new Pizzicato.Sound({
+    source: 'file',
+    options: {
+    path: URL.createObjectURL(new Blob(recordedChunks)) }
+  });
+
+  let playPanAudio = document.getElementById('play-pan-audio'); // Assigns start id to playPanAudio variable.
+  let pausePanAudio = document.getElementById('pause-pan-audio'); // Assigns start id to pausePanAudio variable.
+
+    playPanAudio.addEventListener('click', function() { // Event listener that listens for button click.
+    yourPanAudio.play(); // Plays the recorded src.
+
+      pausePanAudio.addEventListener('click', function() { // Event listener that listens for button click.
+        yourPanAudio.stop(); // Stops the recorded src.
       });
 
-      let playPanAudio = document.getElementById('play-pan-audio'); // Assigns start id to playPanAudio variable.
-      let pausePanAudio = document.getElementById('pause-pan-audio'); // Assigns start id to pausePanAudio variable.
+      yourPanAudio.addEffect(stereoPanner); // Creates stereo panner effect.
+    });
 
-      playPanAudio.addEventListener('click', function() { // Event listener that listens for button click.
-        yourPanAudio.play(); // Plays the recorded src.
-
-        pausePanAudio.addEventListener('click', function() { // Event listener that listens for button click.
-          yourPanAudio.stop(); // Stops the recorded src.
-        });
-
-        yourPanAudio.addEffect(stereoPanner); // Creates stereo panner effect.
-      });
-
-      $(`#panner`).on(`change`, function(event) { // Displays panner value upon click on slider.
+    $(`#panner`).on(`change`, function(event) { // Displays panner value upon click on slider.
       let pannerInput = $(this).val(); // Assigns pannerInput to dynamic value.
       $(`#pan-location`).text(`Panning is set to: ${pannerInput}`); // text method is assigned to pan-location ID, so panner is dsiplayed when the user moves the slider.
 
-      stereoPanner.pan = parseFloat(pannerInput) // Converts pannerInput string value into a floating-point number for stereoPanner to pan dynamically.
+    stereoPanner.pan = parseFloat(pannerInput) // Converts pannerInput string value into a floating-point number for stereoPanner to pan dynamically.
     });
   }
 
@@ -276,21 +332,21 @@
   });
 
   function lowHighPassSlider() {
-    let yourLowHighAudio = new Pizzicato.Sound({ // Creates a new Pizzicato sound.
-      source: 'file',
-      options: {
-      path: URL.createObjectURL(new Blob(recordedChunks)) }
-      });
+  let yourLowHighAudio = new Pizzicato.Sound({ // Creates a new Pizzicato sound.
+    source: 'file',
+    options: {
+    path: URL.createObjectURL(new Blob(recordedChunks)) }
+  });
 
-    let playLowHighAudio = document.getElementById('play-low-high-audio'); // Assigns start id to playLowHighAudio constant.
-    let pauseLowHighAudio = document.getElementById('pause-low-high-audio'); // Assigns start id to playLowHighAudio constant.
+  let playLowHighAudio = document.getElementById('play-low-high-audio'); // Assigns start id to playLowHighAudio constant.
+  let pauseLowHighAudio = document.getElementById('pause-low-high-audio'); // Assigns start id to playLowHighAudio constant.
 
     playLowHighAudio.addEventListener('click', function() { // Event listener that listens for button click.
       yourLowHighAudio.play(); // Plays the audio recording.
 
-      pauseLowHighAudio.addEventListener('click', function() { // Event listener that listens for button click.
-        yourLowHighAudio.stop(); // Stops the audio recording.
-      });
+    pauseLowHighAudio.addEventListener('click', function() { // Event listener that listens for button click.
+      yourLowHighAudio.stop(); // Stops the audio recording.
+    });
 
       yourLowHighAudio.addEffect(lowPassFilter); // Creates low Pass Filter effect.
       yourLowHighAudio.addEffect(highPassFilter); // Creates High Pass Filter effect.
@@ -300,16 +356,167 @@
     let lowPassInput = $(this).val(); // Assigns pannerInput to dynamic value.
     $(`#low-pass-location`).text(`Low-pass frequency is set to: ${lowPassInput}`); // text method is assigned to pan-location ID, so panner is dsiplayed when the user moves the slider.
 
-      lowPassFilter.frequency = parseFloat(lowPassInput) // Converts pannerInput string value into a floating-point number for stereoPanner to pan dynamically.
-      lowPassFilter.peak = parseFloat(lowPassInput) // Converts pannerInput string value into a floating-point number for stereoPanner to pan dynamically.
+    lowPassFilter.frequency = parseFloat(lowPassInput) // Converts pannerInput string value into a floating-point number for stereoPanner to pan dynamically.
+    lowPassFilter.peak = parseFloat(lowPassInput) // Converts pannerInput string value into a floating-point number for stereoPanner to pan dynamically.
     });
 
     $(`#high-pass-slider`).on(`change`, function(event) { // Displays panner value upon click on slider.
     let highPassInput = $(this).val(); // Assigns pannerInput to dynamic value.
     $(`#high-pass-location`).text(`High-pass frequency is set to: ${highPassInput}`); // text method is assigned to pan-location ID, so panner is dsiplayed when the user moves the slider.
 
-      highPassFilter.frequency = parseFloat(highPassInput) // Converts pannerInput string value into a floating-point number for stereoPanner to pan dynamically.
-      highPassFilter.peak = parseFloat(highPassInput) // Converts pannerInput string value into a floating-point number for stereoPanner to pan dynamically.
+      highPassFilter.frequency = parseFloat(highPassInput) // Converts lowPassInput string value into a floating-point number for lowPassFilter effect.
+      highPassFilter.peak = parseFloat(highPassInput) // Converts highPassInput string value into a floating-point number for highPassFilter effect.
+    });
+  }
+
+
+  // PING PONG DELAY
+  let pingPongDelay = new Pizzicato.Effects.PingPongDelay({ // Assigns steroPanner to new Pizzicato effect
+    feedback: 0.3,
+    time: 0.3,
+    mix: 0.3
+  });
+
+  function pingPongSlider() {
+  let yourPingPongAudio = new Pizzicato.Sound({
+    source: 'file',
+    options: {
+    path: URL.createObjectURL(new Blob(recordedChunks)) }
+    });
+
+    let playPingPongAudio = document.getElementById('play-ping-pong-audio'); // Assigns start id to playPanAudio variable.
+    let pausePingPongAudio = document.getElementById('pause-ping-pong-audio'); // Assigns start id to pausePanAudio variable.
+
+    playPingPongAudio.addEventListener('click', function() { // Event listener that listens for button click.
+      yourPingPongAudio.play(); // Plays the recorded src.
+
+        pausePingPongAudio.addEventListener('click', function() { // Event listener that listens for button click.
+          yourPingPongAudio.stop(); // Stops the recorded src.
+        });
+
+      yourPingPongAudio.addEffect(pingPongDelay); // Creates pingPongDelay effect.
+    });
+
+    $(`#ping-pong-delay-feedback`).on(`change`, function(event) { // Displays panner value upon click on slider.
+    let delayFeedback = $(this).val(); // Assigns delayFeedback to dynamic value.
+    $(`#ping-pong-delay-feedback-location`).text(`Delay Feedback is set to: ${delayFeedback}`); // text method is assigned to ping-pong-delay-feedback-location ID, so feedback is dsiplayed when the user moves the slider.
+
+    pingPongDelay.feedback = parseFloat(delayFeedback) // Converts delayFeedback string value into a floating-point number for pingPongDelay effect.
+    });
+
+    $(`#ping-pong-delay-time`).on(`change`, function(event) { // Displays panner value upon click on slider.
+    let delayTime = $(this).val(); // Assigns delayFeedback to dynamic value.
+    $(`#ping-pong-delay-time-location`).text(`Delay Time is set to: ${delayTime}`); // text method is assigned to ping-pong-delay-feedback-location ID, so feedback is dsiplayed when the user moves the slider.
+
+    pingPongDelay.time = parseFloat(delayTime) // Converts delayFeedback string value into a floating-point number for pingPongDelay effect.
+    });
+
+    $(`#ping-pong-delay-mix`).on(`change`, function(event) { // Displays panner value upon click on slider.
+    let delayMix = $(this).val(); // Assigns delayFeedback to dynamic value.
+    $(`#ping-pong-delay-mix-location`).text(`Delay Mix is set to: ${delayMix}`); // text method is assigned to ping-pong-delay-feedback-location ID, so feedback is dsiplayed when the user moves the slider.
+
+    pingPongDelay.mix = parseFloat(delayMix) // Converts delayFeedback string value into a floating-point number for pingPongDelay effect.
+    });
+  }
+
+
+  // RING MOULATOR
+  let ringModulator = new Pizzicato.Effects.RingModulator({ // Assigns steroPanner to new Pizzicato effect
+    speed: 30,
+    distortion: 1,
+    mix: 0.5
+  });
+
+  function ringModulatorSlider() {
+  let yourModulatedAudio = new Pizzicato.Sound({
+    source: 'file',
+    options: {
+    path: URL.createObjectURL(new Blob(recordedChunks)) }
+    });
+
+    let playRingModulatedAudio = document.getElementById('play-ring-modulated-audio'); // Assigns start id to playPanAudio variable.
+    let pauseRingModulatedAudio = document.getElementById('pause-ring-modulated-audio'); // Assigns start id to pausePanAudio variable.
+
+    playRingModulatedAudio.addEventListener('click', function() { // Event listener that listens for button click.
+      yourModulatedAudio.play(); // Plays the recorded src.
+
+      pauseRingModulatedAudio.addEventListener('click', function() { // Event listener that listens for button click.
+        yourModulatedAudio.stop(); // Stops the recorded src.
+      });
+
+      yourModulatedAudio.addEffect(ringModulator); // Creates ringModulator effect.
+    });
+
+    $(`#ringmodulated-speed`).on(`change`, function(event) { // Displays panner value upon click on slider.
+    let modulatedSpeed = $(this).val(); // Assigns delayFeedback to dynamic value.
+    $(`#ringmodulated-speed-location`).text(`Speed is set to: ${modulatedSpeed}`); // text method is assigned to ping-pong-delay-feedback-location ID, so feedback is dsiplayed when the user moves the slider.
+
+    ringModulator.speed = parseFloat(modulatedSpeed) // Converts delayFeedback string value into a floating-point number for pingPongDelay effect.
+    });
+
+    $(`#ringmodulated-distortion`).on(`change`, function(event) { // Displays panner value upon click on slider.
+    let modulatedDistortion = $(this).val(); // Assigns delayFeedback to dynamic value.
+    $(`#ringmodulated-distortion-location`).text(`Distortion is set to: ${modulatedDistortion}`); // text method is assigned to ping-pong-delay-feedback-location ID, so feedback is dsiplayed when the user moves the slider.
+
+      ringModulator.distortion = parseFloat(modulatedDistortion) // Converts delayFeedback string value into a floating-point number for pingPongDelay effect.
+    });
+
+    $(`#ringmodulated-mix`).on(`change`, function(event) { // Displays panner value upon click on slider.
+    let modulatedMix = $(this).val(); // Assigns delayFeedback to dynamic value.
+    $(`#ringmodulated-mix-location`).text(`Mix is set to: ${modulatedMix}`); // text method is assigned to ping-pong-delay-feedback-location ID, so feedback is dsiplayed when the user moves the slider.
+
+      ringModulator.mix = parseFloat(modulatedMix) // Converts delayFeedback string value into a floating-point number for pingPongDelay effect.
+    });
+  }
+
+
+  // REVERB
+  let reverb = new Pizzicato.Effects.Reverb({ // Assigns steroPanner to new Pizzicato effect
+    speed: 0.5,
+    decay: 0.5,
+    reverse: false,
+    mix: 0.5
+  });
+
+  function reverbSlider() {
+  let yourReverbAudio = new Pizzicato.Sound({
+    source: 'file',
+    options: {
+    path: URL.createObjectURL(new Blob(recordedChunks)) }
+  });
+
+  let playReverbAudio = document.getElementById('play-reverb-audio'); // Assigns start id to playReverbAudio variable.
+  let pauseReverbAudio = document.getElementById('pause-reverb-audio'); // Assigns start id to pauseReverbAudio variable.
+
+    playReverbAudio.addEventListener('click', function() { // Event listener that listens for button click.
+      yourReverbAudio.play(); // Plays the recorded src.
+
+      pauseReverbAudio.addEventListener('click', function() { // Event listener that listens for button click.
+        yourReverbAudio.stop(); // Stops the recorded src.
+      });
+
+      yourReverbAudio.addEffect(reverb); // Creates reverb effect.
+    });
+
+    $(`#reverb-time`).on(`change`, function(event) { // Displays panner value upon click on slider.
+    let reverbSpeed = $(this).val(); // Assigns delayFeedback to dynamic value.
+    $(`#reverb-time-location`).text(`Time is set to: ${reverbSpeed}`); // text method is assigned to ping-pong-delay-feedback-location ID, so feedback is dsiplayed when the user moves the slider.
+
+    reverb.speed = parseFloat(reverbSpeed) // Converts delayFeedback string value into a floating-point number for pingPongDelay effect.
+    });
+
+    $(`#reverb-decay`).on(`change`, function(event) { // Displays panner value upon click on slider.
+    let reverbDecay = $(this).val(); // Assigns delayFeedback to dynamic value.
+    $(`#reverb-decay-location`).text(`Decay is set to: ${reverbDecay}`); // text method is assigned to ping-pong-delay-feedback-location ID, so feedback is dsiplayed when the user moves the slider.
+
+    reverb.decay = parseFloat(reverbDecay) // Converts delayFeedback string value into a floating-point number for pingPongDelay effect.
+    });
+
+    $(`#reverb-mix`).on(`change`, function(event) { // Displays panner value upon click on slider.
+    let reverbMix = $(this).val(); // Assigns delayFeedback to dynamic value.
+    $(`#reverb-mix-location`).text(`Mix is set to: ${reverbMix}`); // text method is assigned to ping-pong-delay-feedback-location ID, so feedback is dsiplayed when the user moves the slider.
+
+    reverb.mix = parseFloat(reverbMix) // Converts delayFeedback string value into a floating-point number for pingPongDelay effect.
     });
   }
 
@@ -329,6 +536,7 @@
   });
 
 
+  // HIDDEN AND SHOWN CONTENT AT THE START
   function showHideContentAtStart() {
     // Displays content
     $(`#stop`).show(); // Shows the stop button once the user has started the recording.
@@ -342,6 +550,7 @@
   }
 
 
+  // RECORDING ANIMATION
   function startRecorderFlash() {
     setInterval(function() {
       $(`#record-rectangle`).fadeToggle(1000); // Simulates html blink tag by flashing every 1 second
@@ -353,9 +562,23 @@
   visualizerButton.addEventListener(`click`, function() {
     $(`#visualizer`).dialog({
       modal: true,
-      height: 600,
+      height: 750,
       width: 700,
       resizable: false,
+      draggable: false,
+      show: {
+        effect: `fadeIn`,
+        duration: 1000 // Dialog box fades in over 1.5 seconds
+      },
+      hide: {
+        effect: `fadeOut`,
+        duration: 1000 // Dialog box fades in over 1.5 seconds
+      },
+      buttons: {
+        "Close": function() { // Anonymous function that...
+          $(this).dialog(`close`); // Creates a close button for the dialog box
+        }
+      }
     });
     $(`#visual-content`).show(); // Displays the html content that builds the visualizer.
 

@@ -72,11 +72,15 @@
           <p class="black-font"><span id="pan-location">Panning is set to: 0.0</span></p>
         </div>
 
+
+
         <h3>Filters</h3>
         <div>
           <button id="play-low-high-audio">Play</button>
           <button id="pause-low-high-audio">Pause</button>
+
           <br><br>
+
           <input type="range" id="low-pass-slider" min="1005" max="20000" step="1" value="500" id="low-pass-filter-frequency" />
           <p class="black-font"><span id="low-pass-location">Low-pass frequency is set to: 500</span></p>
 
@@ -86,23 +90,78 @@
           <p class="black-font"><span id="high-pass-location">High-pass frequency is set to: 500</span></p>
         </div>
 
+
+
         <h3>Ping Pong Delay</h3>
         <div>
-          <p>Text</p>
-        </div>
-        <h3>Distortion</h3>
-        <div>
-          <p>Text</p>
-        </div>
-        <h3>Ring Modulation</h3>
-        <div>
-          <p>Text</p>
-        </div>
-        <h3>Reverb</h3>
-        <div>
-          <p>Text</p>
+          <button id="play-ping-pong-audio">Play</button>
+          <button id="pause-ping-pong-audio">Pause</button>
+
+          <br><br>
+
+          <input type="range" id="ping-pong-delay-feedback" min="0" max="1" step="0.01" value="0.3" />
+          <p class="black-font"><span id="ping-pong-delay-feedback-location">Feedback is set to: 0.6</span></p>
+
+          <br>
+
+          <input type="range" id="ping-pong-delay-time" min="0" max="1" step="0.001" value="0.3" />
+          <p class="black-font"><span id="ping-pong-delay-time-location">Delay time is set to: 0.3</span></p>
+
+          <br>
+
+          <input type="range" id="ping-pong-delay-mix" min="0" max="1" step="0.001" value="0.3" />
+          <p class="black-font"><span id="ping-pong-delay-mix-location">Delay mix is set to: 0.5</span></p>
         </div>
 
+
+
+
+
+
+        <h3>Ring Modulation</h3>
+        <div>
+          <button id="play-ring-modulated-audio">Play</button>
+          <button id="pause-ring-modulated-audio">Pause</button>
+
+          <br><br>
+
+          <input type="range" id="ringmodulated-speed" min="0" max="2000" step="1" value="30" />
+          <p class="black-font"><span id="ringmodulated-speed-location">Speed is set to: 30</span></p>
+
+          <br>
+
+          <input type="range" id="ringmodulated-distortion" min="0.2" max="50" step="0.0001" value="1" />
+          <p class="black-font"><span id="ringmodulated-distortion-location">Distortion is set to: 1</span></p>
+
+          <br>
+
+          <input type="range" id="ringmodulated-mix" min="0" max="1" step="0.01" value="0.5" />
+          <p class="black-font"><span id="ringmodulated-mix-location">Mix is set to: 0.5</span></p>
+        </div>
+
+
+
+
+        <h3>Reverb</h3>
+        <div>
+          <button id="play-reverb-audio">Play</button>
+          <button id="pause-reverb-audio">Pause</button>
+
+          <br><br>
+
+          <input type="range" id="reverb-time" min="0.01" max="3" step="0.01" value="0.5" />
+          <p class="black-font"><span id="reverb-time-location">Reverb is set to: 0.5</span></p>
+
+          <br>
+
+          <input type="range" id="reverb-decay" min="0.0" max="3" step="0.01" value="0.5" />
+          <p class="black-font"><span id="reverb-decay-location">Decay is set to: 0.5</span></p>
+
+          <br>
+
+          <input type="range" id="reverb-mix" min="0" max="1" step="0.01" value="0.5" />
+          <p class="black-font"><span id="reverb-mix-location">Mix is set to: 0.5</span></p>
+        </div>
       </div>
 
       <span class="space"></span>
@@ -128,12 +187,20 @@
 
       <span class="space"></span>
 
-      <div id="random-effect-modal" title="Listen if you dare">
-        <div id="play-download">
-          <audio id="random-effect-player" controls></audio>
-          <br><br>
-          <p>Figure out how to apply random effects to recording</p>
-        </div>
+      <div id="random-effect-modal" title="Random Effect Selector">
+
+          <div>
+            <button id="play-distorted-audio">Play</button>
+            <button id="pause-distorted-audio">Pause</button>
+            <br><br>
+            <button id="pause-distorted-audio">Random</button>
+
+            <br><br>
+            <p>Volume</p>
+            <input type="range" id="distortion-gain" min="0" max="1" step="0.01" value="0.3" />
+            <p class="black-font"><span id="distortion-gain-location">Distortion is set to: 0.3</span></p>
+          </div>
+
       </div>
 
     </section>

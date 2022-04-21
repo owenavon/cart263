@@ -198,7 +198,7 @@ h2 {
   color: #006400;
 }
 
-#play-pause-low-high-audio {
+#play-low-high-audio {
   font-size: 1.2rem;
   border-radius: 15px;
   padding: 5px 50px;
@@ -209,10 +209,165 @@ h2 {
   transition-duration: 0.4s;
 }
 
-#play-pause-low-high-audio:hover {
+#play-low-high-audio:hover {
   background-color: #e1e1e1;
   color: #006400;
 }
+
+#pause-low-high-audio {
+  font-size: 1.2rem;
+  border-radius: 15px;
+  padding: 5px 50px;
+  background-color: #f5f5f5;
+  color: #000000;
+  cursor: pointer;
+  border: none;
+  transition-duration: 0.4s;
+}
+
+#pause-low-high-audio:hover {
+  background-color: #e1e1e1;
+  color: #006400;
+}
+
+#play-ping-pong-audio {
+  font-size: 1.2rem;
+  border-radius: 15px;
+  padding: 5px 50px;
+  background-color: #f5f5f5;
+  color: #000000;
+  cursor: pointer;
+  border: none;
+  transition-duration: 0.4s;
+}
+
+#play-ping-pong-audio:hover {
+  background-color: #e1e1e1;
+  color: #006400;
+}
+
+#pause-ping-pong-audio {
+  font-size: 1.2rem;
+  border-radius: 15px;
+  padding: 5px 50px;
+  background-color: #f5f5f5;
+  color: #000000;
+  cursor: pointer;
+  border: none;
+  transition-duration: 0.4s;
+}
+
+#pause-ping-pong-audio:hover {
+  background-color: #e1e1e1;
+  color: #006400;
+}
+
+#play-distorted-audio {
+  font-size: 1.2rem;
+  border-radius: 15px;
+  padding: 5px 50px;
+  background-color: #f5f5f5;
+  color: #000000;
+  cursor: pointer;
+  border: none;
+  transition-duration: 0.4s;
+}
+
+#play-distorted-audio:hover {
+  background-color: #e1e1e1;
+  color: #006400;
+}
+
+#pause-distorted-audio {
+  font-size: 1.2rem;
+  border-radius: 15px;
+  padding: 5px 50px;
+  background-color: #f5f5f5;
+  color: #000000;
+  cursor: pointer;
+  border: none;
+  transition-duration: 0.4s;
+}
+
+#pause-distorted-audio:hover {
+  background-color: #e1e1e1;
+  color: #006400;
+}
+
+#play-ring-modulated-audio {
+  font-size: 1.2rem;
+  border-radius: 15px;
+  padding: 5px 50px;
+  background-color: #f5f5f5;
+  color: #000000;
+  cursor: pointer;
+  border: none;
+  transition-duration: 0.4s;
+}
+
+#play-ring-modulated-audio:hover {
+  background-color: #e1e1e1;
+  color: #006400;
+}
+
+#pause-ring-modulated-audio {
+  font-size: 1.2rem;
+  border-radius: 15px;
+  padding: 5px 50px;
+  background-color: #f5f5f5;
+  color: #000000;
+  cursor: pointer;
+  border: none;
+  transition-duration: 0.4s;
+}
+
+#pause-ring-modulated-audio:hover {
+  background-color: #e1e1e1;
+  color: #006400;
+}
+
+#play-reverb-audio {
+  font-size: 1.2rem;
+  border-radius: 15px;
+  padding: 5px 50px;
+  background-color: #f5f5f5;
+  color: #000000;
+  cursor: pointer;
+  border: none;
+  transition-duration: 0.4s;
+}
+
+#play-reverb-audio:hover {
+  background-color: #e1e1e1;
+  color: #006400;
+}
+
+#pause-reverb-audio {
+  font-size: 1.2rem;
+  border-radius: 15px;
+  padding: 5px 50px;
+  background-color: #f5f5f5;
+  color: #000000;
+  cursor: pointer;
+  border: none;
+  transition-duration: 0.4s;
+}
+
+#pause-reverb-audio:hover {
+  background-color: #e1e1e1;
+  color: #006400;
+}
+
+
+
+
+
+
+
+
+
+
+
 
 #audio-file {
   cursor: pointer;
@@ -240,7 +395,7 @@ h2 {
 /* ------------------------ */
 
 #canvas {
-  height: 405px;
+  height: 475px;
   width: 665px;
   margin-bottom: 25px;
   border-radius: 10px;
@@ -315,4 +470,16 @@ h2 {
 
 .ui-corner-bottom {
   border: none !important;
+}
+
+.ui-dialog .ui-dialog-titlebar-close {
+  display: none;
+}
+
+.ui-widget-content {
+  border: 0px !important;
+}
+
+.ui-dialog-buttonpane.ui-widget-content.ui-helper-clearfix {
+  border-radius: 25px;
 }
