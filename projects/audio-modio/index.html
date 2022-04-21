@@ -61,7 +61,8 @@
 
         <h3>Panning</h3>
         <div>
-          <button id="play-pause-pan-audio">Play / Pause</button>
+          <button id="play-pan-audio">Play</button>
+          <button id="pause-pan-audio">Pause</button>
           <br><br>
           <input type="range" id="panner" id="control-panner" list="pan-vals" min="-1" max="1" value="0" step="0.01" data-action="panner" />
           <datalist id="pan-vals">
@@ -73,7 +74,8 @@
 
         <h3>Filters</h3>
         <div>
-          <button id="play-pause-low-high-audio">Play / Pause</button>
+          <button id="play-low-high-audio">Play</button>
+          <button id="pause-low-high-audio">Pause</button>
           <br><br>
           <input type="range" id="low-pass-slider" min="1005" max="20000" step="1" value="500" id="low-pass-filter-frequency" />
           <p class="black-font"><span id="low-pass-location">Low-pass frequency is set to: 500</span></p>

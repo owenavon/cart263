@@ -235,20 +235,24 @@
   });
 
   function panSlider() {
-    let yourPanAudio = new Pizzicato.Sound({ // Creates a new Pizzicato sound.
+    let yourPanAudio = new Pizzicato.Sound({
       source: 'file',
       options: {
-      path: './assets/sounds/test.mp3' }
-    }, function() {
-      console.log('Pan Slider');
-    });
+      path: URL.createObjectURL(new Blob(recordedChunks)) }
+      });
 
-    const playPanAudio = document.getElementById('play-pause-pan-audio'); // Assigns start id to playPanAudio constant.
-    playPanAudio.addEventListener('click', function() { // Event listener that listens for button click.
+      let playPanAudio = document.getElementById('play-pan-audio'); // Assigns start id to playPanAudio variable.
+      let pausePanAudio = document.getElementById('pause-pan-audio'); // Assigns start id to pausePanAudio variable.
 
-    yourPanAudio.play(); // Plays the sawtooth effect.
-    yourPanAudio.addEffect(stereoPanner); // Creates stereo panner effect.
-    });
+      playPanAudio.addEventListener('click', function() { // Event listener that listens for button click.
+        yourPanAudio.play(); // Plays the recorded src.
+
+        pausePanAudio.addEventListener('click', function() { // Event listener that listens for button click.
+          yourPanAudio.stop(); // Stops the recorded src.
+        });
+
+        yourPanAudio.addEffect(stereoPanner); // Creates stereo panner effect.
+      });
 
       $(`#panner`).on(`change`, function(event) { // Displays panner value upon click on slider.
       let pannerInput = $(this).val(); // Assigns pannerInput to dynamic value.
@@ -275,17 +279,21 @@
     let yourLowHighAudio = new Pizzicato.Sound({ // Creates a new Pizzicato sound.
       source: 'file',
       options: {
-      path: './assets/sounds/test.mp3' }
-    }, function() {
-      console.log('Low High Pass Filter');
-    });
+      path: URL.createObjectURL(new Blob(recordedChunks)) }
+      });
 
-    const playLowHighAudio = document.getElementById('play-pause-low-high-audio'); // Assigns start id to playLowHighAudio constant.
+    let playLowHighAudio = document.getElementById('play-low-high-audio'); // Assigns start id to playLowHighAudio constant.
+    let pauseLowHighAudio = document.getElementById('pause-low-high-audio'); // Assigns start id to playLowHighAudio constant.
+
     playLowHighAudio.addEventListener('click', function() { // Event listener that listens for button click.
+      yourLowHighAudio.play(); // Plays the audio recording.
 
-      yourLowHighAudio.play(); // Plays the sawtooth effect.
-      yourLowHighAudio.addEffect(lowPassFilter); // Creates stereo panner effect.
-      yourLowHighAudio.addEffect(highPassFilter); // Creates stereo panner effect.
+      pauseLowHighAudio.addEventListener('click', function() { // Event listener that listens for button click.
+        yourLowHighAudio.stop(); // Stops the audio recording.
+      });
+
+      yourLowHighAudio.addEffect(lowPassFilter); // Creates low Pass Filter effect.
+      yourLowHighAudio.addEffect(highPassFilter); // Creates High Pass Filter effect.
     });
 
     $(`#low-pass-slider`).on(`change`, function(event) { // Displays panner value upon click on slider.
