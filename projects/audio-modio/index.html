@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0>
 
-    <title>Audio Modio - Prototype</title>
+    <title>Audio Modio</title>
 
     <!-- CSS stylesheet(s) -->
     <link rel="stylesheet" type="text/css" href="css/style.css" />
@@ -23,47 +23,57 @@
     <!-- Pizzicato -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pizzicato/0.6.4/Pizzicato.min.js"></script>
   </head>
-  </head>
 
   <body>
-
-      <!-- <div id="visual-content">
-        <canvas id="canvas"></canvas>
-        <audio id="visualizer-player" controls></audio>
-      </div> -->
-
+    <!-- Main Content section -->
     <section id="main-content">
 
+      <!-- Simulated recording icon -->
       <div id="record-rectangle"></div>
+
+      <!-- Secondary Buttons -->
       <button id="help">?</button>
       <button id="surprise">!</button>
 
+      <!-- CSS Break Tag -->
       <span class="space"></span>
 
+      <!-- Dynamic Text Headings -->
       <h1>Audio&ndash;Modio</h1>
       <h2><span id="start-stop-button"></span></h2>
       <h2><span id="start-stop-record"></span></h2>
       <h2><span id="press-play-text"></span></h2>
 
+      <!-- Audio player for recorded voice -->
       <audio id="player" controls></audio>
-      <h2><span id="edit-recording"></span></h2>
 
-      <div id="accordion">
+      <!-- Editing Options in jQuery volume accordion UI-->
+      <div id="volume-accordion">
+        <!-- Volume Effect -->
         <h3>Volume</h3>
         <div>
-          <input type="range" id="volume-slider" class="control-volume" min="0" max="100" value="1" list="gain-vals" step="1" data-action="volume" />
+          <input type="range" id="volume-slider" class="control-volume" min="0" max="100" value="50" list="gain-vals" step="1" data-action="volume" />
           <datalist id="gain-vals">
             <option value="0" label="min">
             <option value="100" label="max">
           </datalist>
-          <p class="black-font"><span id="volume-level">Volume is set to:</span></p>
+          <p class="black-font"><span id="volume-level">Volume is set to: 50</span></p>
         </div>
+      </div>
 
+      <!-- Dynamic Text Heading -->
+      <h2><span id="edit-recording"></span></h2>
+
+      <!-- Editing Options in jQuery accordion UI-->
+      <div id="accordion">
+
+        <!-- Panning Effect -->
         <h3>Panning</h3>
         <div>
           <button id="play-pan-audio">Play</button>
           <button id="pause-pan-audio">Pause</button>
-          <br><br>
+            <br>
+            <br>
           <input type="range" id="panner" id="control-panner" list="pan-vals" min="-1" max="1" value="0" step="0.01" data-action="panner" />
           <datalist id="pan-vals">
             <option value="-1" label="left">
@@ -72,141 +82,112 @@
           <p class="black-font"><span id="pan-location">Panning is set to: 0.0</span></p>
         </div>
 
-
-
-        <h3>Filters</h3>
+        <!-- Low & High Pass Filters -->
+        <h3>Frequency Filters</h3>
         <div>
           <button id="play-low-high-audio">Play</button>
           <button id="pause-low-high-audio">Pause</button>
-
-          <br><br>
-
+            <br>
+            <br>
           <input type="range" id="low-pass-slider" min="1005" max="20000" step="1" value="500" id="low-pass-filter-frequency" />
           <p class="black-font"><span id="low-pass-location">Low-pass frequency is set to: 500</span></p>
-
-          <br>
-
+            <br>
           <input type="range" id="high-pass-slider" min="0.0001" max="10000" step="0.0001" value="10" id="low-pass-filter-peak" />
           <p class="black-font"><span id="high-pass-location">High-pass frequency is set to: 500</span></p>
         </div>
 
-
-
+        <!-- Ping Pong Delay Filters -->
         <h3>Ping Pong Delay</h3>
         <div>
           <button id="play-ping-pong-audio">Play</button>
           <button id="pause-ping-pong-audio">Pause</button>
-
-          <br><br>
-
+            <br>
+            <br>
           <input type="range" id="ping-pong-delay-feedback" min="0" max="1" step="0.01" value="0.3" />
           <p class="black-font"><span id="ping-pong-delay-feedback-location">Feedback is set to: 0.6</span></p>
-
-          <br>
-
+            <br>
           <input type="range" id="ping-pong-delay-time" min="0" max="1" step="0.001" value="0.3" />
           <p class="black-font"><span id="ping-pong-delay-time-location">Delay time is set to: 0.3</span></p>
-
-          <br>
-
+            <br>
           <input type="range" id="ping-pong-delay-mix" min="0" max="1" step="0.001" value="0.3" />
           <p class="black-font"><span id="ping-pong-delay-mix-location">Delay mix is set to: 0.5</span></p>
         </div>
 
-
-
-
-
-
+        <!-- Ring Modulation Filters -->
         <h3>Ring Modulation</h3>
         <div>
           <button id="play-ring-modulated-audio">Play</button>
           <button id="pause-ring-modulated-audio">Pause</button>
-
-          <br><br>
-
+            <br>
+            <br>
           <input type="range" id="ringmodulated-speed" min="0" max="2000" step="1" value="30" />
           <p class="black-font"><span id="ringmodulated-speed-location">Speed is set to: 30</span></p>
-
-          <br>
-
+            <br>
           <input type="range" id="ringmodulated-distortion" min="0.2" max="50" step="0.0001" value="1" />
           <p class="black-font"><span id="ringmodulated-distortion-location">Distortion is set to: 1</span></p>
-
-          <br>
-
+            <br>
           <input type="range" id="ringmodulated-mix" min="0" max="1" step="0.01" value="0.5" />
           <p class="black-font"><span id="ringmodulated-mix-location">Mix is set to: 0.5</span></p>
         </div>
 
-
-
-
+        <!-- Reverb Filters -->
         <h3>Reverb</h3>
         <div>
           <button id="play-reverb-audio">Play</button>
           <button id="pause-reverb-audio">Pause</button>
-
-          <br><br>
-
+            <br>
+            <br>
           <input type="range" id="reverb-time" min="0.01" max="3" step="0.01" value="0.5" />
           <p class="black-font"><span id="reverb-time-location">Reverb is set to: 0.5</span></p>
-
-          <br>
-
+            <br>
           <input type="range" id="reverb-decay" min="0.0" max="3" step="0.01" value="0.5" />
           <p class="black-font"><span id="reverb-decay-location">Decay is set to: 0.5</span></p>
-
-          <br>
-
+            <br>
           <input type="range" id="reverb-mix" min="0" max="1" step="0.01" value="0.5" />
           <p class="black-font"><span id="reverb-mix-location">Mix is set to: 0.5</span></p>
         </div>
-      </div>
 
-      <span class="space"></span>
-
-
-      <!-- Bottom Content -->
-      <h2><span id="extra"></span></h2>
-      <div class="button-container">
-        <button id="start">Start</button>
-        <button id="stop">Stop</button>
-        <a id="see-visualizer">See Visualizer</a>
-        <a id="download-raw">Download Raw</a>
-      </div>
-
-      <span class="space"></span>
-
-      <div id="visualizer" title="Get lost in your Visuals">
-        <div id="visual-content">
-          <canvas id="canvas"></canvas>
-          <audio id="visualizer-player" controls></audio>
+        <!-- End of Editing Options in jQuery accordion UI   -->
         </div>
-      </div>
 
-      <span class="space"></span>
+        <!-- CSS Break Tag -->
+        <span class="space"></span>
 
-      <div id="random-effect-modal" title="Random Effect Selector">
+        <!-- Dynamic Text Heading -->
+        <h2><span id="extra"></span></h2>
 
-          <div>
-            <button id="play-distorted-audio">Play</button>
-            <button id="pause-distorted-audio">Pause</button>
-            <br><br>
-            <button id="pause-distorted-audio">Random</button>
+        <!-- Button Container -->
+        <div class="button-container">
+          <button id="start">Start</button>
+          <button id="stop">Stop</button>
+          <a id="see-visualizer">See Visualizer</a>
+          <a id="download-raw">Download Raw</a>
+        </div>
 
-            <br><br>
-            <p>Volume</p>
-            <input type="range" id="distortion-gain" min="0" max="1" step="0.01" value="0.3" />
-            <p class="black-font"><span id="distortion-gain-location">Distortion is set to: 0.3</span></p>
+        <!-- CSS Break Tag -->
+        <span class="space"></span>
+
+        <!-- Audio Visualizer -->
+        <div id="visualizer" title="Get lost in your Visuals">
+          <div id="visual-content">
+            <canvas id="canvas"></canvas>
+            <audio id="visualizer-player" controls></audio>
           </div>
+        </div>
 
-      </div>
+        <!-- CSS Break Tag -->
+        <span class="space"></span>
 
-    </section>
+        <!-- Random Buttons in Random Effect Selector UI box -->
+        <div id="random-effect-modal" title="Random Effect Selector">
+          <button id="apply-random-effect">?</button>
+          <button id="pause-random-effect">Pause</button>
+        </div>
 
-    <!-- My script(s) -->
-    <script src="js/script.js"></script>
-  </body>
+      <!-- End of Main Content Section -->
+      </section>
 
-</html>
+      <!-- My script(s) -->
+      <script src="js/script.js"></script>
+    </body>
+  </html>

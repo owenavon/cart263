@@ -1,3 +1,8 @@
+
+/* ------------------------ */
+/* STRUCTURE                */
+/* ------------------------ */
+
 body {
   font-family: "calibri";
   padding: 0;
@@ -42,6 +47,18 @@ h2 {
 
 .black-font {
   color: #000000;
+}
+
+/* ------------------------ */
+/* VOLUME ACCORDION         */
+/* ------------------------ */
+
+#volume-accordion {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 75%;
+  margin-bottom: 2em;
 }
 
 /* ------------------------ */
@@ -262,38 +279,6 @@ h2 {
   color: #006400;
 }
 
-#play-distorted-audio {
-  font-size: 1.2rem;
-  border-radius: 15px;
-  padding: 5px 50px;
-  background-color: #f5f5f5;
-  color: #000000;
-  cursor: pointer;
-  border: none;
-  transition-duration: 0.4s;
-}
-
-#play-distorted-audio:hover {
-  background-color: #e1e1e1;
-  color: #006400;
-}
-
-#pause-distorted-audio {
-  font-size: 1.2rem;
-  border-radius: 15px;
-  padding: 5px 50px;
-  background-color: #f5f5f5;
-  color: #000000;
-  cursor: pointer;
-  border: none;
-  transition-duration: 0.4s;
-}
-
-#pause-distorted-audio:hover {
-  background-color: #e1e1e1;
-  color: #006400;
-}
-
 #play-ring-modulated-audio {
   font-size: 1.2rem;
   border-radius: 15px;
@@ -358,24 +343,36 @@ h2 {
   color: #006400;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-#audio-file {
+#apply-random-effect {
+  font-size: 1.2rem;
+  border-radius: 15px;
+  padding: 5px 50px;
+  background-color: #f5f5f5;
+  color: #000000;
   cursor: pointer;
-  border-radius: 50px;
+  border: none;
+  transition-duration: 0.4s;
 }
 
-.slider-title {
-  margin-bottom: 0px;
+#apply-random-effect:hover {
+  background-color: #e1e1e1;
+  color: #006400;
+}
+
+#pause-random-effect {
+  font-size: 1.2rem;
+  border-radius: 15px;
+  padding: 5px 50px;
+  background-color: #f5f5f5;
+  color: #000000;
+  cursor: pointer;
+  border: none;
+  transition-duration: 0.4s;
+}
+
+#pause-random-effect:hover {
+  background-color: #e1e1e1;
+  color: #006400;
 }
 
 /* ------------------------ */
@@ -433,6 +430,10 @@ h2 {
   border-radius: 10px !important;
 }
 
+.ui-dialog .ui-dialog-content {
+    border-radius: 25px;
+}
+
 /* ------------------------ */
 /* ACCORDION BOX            */
 /* ------------------------ */
@@ -447,10 +448,6 @@ h2 {
     border-bottom-left-radius: 25px !important;
     border-top-right-radius: 25px !important;
     border-top-left-radius: 25px !important;
-}
-
-.ui-dialog .ui-dialog-content {
-    border-radius: 25px;
 }
 
 .ui-accordion-header {

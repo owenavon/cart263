@@ -1,15 +1,11 @@
   // Audio-Modio
   // Owen Avon
 
-  // Application that allows the user to record their voice, modify the tones, view the visualization of the audio, and download the recording via .wav. Please see "Audio-Modio_Proposal-Owen_Avon.pdf" for further information.
+  // Web application that allows the user to record their voice, modify the sound with various filters, view the sound waves live as vertical bars, and download the recording the raw recording as a .wav file.
 
   "use strict";
 
-  const TWO_FIVE_SIX = 256;
-
-
-  // This will be moved soon! - NEED TO MOVE TO APPROPRIATE FUNCTION
-  const randomEffectPlayer = document.getElementById(`random-effect-player`); // Assigns visualizerPlayer variable to visualizer-player id.
+  const TWO_FIVE_SIX = 256; // Used in visualizer as divisble value
 
   const helpButton = document.getElementById('help'); // Assigns help id to helpButton constant.
   const surpriseButton = document.getElementById('surprise'); // Assigns help id to surpriseButton constant.
@@ -29,6 +25,13 @@
     `Modify the sound of your voice by using the sliders below.`,
   ];
 
+  let audioEffect = [
+    'Frequency Filters',
+    'Ping Pong Delay',
+    'Ring Modulation',
+    'Reverb'
+  ];
+
   hideShowContentAtStart(); // Calls the hideContentFromStart function.
 
   // HIDE CONTENT FROM START FUNCTION
@@ -43,6 +46,7 @@
     $(`#see-visualizer`).hide(); // Hides the see-visualizer button by default.
     $(`#visualizer`).hide(); // Hides the visualizer content upon starting the program.
     $(`#visual-content`).hide(); // Hides the visual content.
+    $(`#volume-accordion`).hide(); // Hides the accordion by default.
     $(`#accordion`).hide(); // Hides the accordion by default.
     $(`#record-rectangle`).hide(); // Hides the record-rectangle by default.
     $(`#random-effect-modal`).hide(); // Hides the record-rectangle by default.
@@ -56,7 +60,7 @@
 
   const handleSuccess = function(stream) { // Assigns the stream function to the handleSuccess constant.
     const options = {
-      mimeType: 'audio/webm'
+      mimeType: 'audio/webm' // Media input type.
   };
   const recordedChunks = []; // Creates an empty array called recorded chunks.
   const mediaRecorder = new MediaRecorder(stream, options); // Assigns the MediaRecorder class to the mediaRecorder constant.
@@ -64,7 +68,7 @@
 
   // DATA_AVAILABLE METHOD
   mediaRecorder.addEventListener('dataavailable', function(e) { // dataavailable fires when mediaRecorder delivers media.
-    if (e.data.size > 0) recordedChunks.push(e.data);
+    if (e.data.size > 0) recordedChunks.push(e.data); // If audio is inputed, it is saved in recordedChunks
   });
 
 
@@ -78,13 +82,12 @@
 
     // FUNCTIONS CALLED INSIDE STOP BUTTON
     stopRecorderFlash(); // Calls the stopRecorderFlash rectangle.
-
     showHideContentAtStop(); // Calls the show hide conent after stop function.
 
-    // Custom Filter sliders
+    // CUSTOM FILTER SLIDERS
     volumeSlider(); // Calls the volumeSlider function.
     panSlider(); // Calls the panSLider function.
-    lowHighPassSlider(); // Calls the lowPassFilter function.
+    lowHighPassSlider(); // Calls the lowHighPassFilter function.
     pingPongSlider(); // Calls the pingPongSlider function.
     distortionSlider(); // Calls the distortionSlider function.
     ringModulatorSlider(); // Calls the ringModulatorSlider function.
@@ -95,7 +98,7 @@
   // STOP RECORDER FLASH RECTANGLE
   function stopRecorderFlash() {
     setInterval(function() {
-      $(`#record-rectangle`).remove(); // Removes the recording rectangle.
+      $(`#record-rectangle`).remove(); // Removes the recording rectangle when the user press the stop button.
     });
   }
 
@@ -123,11 +126,18 @@
     $(`#stop`).hide(); // Hides the player interface upon stopping the event listener.
     $(`#start`).hide(); // Hides the player interface upon stopping the event listener.
 
+    // Volume Accordion UI
+    $(`#volume-accordion`).show(); // Shows the volume accordion.
+    $(`#volume-accordion`).accordion({
+      collapsible: true, // Allows the user to collapse the volume accordion options.
+      active: false // Starts the volume accordion as completely collapsed.
+    }); // Creates the volume accordion UI.
+
     // Accordion UI
     $(`#accordion`).show(); // Shows the accordion.
     $(`#accordion`).accordion({
       collapsible: true, // Allows the user to collapse the accordion options.
-      active: false // Starts the Accordion as completely collapsed.
+      active: false // Starts the accordion as completely collapsed.
     }); // Creates the accordion UI.
   }
 
@@ -140,7 +150,6 @@
 
   // INSTRUCTION VOICE FUNCTION
   function instructionVoice() {
-
   let instructionLength = instruction.length; // Assigns instructionLength to the number of elements in an array.
     for (let i = 0; i < instructionLength; i++) { // Creates a loop that calls all of the elements in the instruction array in order.
       responsiveVoice.speak(instruction[i]); // ResponsiveVoice speaks the text in the instruction array.
@@ -168,15 +177,9 @@
   function feelingLuckyVoiceInput() {
     if (annyang) { // If annyang is listening, then...
       let commands = { // Defines commands.
-        "test": function() {  // User speaks "hello".
+        "I'm Feeling Lucky": function() {  // User speaks "I'm Feeling Lucky".
         rotateMainContent(); // Calls the rotateMainContent function.
         randomEffectModal(); // Calls the randomEffectModal function.
-
-
-
-
-
-
       }
     };
     annyang.addCommands(commands); // Add our commands to annyang.
@@ -208,66 +211,72 @@
 
   // RANDOM EFFECT DIALOG BOX
   function randomEffectModal() {
-    $(`#random-effect-modal`).dialog({
-      modal: true,
-      height: 500,
-      width: 500,
-      resizable: false,
-      draggable: false,
-      show: {
-        effect: `fade`,
-        duration: 3000 // Dialog box fades in over 3 seconds
+    $(`#random-effect-modal`).dialog({ // Creates a jQuery UI dialog box.
+      modal: true, // Creates box.
+      height: 300, // Sets static box height.
+      width: 500, // Sets static box width.
+      resizable: false, // Prevents the user from resizing the box.
+      draggable: false, // Prevents the user from dragging the box.
+      show: { // Applies the below methods upon displaying the box.
+        effect: `fadeIn`, // Fades the box in...
+        duration: 3000 // Over 3 seconds.
       },
-      hide: {
-        effect: `fadeOut`,
-        duration: 1000 // Dialog box fades in over 1.5 seconds
+      hide: { // Applies the below methods upon closing the box.
+        effect: `fadeOut`, // Fades the box out...
+        duration: 1000 // Over 1 second.
       },
-      buttons: {
+      buttons: { // Creates button(s) on the box.
         "Close": function() { // Anonymous function that...
-          $(this).dialog(`close`); // Creates a close button for the dialog box
-          $("#main-content").fadeIn(1500); // Fades the main-content back in over 1.5 seconds
+          $(this).dialog(`close`); // Creates a close button for the dialog box.
+          $("#main-content").fadeIn(1500); // Fades the main-content back in over 1.5 seconds.
         }
+      }
+    });
+    selectRandomEffect(); // Calls the selectRandomEffect function.
+  }
+
+
+  // PLAY RANDOM EFFECT - I was not able to have Pizzicato play a random Pizzicato.Sound. "this.getRawSourceNode"
+  function selectRandomEffect() {
+
+    let randomEffect = audioEffect[(Math.random() * audioEffect.length) | 0] // Uses math.random to select a random string in the RandomEffect's array.
+    $(`#apply-random-effect`).on(`click`, function(event) { // Calls a random effect upon clicking on ? button.
+
+      if (randomEffect === audioEffect[0]) { // States if the array string is equal to the random selected position, then...
+        console.log(`frequency Filter`); // Console log the name of the desired effect. This where the effect should be played...
+      }
+      else if (randomEffect === audioEffect[1]) { // States if the array string is equal to the random selected position, then...
+        console.log(`Ping Pong Delay`); // Console log the name of the desired effect. This where the effect should be played...
+      }
+      else if (randomEffect === audioEffect[2]) { // States if the array string is equal to the random selected position, then...
+        console.log(`Ring Modulation`); // Console log the name of the desired effect. This where the effect should be played...
+      }
+      else if (randomEffect === audioEffect[3]) { // States if the array string is equal to the random selected position, then...
+        console.log(`Reverb`); // Console log the name of the desired effect. This where the effect should be played...
       }
     });
   }
 
 
-
-  // RANDOM DISTORTION EFFECT
-  let distortion = new Pizzicato.Effects.Distortion({ // Assigns steroPanner to new Pizzicato effect
-    gain: 0.3
+  // DISTORTION EFFECT (Backup for "Random Effect").
+  let distortion = new Pizzicato.Effects.Distortion({ // Assigns steroPanner to new Pizzicato effect.
+    gain: 0.9 // Sets default gain to 0.9.
   });
 
   function distortionSlider() {
-    let yourDistortedAudio = new Pizzicato.Sound({
-      source: 'file',
-      options: {
-      path: URL.createObjectURL(new Blob(recordedChunks)) }
-      });
+    let yourDistortedAudio = new Pizzicato.Sound({ // Creates a new Pizzicato sound.
+      source: 'file', // Retrieves audio from "file".
+      options: { // Object the provides further sound options.
+      path: URL.createObjectURL(new Blob(recordedChunks)) } // Targets the inputted audio from recordedChunks.
+    });
 
-      let playDistortedAudio = document.getElementById('play-distorted-audio'); // Assigns start id to playDistortedAudio variable.
-      let pauseDistortedAudio = document.getElementById('pause-distorted-audio'); // Assigns start id to pauseDistortedAudio variable.
-
+    let playDistortedAudio = document.getElementById('apply-random-effect'); // Assigns start id to playLowHighAudio constant.
       playDistortedAudio.addEventListener('click', function() { // Event listener that listens for button click.
-        yourDistortedAudio.play(); // Plays the recorded src.
 
-        pauseDistortedAudio.addEventListener('click', function() { // Event listener that listens for button click.
-          yourDistortedAudio.stop(); // Stops the recorded src.
-        });
-
-        yourDistortedAudio.addEffect(distortion); // Creates stereo panner effect.
-      });
-
-      $(`#distortion-gain`).on(`change`, function(event) { // Displays panner value upon click on slider.
-      let distortedAudio = $(this).val(); // Assigns pannerInput to dynamic value.
-      $(`#distortion-gain-location`).text(`Distortion is set to: ${distortedAudio}`); // text method is assigned to pan-location ID, so panner is dsiplayed when the user moves the slider.
-
-      distortion.gain = parseFloat(distortedAudio) // Converts pannerInput string value into a floating-point number for stereoPanner to pan dynamically.
+        yourDistortedAudio.play(); // Plays the sawtooth effect.
+        yourDistortedAudio.addEffect(distortion); // Adds the effect to Pizzicato sound.
     });
   }
-
-
-  //---------------------------------------------------------------------//
 
 
   // VOLUME SLIDER
@@ -280,28 +289,27 @@
   let volume = document.querySelector("#volume-slider"); // Assigns volume variable to volume-slider ID.
     volume.addEventListener("change", function(e) { // Change function is applied to allow for volume minpulation
     (player).volume = e.currentTarget.value / 100; // Assigns the player constant streamed data to the volume-slider ID.
-    console.log(recordedChunks);
     });
   }
 
 
   // PAN SLIDER
-  let stereoPanner = new Pizzicato.Effects.StereoPanner({ // Assigns steroPanner to new Pizzicato effect
-    pan: 0
+  let stereoPanner = new Pizzicato.Effects.StereoPanner({ // Assigns stereoPanner to new Pizzicato effect.
+    pan: 0 // Sets the default pan to 0 (centre).
   });
 
   function panSlider() {
-  let yourPanAudio = new Pizzicato.Sound({
-    source: 'file',
-    options: {
-    path: URL.createObjectURL(new Blob(recordedChunks)) }
+  let yourPanAudio = new Pizzicato.Sound({ // Creates a new Pizzicato sound.
+    source: 'file', // Retrieves audio from "file".
+    options: { // Object the provides further sound options.
+    path: URL.createObjectURL(new Blob(recordedChunks)) } // Targets the inputted audio from recordedChunks.
   });
 
   let playPanAudio = document.getElementById('play-pan-audio'); // Assigns start id to playPanAudio variable.
   let pausePanAudio = document.getElementById('pause-pan-audio'); // Assigns start id to pausePanAudio variable.
 
     playPanAudio.addEventListener('click', function() { // Event listener that listens for button click.
-    yourPanAudio.play(); // Plays the recorded src.
+    yourPanAudio.play(); // Plays the recorded src. Issue where when user clicks on the play button a second time, the effect plays without the recorded source. The outcome is generally a high pitch sound or the following error: "BiquadFilterNode: state is bad, probably due to unstable filter caused by fast parameter automation."
 
       pausePanAudio.addEventListener('click', function() { // Event listener that listens for button click.
         yourPanAudio.stop(); // Stops the recorded src.
@@ -319,23 +327,24 @@
   }
 
 
+  // FREQUENCY FILTERS
   // LOW PASS FILTER
-  let lowPassFilter = new Pizzicato.Effects.LowPassFilter({ // Assigns steroPanner to new Pizzicato effect
-    frequency: 400,
-	  peak: 10
+  let lowPassFilter = new Pizzicato.Effects.LowPassFilter({ // Assigns lowPassFilter to new Pizzicato effect.
+    frequency: 400, // Sets the default frequenecy to 400.
+	  peak: 10 // Sets the deafult peak to 10.
   });
 
   // HIGH PASS FILTER
-  let highPassFilter = new Pizzicato.Effects.HighPassFilter({
-    frequency: 120,
-    peak: 10
+  let highPassFilter = new Pizzicato.Effects.HighPassFilter({ // Assigns highPassFilter to new Pizzicato effect.
+    frequency: 120, // Sets the default frequenecy to 120.
+    peak: 10 // Sets the default peak to 10.
   });
 
   function lowHighPassSlider() {
   let yourLowHighAudio = new Pizzicato.Sound({ // Creates a new Pizzicato sound.
-    source: 'file',
-    options: {
-    path: URL.createObjectURL(new Blob(recordedChunks)) }
+    source: 'file', // Retrieves audio from "file".
+    options: { // Object the provides further sound options.
+    path: URL.createObjectURL(new Blob(recordedChunks)) } // Targets the inputted audio from recordedChunks.
   });
 
   let playLowHighAudio = document.getElementById('play-low-high-audio'); // Assigns start id to playLowHighAudio constant.
@@ -371,17 +380,17 @@
 
 
   // PING PONG DELAY
-  let pingPongDelay = new Pizzicato.Effects.PingPongDelay({ // Assigns steroPanner to new Pizzicato effect
-    feedback: 0.3,
-    time: 0.3,
-    mix: 0.3
+  let pingPongDelay = new Pizzicato.Effects.PingPongDelay({ // Assigns pingPongDelay to new Pizzicato effect.
+    feedback: 0.3, // Sets the default feedback to 0.3.
+    time: 0.3, // Sets the default time to 0.3.
+    mix: 0.3 // Sets the default mix to 0.3.
   });
 
   function pingPongSlider() {
-  let yourPingPongAudio = new Pizzicato.Sound({
-    source: 'file',
-    options: {
-    path: URL.createObjectURL(new Blob(recordedChunks)) }
+  let yourPingPongAudio = new Pizzicato.Sound({ // Creates a new Pizzicato sound.
+    source: 'file', // Retrieves audio from "file".
+    options: { // Object the provides further sound options.
+    path: URL.createObjectURL(new Blob(recordedChunks)) } // Targets the inputted audio from recordedChunks.
     });
 
     let playPingPongAudio = document.getElementById('play-ping-pong-audio'); // Assigns start id to playPanAudio variable.
@@ -421,17 +430,17 @@
 
 
   // RING MOULATOR
-  let ringModulator = new Pizzicato.Effects.RingModulator({ // Assigns steroPanner to new Pizzicato effect
-    speed: 30,
-    distortion: 1,
-    mix: 0.5
+  let ringModulator = new Pizzicato.Effects.RingModulator({ // Assigns ringModulator to new Pizzicato effect.
+    speed: 30, // Sets the default speed to 30.
+    distortion: 1, // Sets the default distortion to 1.
+    mix: 0.5 // Sets the default mix to 0.5.
   });
 
   function ringModulatorSlider() {
-  let yourModulatedAudio = new Pizzicato.Sound({
-    source: 'file',
-    options: {
-    path: URL.createObjectURL(new Blob(recordedChunks)) }
+  let yourModulatedAudio = new Pizzicato.Sound({ // Creates a new Pizzicato sound.
+    source: 'file', // Retrieves audio from "file".
+    options: { // Object the provides further sound options.
+    path: URL.createObjectURL(new Blob(recordedChunks)) } // Targets the inputted audio from recordedChunks.
     });
 
     let playRingModulatedAudio = document.getElementById('play-ring-modulated-audio'); // Assigns start id to playPanAudio variable.
@@ -471,18 +480,18 @@
 
 
   // REVERB
-  let reverb = new Pizzicato.Effects.Reverb({ // Assigns steroPanner to new Pizzicato effect
-    speed: 0.5,
-    decay: 0.5,
-    reverse: false,
-    mix: 0.5
+  let reverb = new Pizzicato.Effects.Reverb({ // Assigns reverb to new Pizzicato effect.
+    speed: 0.5, // Sets the default speed to 0.5.
+    decay: 0.5, // Sets the default decay to 0.5.
+    reverse: false, // Prevents the reverse of the impulse shape.
+    mix: 0.5 // Sets the default mix to 0.5.
   });
 
   function reverbSlider() {
-  let yourReverbAudio = new Pizzicato.Sound({
-    source: 'file',
-    options: {
-    path: URL.createObjectURL(new Blob(recordedChunks)) }
+  let yourReverbAudio = new Pizzicato.Sound({ // Creates a new Pizzicato sound.
+    source: 'file', // Retrieves audio from "file".
+    options: { // Object the provides further sound options.
+    path: URL.createObjectURL(new Blob(recordedChunks)) } // Targets the inputted audio from recordedChunks.
   });
 
   let playReverbAudio = document.getElementById('play-reverb-audio'); // Assigns start id to playReverbAudio variable.
@@ -552,8 +561,8 @@
 
   // RECORDING ANIMATION
   function startRecorderFlash() {
-    setInterval(function() {
-      $(`#record-rectangle`).fadeToggle(1000); // Simulates html blink tag by flashing every 1 second
+    setInterval(function() { // Creates an interval on the anonymous function.
+      $(`#record-rectangle`).fadeToggle(1000); // Simulates html blink tag by flashing every 1 second.
     });
   }
 
@@ -561,22 +570,22 @@
   // CALLS VISAUALIZER DIALOG BOX
   visualizerButton.addEventListener(`click`, function() {
     $(`#visualizer`).dialog({
-      modal: true,
-      height: 750,
-      width: 700,
-      resizable: false,
-      draggable: false,
-      show: {
-        effect: `fadeIn`,
-        duration: 1000 // Dialog box fades in over 1.5 seconds
+      modal: true, // Creates box.
+      height: 750, // Sets static box height.
+      width: 700, // Sets static box width.
+      resizable: false, // Prevents the user from resizing the box.
+      draggable: false, // Prevents the user from dragging the box.
+      show: { // Applies the below methods upon displaying the box.
+        effect: `fadeIn`, // Fades the box in...
+        duration: 1000 // Over 1 second.
       },
       hide: {
-        effect: `fadeOut`,
-        duration: 1000 // Dialog box fades in over 1.5 seconds
+        effect: `fadeOut`, // Fades the box out...
+        duration: 1000 // Over 1 second.
       },
-      buttons: {
+      buttons: { // Creates button(s) on the box.
         "Close": function() { // Anonymous function that...
-          $(this).dialog(`close`); // Creates a close button for the dialog box
+          $(this).dialog(`close`); // Creates a close button for the dialog box.
         }
       }
     });
@@ -587,14 +596,14 @@
 
 
   function soundVisualizer() {
-    // AUDIO VISUALIZER
-    // https://codepen.io/nfj525/pen/rVBaab
+  // AUDIO VISUALIZER
+  // https://codepen.io/nfj525/pen/rVBaab
 
     let visualizerPlayer = document.getElementById(`visualizer-player`); // Assigns visualizerPlayer variable to visualizer-player id.
 
     let context = new AudioContext(); // Assigns an audio processing graph to the varibale context.
     let srcAudio = context.createMediaElementSource(visualizerPlayer); // Assigns srcAudio to visualizerPlayer for audio to playblack in audio player.
-    let analyser = context.createAnalyser(); //
+    let analyser = context.createAnalyser(); // Assigns analyser to  content to ensure content is of correct size.
     let canvas = document.getElementById(`canvas`); // Provides the visualizer with coordinates for viewport.
     let ctx = canvas.getContext("2d");
 
@@ -602,13 +611,13 @@
     // canvas.width = window.innerWidth;
     // canvas.height = window.innerHeight;
 
-    srcAudio.connect(analyser);
+    srcAudio.connect(analyser); // Appends srcAudio to analyser
     analyser.connect(context.destination);
 
     analyser.fftSize = TWO_FIVE_SIX; // Assigns...
 
     let bufferLength = analyser.frequencyBinCount; // Assigns bufferLength to frequencyBinCount as a read only property for the analyser node.
-    console.log(`Buffer Length = ${bufferLength}`);
+    console.log(`Buffer Length = ${bufferLength}`); // Logs the
 
     let dataArray = new Uint8Array(bufferLength); // Assigns dataArray to special array of 8-bit unsigned integers.
 
@@ -648,8 +657,8 @@
   }; // Function Stream
 
 
-  // GET USER MEDIA VIA AUDIO INPUT
-  navigator.mediaDevices.getUserMedia({
-    audio: true,
-    video: false
-  }).then(handleSuccess);
+  // GET USER MEDIA VIA AUDIO INPUT (Web Audio API)
+  navigator.mediaDevices.getUserMedia({ // Prompts the user for permission to use media input.
+    audio: true, // Access and collects user audio
+    video: false // Does not access and does not collect user video
+  }).then(handleSuccess); // Proccess the collected data
